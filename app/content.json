@@ -1,0 +1,234 @@
+{
+  "hero": {
+    "heading": "MOVING\nSHOULDN'T BE\nA HEADACHE.",
+    "headingAccent": "A HEADACHE.",
+    "subheading": "You point. We handle the truck, the boxes, the junk, and the worrying.",
+    "ctaButton": "GET MY FREE QUOTE →",
+    "callButton": "CALL US",
+    "callButtonPhone": "+17025551234",
+    "trustSignalTitle": "Licensed & Insured",
+    "trustSignalDescription": "3+ years moving Vegas — your stuff is protected",
+    "heroImage": "/images/hero.jpg"
+  },
+  "trustBar": {
+    "stats": [
+      {
+        "number": "1,200+",
+        "label": "Moves Completed"
+      },
+      {
+        "number": "4",
+        "label": "Years in Vegas"
+      },
+      {
+        "number": "4.8★",
+        "label": "From 300+ Reviews"
+      },
+      {
+        "number": "24/7",
+        "label": "Support Available"
+      }
+    ]
+  },
+  "services": {
+    "heading": "WHAT DO YOU NEED GONE?",
+    "subheading": "We handle every type of move and removal. Pick your service below.",
+    "items": [
+      {
+        "title": "Local Moving",
+        "description": "Same-day or scheduled. Start and finish in one day.",
+        "image": "/images/furniture-moving.jpg"
+      },
+      {
+        "title": "Long-Distance",
+        "description": "Cross-country without a truck full of surprises.",
+        "image": "/images/commercial.jpg"
+      },
+      {
+        "title": "Appliance Removal",
+        "description": "Heavy appliances gone. Disposal handled, cleanup done.",
+        "image": "/images/appliance-removal.jpg"
+      },
+      {
+        "title": "Garage Cleanout",
+        "description": "Years of junk cleared. You get your space back.",
+        "image": "/images/garage-cleanout.jpg"
+      },
+      {
+        "title": "Commercial",
+        "description": "Office moves that don't shut down your business.",
+        "image": "/images/commercial.jpg"
+      }
+    ]
+  },
+  "process": {
+    "heading": "HOW IT WORKS",
+    "steps": [
+      {
+        "number": "1",
+        "title": "GET YOUR QUOTE",
+        "description": "Flat rate or hourly. Delivered in 60 seconds."
+      },
+      {
+        "number": "2",
+        "title": "BOOK YOUR MOVE",
+        "description": "Schedule at your convenience."
+      },
+      {
+        "number": "3",
+        "title": "WE MOVE YOU",
+        "description": "Show up on time. Finish on time. Done."
+      }
+    ]
+  },
+  "whyChooseUs": {
+    "heading": "WHY CHOOSE US",
+    "reasons": [
+      {
+        "number": "01",
+        "title": "Licensed & Insured",
+        "description": "Full coverage on your belongings. If something breaks, we handle the claim—no gotchas."
+      },
+      {
+        "number": "02",
+        "title": "No Hidden Fees",
+        "description": "Flat rate quote. If the move runs long, you don't get surprised at checkout."
+      },
+      {
+        "number": "03",
+        "title": "Professional Teams",
+        "description": "Crews introduce themselves, wrap items before doorways, call ahead. They're not anonymous."
+      },
+      {
+        "number": "04",
+        "title": "Fast & Efficient",
+        "description": "In and out on time. We respect your schedule and your space."
+      }
+    ]
+  },
+  "furnitureMoving": {
+    "heading": "FURNITURE MOVING",
+    "description": "Your grandmother's china. Heavy sofas. Awkward pianos. We've moved it all. Every piece gets wrapped before it leaves your current place.",
+    "image": "/images/service-furniture.jpg",
+    "checklist": [
+      {
+        "item": "Professional wrapping and protection"
+      },
+      {
+        "item": "Stairs and tight doorways—we handle it"
+      },
+      {
+        "item": "Damage claim process is simple—we'll walk you through it"
+      }
+    ]
+  },
+  "junkRemoval": {
+    "heading": "JUNK & CLUTTER REMOVAL",
+    "description": "Old furniture. Broken appliances. Decades of garage clutter. One call and it's gone. We haul it away, donate what we can, recycle what we can, and leave your space empty.",
+    "image": "/images/service-garage.jpg",
+    "checklist": [
+      {
+        "item": "Complete removal and disposal—nothing left behind"
+      },
+      {
+        "item": "What gets donated goes to local nonprofits"
+      },
+      {
+        "item": "Same-day or next-day service available"
+      }
+    ]
+  },
+  "reviews": {
+    "heading": "WHAT CUSTOMERS SAY",
+    "items": [
+      {
+        "text": "Moved our 3-bedroom house in 4 hours. The crew showed up at 8am, everything was wrapped before they touched a doorway, and we were done by noon. No surprises on the final bill.",
+        "author": "Jennifer Martinez",
+        "rating": 5
+      },
+      {
+        "text": "Called Monday afternoon for a garage cleanout, they came Wednesday morning. Pulled out 15+ years of junk, donated what was good, and left the space completely empty. Best $800 I've spent.",
+        "author": "Robert Chen",
+        "rating": 5
+      },
+      {
+        "text": "Cross-country move from Vegas to Portland. Quoted $4,200 flat, arrived on schedule, nothing was damaged. When we got to Portland, everything was exactly as it left. No hidden fees, no upsells.",
+        "author": "Michelle Thompson",
+        "rating": 5
+      }
+    ]
+  },
+  "yourMoveMattersBanner": {
+    "heading": "Your Move Matters",
+    "description": "We are a faith-based company dedicated to serving with integrity and purpose.",
+    "quote": "Whatever you do, work at it with all your heart, as working for the Lord, not for human masters, since you know that you will receive an inheritance from the Lord as a reward. It is the Lord Christ you are serving.",
+    "quoteSource": "Colossians 3:23-24",
+    "ctaMessage": "10% of every move goes to the world of evangelism"
+  },
+  "finalCTA": {
+    "heading": "READY TO MOVE?",
+    "description": "Get a flat quote in 60 seconds. No hidden fees, no surprises at the truck.",
+    "buttonText": "GET MY FREE QUOTE →",
+    "image": "/images/final-cta-bg.jpg"
+  },
+  "footer": {
+    "companyName": "MOVERS & JUNK REMOVAL",
+    "tagline": "Making moves easier since 2021.",
+    "services": [
+      {
+        "label": "Local Moving",
+        "href": "#services"
+      },
+      {
+        "label": "Long-Distance",
+        "href": "#services"
+      },
+      {
+        "label": "Junk Removal",
+        "href": "#services"
+      },
+      {
+        "label": "Commercial",
+        "href": "#services"
+      }
+    ],
+    "company": [
+      {
+        "label": "Reviews",
+        "href": "#reviews"
+      },
+      {
+        "label": "About Us",
+        "href": "#"
+      },
+      {
+        "label": "Contact",
+        "href": "#"
+      },
+      {
+        "label": "Service Areas",
+        "href": "#"
+      }
+    ],
+    "contact": {
+      "phone": "+1 (702) 555-1234",
+      "phoneHref": "tel:+17025551234",
+      "buttonText": "Get Quote"
+    },
+    "copyright": "© 2026 Movers & Junk Removal. All rights reserved.",
+    "legal": [
+      {
+        "label": "Privacy Policy",
+        "href": "#"
+      },
+      {
+        "label": "Terms of Service",
+        "href": "#"
+      },
+      {
+        "label": "Service Areas",
+        "href": "#"
+      }
+    ]
+  }
+}

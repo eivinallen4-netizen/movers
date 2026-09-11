@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(pkill -f \"next dev\")",
+      "Skill(claude-in-chrome)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(npm run *)",
+      "Read(//tmp/**)",
+      "Bash(node /tmp/browser_nav.js)",
+      "Bash(curl -s \"http://localhost:3000/api/autocomplete?q=123%20main\")",
+      "Bash(curl -s \"http://localhost:3000/api/autocomplete?q=new\")",
+      "Bash(curl *)",
+      "mcp__plugin_ecc_playwright__browser_navigate"
+    ]
+  }
+}
