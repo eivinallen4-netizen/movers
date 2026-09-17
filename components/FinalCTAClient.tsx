@@ -19,18 +19,18 @@ export default function FinalCTAClient() {
       />
       <div className="absolute inset-0 bg-black/50 -z-10"></div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <h2 className="heading-display mb-8">{ctaData.heading}</h2>
-        <p className="text-body-lg max-w-2xl mx-auto mb-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 py-12 sm:py-16 md:py-20">
+        <h2 className="heading-display mb-6 sm:mb-8 text-3xl sm:text-4xl lg:text-5xl">{ctaData.heading}</h2>
+        <p className="text-body-lg max-w-2xl mx-auto mb-8 sm:mb-12 text-sm sm:text-base lg:text-lg">
           {ctaData.description}
         </p>
         <button
           onClick={() => router.push("/quote")}
-          className="btn-cta text-xl font-bold py-5 px-10"
+          className="btn-cta text-base sm:text-lg lg:text-xl font-bold py-3 sm:py-4 md:py-5 px-6 sm:px-8 lg:px-10"
         >
           {ctaData.buttonText}
         </button>
-        <p className="text-sm text-gray-300 mt-8 italic">
+        <p className="text-xs sm:text-sm text-gray-300 mt-6 sm:mt-8 italic">
           ✓ We trust you to give us the details, you can trust us to get your quote right.
         </p>
       </div>

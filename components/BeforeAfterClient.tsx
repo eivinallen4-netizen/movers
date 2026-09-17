@@ -37,7 +37,7 @@ export default function BeforeAfterClient() {
           {/* After side - clipped to slider position */}
           <div
             className="absolute inset-0 overflow-hidden transition-all duration-75"
-            style={{ right: 0, width: `${100 - sliderPos}%` }}
+            style={{ left: 0, width: `${sliderPos}%` }}
           >
             <Image
               src="/images/after.jpg"

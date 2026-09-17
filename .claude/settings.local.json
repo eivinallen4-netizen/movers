@@ -11,7 +11,9 @@
       "Bash(curl -s \"http://localhost:3000/api/autocomplete?q=123%20main\")",
       "Bash(curl -s \"http://localhost:3000/api/autocomplete?q=new\")",
       "Bash(curl *)",
-      "mcp__plugin_ecc_playwright__browser_navigate"
+      "mcp__plugin_ecc_playwright__browser_navigate",
+      "Bash(powershell *)",
+      "Bash(cd C:\\\\\\\\Users\\\\\\\\Theo\\\\\\\\Desktop\\\\\\\\movers)"
     ]
   }
 }

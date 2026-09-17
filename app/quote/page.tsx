@@ -234,18 +234,36 @@ function QuotePageContent() {
 
     if (!validateStep("contact")) return;
 
-    console.log("Form submitted:", {
-      fromAddress: fromAddress.placeData,
-      toAddress: toAddress.placeData,
-      items: items.map((item) => ({
-        category: item.category,
-        hasImage: !!item.image,
-      })),
-      ...formData,
-    });
+    try {
+      const quoteData = {
+        fromAddress: fromAddress.placeData?.formatted_address || "",
+        toAddress: toAddress.placeData?.formatted_address || "",
+        items: items.map((item) => ({
+          category: item.category,
+          hasImage: !!item.image,
+        })),
+        ...formData,
+      };
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setSubmitted(true);
+      const response = await fetch("/api/quotes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(quoteData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to submit quote");
+      }
+
+      setSubmitted(true);
+    } catch (error) {
+      setErrors({
+        submit: (error as Error).message || "Failed to submit quote. Please try again.",
+      });
+    }
   };
 
   if (submitted) {
@@ -299,6 +317,12 @@ function QuotePageContent() {
         </div>
 
         <form onSubmit={handleFinalSubmit} className="space-y-8">
+          {errors.submit && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+              {errors.submit}
+            </div>
+          )}
+
           {/* Step 1: Address */}
           {currentStep === "address" && (
             <div className="space-y-6">
