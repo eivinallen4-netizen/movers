@@ -83,8 +83,10 @@ export default function HowItWorksPage() {
               </div>
             </div>
             <div className="bg-navy-800/50 rounded-2xl p-8 sm:p-10 border border-blue-400/20 hover:border-blue-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-              <div>
-                <h3 className="heading-md mb-3 text-lg sm:text-xl font-bold text-blue-400">Professional Teams</h3>
+              <div className="flex items-start gap-4">
+                <div className="text-4xl">•</div>
+                <div>
+                  <h3 className="heading-md mb-3 text-lg sm:text-xl font-bold text-blue-400">Professional Teams</h3>
                   <p className="text-text-secondary text-sm sm:text-base leading-relaxed">
                     Licensed, insured crews that introduce themselves, wrap items before moving, and call ahead.
                   </p>
@@ -92,8 +94,10 @@ export default function HowItWorksPage() {
               </div>
             </div>
             <div className="bg-navy-800/50 rounded-2xl p-8 sm:p-10 border border-blue-400/20 hover:border-blue-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-              <div>
-                <h3 className="heading-md mb-3 text-lg sm:text-xl font-bold text-blue-400">On-Time Service</h3>
+              <div className="flex items-start gap-4">
+                <div className="text-4xl">•</div>
+                <div>
+                  <h3 className="heading-md mb-3 text-lg sm:text-xl font-bold text-blue-400">On-Time Service</h3>
                   <p className="text-text-secondary text-sm sm:text-base leading-relaxed">
                     We respect your schedule. In and out on time, every time.
                   </p>
@@ -101,8 +105,10 @@ export default function HowItWorksPage() {
               </div>
             </div>
             <div className="bg-navy-800/50 rounded-2xl p-8 sm:p-10 border border-blue-400/20 hover:border-blue-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-              <div>
-                <h3 className="heading-md mb-3 text-lg sm:text-xl font-bold text-blue-400">Simple Claims</h3>
+              <div className="flex items-start gap-4">
+                <div className="text-4xl">•</div>
+                <div>
+                  <h3 className="heading-md mb-3 text-lg sm:text-xl font-bold text-blue-400">Simple Claims</h3>
                   <p className="text-text-secondary text-sm sm:text-base leading-relaxed">
                     If something breaks, we handle the insurance claim. No gotchas, no surprises.
                   </p>
