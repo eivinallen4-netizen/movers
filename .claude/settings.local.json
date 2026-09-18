@@ -13,7 +13,16 @@
       "Bash(curl *)",
       "mcp__plugin_ecc_playwright__browser_navigate",
       "Bash(powershell *)",
-      "Bash(cd C:\\\\\\\\Users\\\\\\\\Theo\\\\\\\\Desktop\\\\\\\\movers)"
+      "Bash(cd C:\\\\\\\\Users\\\\\\\\Theo\\\\\\\\Desktop\\\\\\\\movers)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(npx next *)",
+      "mcp__plugin_ecc_playwright__browser_resize",
+      "Bash(taskkill *)",
+      "PowerShell(Stop-Process *)"
     ]
   }
 }

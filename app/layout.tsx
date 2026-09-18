@@ -24,9 +24,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const colorScheme = process.env.NEXT_PUBLIC_COLOR_SCHEME || "navy";
+
   return (
     <html
       lang="en"
+      data-theme={colorScheme}
       className={`${geistSans.variable} ${geistMono.variable} ${bowlbyOneSC.variable} h-full antialiased`}
     >
       <head>

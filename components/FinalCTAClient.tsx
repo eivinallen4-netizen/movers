@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { TRUST_DISCLAIMER } from "@/lib/constants";
 import content from "@/app/content.json";
 
 export default function FinalCTAClient() {
@@ -31,7 +32,7 @@ export default function FinalCTAClient() {
           {ctaData.buttonText}
         </button>
         <p className="text-xs sm:text-sm text-gray-300 mt-6 sm:mt-8 italic">
-          ✓ We trust you to give us the details, you can trust us to get your quote right.
+          {TRUST_DISCLAIMER}
         </p>
       </div>
     </section>

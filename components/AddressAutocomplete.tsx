@@ -45,7 +45,7 @@ export default function AddressAutocomplete({
   error,
   onAddressChange,
   onAddressSelect,
-  inputClassName = "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400",
+  inputClassName = "w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400",
   containerClassName = "",
   errorClassName = "text-red-500 text-sm mt-1",
 }: AddressAutocompleteProps) {
@@ -116,7 +116,7 @@ export default function AddressAutocomplete({
         {showSuggestions && suggestions.length > 0 && (
           <div
             ref={suggestionsRef}
-            className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-xl"
+            className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-xl max-h-48 overflow-y-auto"
             style={{ zIndex: 15 }}
           >
             {suggestions.map((suggestion, idx) => (
@@ -124,7 +124,7 @@ export default function AddressAutocomplete({
                 key={idx}
                 type="button"
                 onClick={() => handleSelectPlace(suggestion)}
-                className="w-full text-left px-4 py-3 text-sm text-gray-900 hover:bg-gray-100 transition-colors border-b border-gray-200 last:border-b-0"
+                className="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base text-gray-900 hover:bg-gray-100 transition-colors border-b border-gray-200 last:border-b-0"
               >
                 {suggestion.address?.label || suggestion.title}
               </button>

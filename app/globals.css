@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-:root {
+:root,
+[data-theme="navy"] {
   --background: #0a0e27;
   --foreground: #ffffff;
   --cta-blue: #31A2FD;
@@ -8,6 +9,26 @@
   --navy-800: #1a2847;
   --surface-light: #f5f5f7;
   --text-secondary: #b0b0b0;
+}
+
+[data-theme="purple"] {
+  --background: #1a0f2e;
+  --foreground: #ffffff;
+  --cta-blue: #c084fc;
+  --navy-900: #2d1b4e;
+  --navy-800: #3d2563;
+  --surface-light: #f5f3f7;
+  --text-secondary: #c0b0d0;
+}
+
+[data-theme="ocean"] {
+  --background: #0f1b2e;
+  --foreground: #ffffff;
+  --cta-blue: #00d9ff;
+  --navy-900: #1a3a52;
+  --navy-800: #2a5a7a;
+  --surface-light: #f0f5fa;
+  --text-secondary: #a0c0d0;
 }
 
 @theme inline {
@@ -21,6 +42,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-bowlby);
+  --breakpoint-xs: 375px;
 }
 
 * {
@@ -59,7 +81,7 @@ body {
 
 /* Section spacing */
 .section-hero {
-  @apply py-24 md:py-40 lg:py-52;
+  @apply py-12 sm:py-20 md:py-40 lg:py-52;
 }
 
 .section-padding {
@@ -73,7 +95,7 @@ body {
 /* Utility classes */
 .heading-display {
   font-family: var(--font-bowlby);
-  @apply text-6xl md:text-7xl lg:text-7xl font-bold tracking-wide leading-none;
+  @apply text-3xl xs:text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wide leading-tight xs:leading-snug md:leading-none;
 }
 
 .heading-xl {

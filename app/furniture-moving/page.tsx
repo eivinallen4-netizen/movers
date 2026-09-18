@@ -5,16 +5,25 @@ import QuoteHeroForm from "@/components/QuoteHeroForm";
 import FinalCTAClient from "@/components/FinalCTAClient";
 import FAQClient from "@/components/FAQClient";
 import FloatingQuoteButton from "@/components/FloatingQuoteButton";
+import ArticleFAQ from "@/components/ArticleFAQ";
+import InternalLinkCluster from "@/components/InternalLinkCluster";
 import content from "@/app/content.json";
+import articles from "@/app/content-articles.json";
+import { buildMetadata, FAQItem } from "@/lib/seo";
 
-export const metadata = {
-  title: "Furniture Moving Services | MOVERS & JUNK REMOVAL",
-  description: "Professional furniture moving with expert wrapping and protection. Handle stairs, tight doorways, pianos, and delicate items safely.",
-};
+export const metadata = buildMetadata({
+  title: articles.furnitureMoving.metaTitle,
+  description: articles.furnitureMoving.metaDescription,
+  path: "/furniture-moving",
+  keywords: [articles.furnitureMoving.primaryKeyword, ...articles.furnitureMoving.secondaryKeywords],
+  image: "/images/furniture-moving-og.jpg",
+});
 
 export default function FurnitureMovingPage() {
   const furnitureData = content.furnitureMoving;
+  const articleData = articles.furnitureMoving;
   const heroData = content.hero;
+  const faqData = articleData.faq as FAQItem[];
 
   return (
     <div className="w-full">
@@ -25,10 +34,10 @@ export default function FurnitureMovingPage() {
       <section className="relative py-16 sm:py-20 md:py-24 bg-gradient-to-b from-navy-900 to-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="heading-display text-3xl sm:text-4xl lg:text-5xl text-center mb-6">
-            {furnitureData.heading}
+            {articleData.h1}
           </h1>
           <p className="text-body-lg text-center text-sm sm:text-base lg:text-lg max-w-2xl mx-auto text-text-secondary mb-12">
-            {furnitureData.description}
+            {articleData.intro}
           </p>
           <div className="flex justify-center">
             <QuoteHeroForm phone={heroData.callButtonPhone} />
@@ -36,49 +45,54 @@ export default function FurnitureMovingPage() {
         </div>
       </section>
 
-      {/* Service Details */}
+      {/* Main Article Section */}
       <section className="section-padding bg-gradient-to-b from-background to-navy-800/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-16 items-center">
-            <div className="relative h-72 sm:h-80 md:h-[450px] lg:h-[500px] rounded-2xl overflow-hidden order-2 lg:order-1 shadow-2xl">
-              <Image
-                src={furnitureData.image}
-                alt="Professional furniture moving"
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 50vw"
-              />
+          <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
+            {/* Main Content */}
+            <div className="lg:col-span-2 prose prose-invert max-w-none prose-headings:text-white prose-p:text-text-secondary prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-strong:text-blue-400 prose-li:text-text-secondary">
+              {articleData.sections.map((section, idx) => (
+                <div key={idx} className="mb-12">
+                  <h2 className="heading-xl text-2xl sm:text-3xl lg:text-4xl mb-6 text-white">
+                    {section.h2}
+                  </h2>
+                  <div className="space-y-4 text-text-secondary whitespace-pre-wrap leading-relaxed">
+                    {section.body}
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className="order-1 lg:order-2 text-center lg:text-left">
-              <h2 className="heading-xl mb-4 sm:mb-6 text-2xl sm:text-3xl lg:text-4xl">
-                Expert Furniture Handling
-              </h2>
-              <p className="text-body-lg mb-6 sm:mb-8 text-sm sm:text-base lg:text-lg text-text-secondary leading-relaxed">
-                From delicate antiques to heavy sofas and pianos, we treat every piece like it's our own. Our experienced team uses professional-grade equipment and protective materials to ensure your furniture arrives in perfect condition.
-              </p>
+            {/* Sidebar with Service Overview */}
+            <div className="lg:col-span-1">
+              <div className="lg:sticky lg:top-8 bg-gradient-to-br from-blue-500/10 to-navy-800 rounded-2xl p-6 sm:p-8 border border-blue-400/30 h-fit space-y-6">
+                <div>
+                  <h3 className="heading-md text-lg font-bold text-white mb-3">
+                    What We Handle
+                  </h3>
+                  <ul className="space-y-3">
+                    {furnitureData.checklist.map((item, idx) => (
+                      <li key={idx} className="flex gap-3 items-start">
+                        <span className="text-blue-400 font-bold flex-shrink-0">✓</span>
+                        <span className="text-text-secondary text-sm">{item.item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-              <h3 className="heading-md mb-6 text-lg sm:text-xl font-bold text-blue-400">What We Handle</h3>
-              <ul className="space-y-3 sm:space-y-4 mb-8">
-                {furnitureData.checklist.map((item, idx) => (
-                  <li key={idx} className="flex gap-3 justify-center lg:justify-start items-start">
-                    <span className="text-blue-400 font-bold flex-shrink-0 text-lg">•</span>
-                    <span className="text-gray-300 text-sm sm:text-base">{item.item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="bg-gradient-to-br from-blue-500/10 to-navy-800 rounded-xl p-6 sm:p-8 border border-blue-400/30">
-                <p className="text-sm sm:text-base text-text-secondary">
-                  <span className="text-blue-400 font-bold">Pro Tip:</span> Call ahead with a photo of your furniture, and we'll let you know exactly how we'll move it.
-                </p>
+                <div className="border-t border-blue-400/10 pt-4">
+                  <p className="text-xs text-text-secondary mb-3 font-semibold">
+                    Ready to move your furniture safely?
+                  </p>
+                  <QuoteHeroForm phone={heroData.callButtonPhone} />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Us */}
+      {/* Why Us Grid */}
       <section className="section-padding bg-gradient-to-b from-navy-800 to-navy-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="heading-xl text-center mb-12 sm:mb-16 text-2xl sm:text-3xl lg:text-4xl">
@@ -107,11 +121,24 @@ export default function FurnitureMovingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <FinalCTAClient />
+      {/* Related Services */}
+      <InternalLinkCluster
+        title="Other Moving Services"
+        links={articleData.internalLinks.map((link: any) => ({
+          href: link.href,
+          title: link.title,
+          blurb: link.blurb,
+        }))}
+      />
 
       {/* FAQ */}
-      <FAQClient />
+      <ArticleFAQ
+        title="Frequently Asked Questions About Furniture Moving"
+        questions={faqData}
+      />
+
+      {/* CTA Section */}
+      <FinalCTAClient />
 
       {/* Footer */}
       <FooterClient />
