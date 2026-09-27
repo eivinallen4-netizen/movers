@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-pink: #ff3d9a;
+  --color-pink-dark: #e62d86;
+  --color-pink-soft: #ffe3ef;
+  --color-navy: #1d1b58;
+  --color-ink: #121216;
+  --font-sans: var(--font-montserrat);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-navy);
+  font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
+}
+
+/* Signature offset "block shadow" behind photos and cards */
+.offset-pink {
+  box-shadow: 15px 15px 0 0 var(--color-pink);
+}
+.offset-navy {
+  box-shadow: 15px 15px 0 0 var(--color-navy);
+}
+.offset-pink-sm {
+  box-shadow: 8px 8px 0 0 var(--color-pink);
+}
+.offset-navy-sm {
+  box-shadow: 8px 8px 0 0 var(--color-navy);
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+.animate-marquee-slow {
+  animation: marquee 60s linear infinite;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
