@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { BUSINESS, SITE_URL } from "@/content/site";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -9,9 +10,14 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "PinkBox Moving & Storage | Top Rated NYC Movers",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Movers and Junk Removal | Las Vegas Movers & Junk Removal",
+    template: `%s | ${BUSINESS}`,
+  },
   description:
-    "Affordable, flat-fee moving and storage in New York City. Get an all-inclusive quote in minutes.",
+    "Local Las Vegas movers and junk removal serving Henderson, Summerlin and the whole valley. Honest pricing, no surprises. Free quote: (702) 527-8565.",
+  openGraph: { siteName: BUSINESS, locale: "en_US", type: "website", images: ["/logo.png"] },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

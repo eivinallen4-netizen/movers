@@ -1,11 +1,22 @@
 @import "tailwindcss";
 
+/*
+ * Brand tokens — sampled from /public/logo.png. See BRAND.md for usage rules.
+ * ink = the wordmark black, sky = the arrow / rule blue.
+ */
 @theme inline {
-  --color-pink: #ff3d9a;
-  --color-pink-dark: #e62d86;
-  --color-pink-soft: #ffe3ef;
-  --color-navy: #1d1b58;
-  --color-ink: #121216;
+  --color-ink: #000000;
+  --color-ink-800: #1c1f24;
+  --color-ink-600: #4b5058;
+  --color-ink-200: #d9dce0;
+
+  --color-sky: #31a2fd; /* logo blue: fills, accents on black */
+  --color-sky-600: #1a8ce8; /* hover fill, large text on white */
+  --color-sky-700: #0b72c6; /* small text + links on white */
+  --color-sky-300: #7cc4ff;
+  --color-sky-200: #a9d7ff;
+  --color-sky-100: #e8f4ff;
+
   --font-sans: var(--font-montserrat);
 }
 
@@ -15,22 +26,32 @@ html {
 
 body {
   background: #ffffff;
-  color: var(--color-navy);
+  color: var(--color-ink);
   font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
 }
 
+::selection {
+  background: var(--color-sky);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-sky);
+  outline-offset: 2px;
+}
+
 /* Signature offset "block shadow" behind photos and cards */
-.offset-pink {
-  box-shadow: 15px 15px 0 0 var(--color-pink);
+.offset-sky {
+  box-shadow: 15px 15px 0 0 var(--color-sky);
 }
-.offset-navy {
-  box-shadow: 15px 15px 0 0 var(--color-navy);
+.offset-ink {
+  box-shadow: 15px 15px 0 0 var(--color-ink);
 }
-.offset-pink-sm {
-  box-shadow: 8px 8px 0 0 var(--color-pink);
+.offset-sky-sm {
+  box-shadow: 8px 8px 0 0 var(--color-sky);
 }
-.offset-navy-sm {
-  box-shadow: 8px 8px 0 0 var(--color-navy);
+.offset-ink-sm {
+  box-shadow: 8px 8px 0 0 var(--color-ink);
 }
 
 @keyframes marquee {
