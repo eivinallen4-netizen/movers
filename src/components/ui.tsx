@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Check, Phone, Star } from "./icons";
 import { MediaFill, hasMedia, type ResolvedMedia } from "./media-fill";
 import { PHONE, PHONE_HREF, SITE_URL } from "@/content/site";
-import type { Review } from "@/content/reviews";
+import { REVIEW_SOURCES, type Review } from "@/content/reviews";
 
 /* Shared building blocks for every page. Server components only (no hooks). */
 
@@ -199,6 +200,7 @@ export function FaqSection({
 export function ReviewCard({ r, i }: { r: Review; i: number }) {
   // Alternates sky / ink offset in a checkerboard
   const sky = (Math.floor(i / 2) + i) % 2 === 0;
+  const source = REVIEW_SOURCES[r.src];
   return (
     <article
       className={`flex min-h-[220px] flex-col rounded-lg border bg-white p-4 ${
@@ -211,16 +213,35 @@ export function ReviewCard({ r, i }: { r: Review; i: number }) {
             <Star key={s} />
           ))}
         </div>
-        <span
-          className="flex h-7 w-7 items-center justify-center rounded-full text-sm font-extrabold text-white"
-          style={{ background: "#4285F4" }}
-        >
-          {r.src}
-        </span>
+        <SourceLogo src={r.src} height={28} />
       </div>
       <p className="mt-6 flex-1 text-[13px] leading-[1.45] text-ink">{r.text}</p>
-      <p className="mt-6 text-xs font-bold text-ink">{r.who}</p>
+      <p className="mt-6 text-xs font-bold text-ink">
+        {r.who}, via {source.label}
+      </p>
     </article>
+  );
+}
+
+/** A review site's logo, linking to our profile there. */
+export function SourceLogo({ src, height }: { src: Review["src"]; height: number }) {
+  const s = REVIEW_SOURCES[src];
+  return (
+    <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={`Our reviews on ${s.label}`}>
+      <Image src={s.logo.src} alt={s.label} width={s.logo.width} height={s.logo.height} className="w-auto" style={{ height: height * s.logo.scale }} />
+    </a>
+  );
+}
+
+/** "Read our reviews on" row of review-site logos. */
+export function ReviewSourceLinks({ className = "" }: { className?: string }) {
+  return (
+    <div className={`flex flex-wrap items-center gap-x-6 gap-y-3 ${className}`}>
+      <span className="text-sm font-bold text-ink">Read our reviews on</span>
+      {(Object.keys(REVIEW_SOURCES) as Review["src"][]).map((src) => (
+        <SourceLogo key={src} src={src} height={36} />
+      ))}
+    </div>
   );
 }
 

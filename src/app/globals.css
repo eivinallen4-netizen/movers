@@ -54,6 +54,17 @@ body {
   box-shadow: 8px 8px 0 0 var(--color-ink);
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);

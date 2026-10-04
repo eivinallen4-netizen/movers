@@ -23,7 +23,7 @@ import { Accordion, BeforeAfter, PhotoStrip, ReviewPager, VideoCarousel } from "
 import { QuoteHeroForm } from "@/components/QuoteHeroForm";
 import { MediaFill, hasMedia } from "@/components/media-fill";
 import { SiteShell } from "@/components/site";
-import { BrandButton, Container, JsonLd, LearnMore, Photo, ReviewCard } from "@/components/ui";
+import { BrandButton, Container, JsonLd, LearnMore, Photo, ReviewCard, ReviewSourceLinks } from "@/components/ui";
 import { BEFORE_AFTER } from "@/content/before-after";
 import { REVIEWS } from "@/content/reviews";
 import { businessSchema } from "@/content/schema";
@@ -39,8 +39,8 @@ export const metadata = pageMeta({
 });
 
 /*
- * NOTE: Copy follows the Movers and Junk Removal brand brief. Reviews are still placeholders:
- * swap in your own Google reviews (src/content/reviews.ts) before launch. Photos/videos: see src/content/media.ts.
+ * NOTE: Copy follows the Movers and Junk Removal brand brief.
+ * Reviews come from Yelp and Thumbtack (src/content/reviews.ts). Photos/videos: see src/content/media.ts.
  */
 
 export default function Home() {
@@ -590,7 +590,9 @@ function ServiceArea() {
 }
 
 function Reviews() {
-  const cards = REVIEWS.map((r, i) => <ReviewCard key={i} r={r} i={i % 6} />);
+  // First 12 only (3 pages); the full list lives on /reviews.
+  const cards = REVIEWS.slice(0, 12).map((r, i) => <ReviewCard key={i} r={r} i={i % 4} />);
+  const pages = Array.from({ length: Math.ceil(cards.length / 4) }, (_, p) => cards.slice(p * 4, p * 4 + 4));
   return (
     <section className="py-12 lg:py-16">
       <Container>
@@ -603,8 +605,9 @@ function Reviews() {
         <Link href="/reviews" className="mt-2 block text-sm font-bold text-ink underline">
           Read all reviews
         </Link>
+        <ReviewSourceLinks className="mt-4" />
         <div className="mt-10">
-          <ReviewPager pages={[cards.slice(0, 6), cards.slice(6)]} />
+          <ReviewPager pages={pages} />
         </div>
       </Container>
     </section>

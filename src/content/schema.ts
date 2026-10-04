@@ -1,8 +1,9 @@
+import { THUMBTACK_URL, YELP_URL } from "./reviews";
 import { BUSINESS, CITIES, PHONE_E164, SITE_URL } from "./site";
 
 /*
- * schema.org structured data. No ratings or reviews here until the reviews on the site are real.
- * TODO: add "address" (if you have a public office) and "sameAs" (Google Business, Instagram, Yelp).
+ * schema.org structured data. No ratings/reviews: Google ignores self-serving LocalBusiness review markup.
+ * TODO: add "address" (if you have a public office) and more "sameAs" links (Google Business, Instagram).
  */
 
 export const BUSINESS_ID = `${SITE_URL}/#business`;
@@ -19,6 +20,7 @@ export function businessSchema() {
     logo: `${SITE_URL}/logo.png`,
     image: `${SITE_URL}/logo.png`,
     priceRange: "$$",
+    sameAs: [YELP_URL, THUMBTACK_URL],
     areaServed: CITIES.map((name) => ({ "@type": "City", name: `${name}, NV` })),
     description:
       "Local Las Vegas movers and junk removal. On time, fast and careful, with honest upfront pricing and no hidden fees.",

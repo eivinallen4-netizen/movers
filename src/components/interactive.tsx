@@ -192,7 +192,7 @@ export function ReviewPager({ pages }: { pages: ReactNode[][] }) {
     <div>
       <div className="grid gap-8 md:grid-cols-2 md:gap-x-9 md:gap-y-10">{pages[page]}</div>
       <div className="mt-12 flex justify-center gap-3">
-        {pages.map((_, i) => (
+        {pages.length > 1 && pages.map((_, i) => (
           <button
             key={i}
             aria-label={`Reviews page ${i + 1}`}
@@ -244,8 +244,16 @@ export function PhotoStrip({ items }: { items: ResolvedMedia[] }) {
 export function BeforeAfter({ pairs }: { pairs: BeforeAfterPair[] }) {
   const [active, setActive] = useState(0);
   const [pos, setPos] = useState(50);
+  const tabsRef = useRef<HTMLDivElement>(null);
   const pair = pairs[active];
   const sizes = "(min-width: 1024px) 760px, 100vw";
+  const select = (i: number) => {
+    setActive(i);
+    setPos(50);
+    // Keep the active room pill visible in the horizontally scrolling row on mobile.
+    const tab = tabsRef.current?.children[i] as HTMLElement | undefined;
+    tab?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  };
   return (
     <div>
       <div className="relative aspect-[3/2] select-none overflow-hidden rounded-lg bg-ink-200 offset-sky">
@@ -274,15 +282,29 @@ export function BeforeAfter({ pairs }: { pairs: BeforeAfterPair[] }) {
           aria-label={`${pair.room}: drag to compare before and after`}
           className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0"
         />
+        <span
+          key={pair.key}
+          aria-live="polite"
+          className="pointer-events-none absolute bottom-3 left-3 animate-[fade-in_300ms_ease-out] rounded bg-ink/80 px-2.5 py-1 text-xs font-bold tracking-wide text-white"
+        >
+          {active + 1} / {pairs.length} · {pair.room}
+        </span>
       </div>
-      <div className="no-scrollbar mt-8 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap">
+      <div className="mt-4 flex justify-center gap-2" aria-hidden="true">
         {pairs.map((p, i) => (
           <button
             key={p.key}
-            onClick={() => {
-              setActive(i);
-              setPos(50);
-            }}
+            tabIndex={-1}
+            onClick={() => select(i)}
+            className={`h-2 rounded-full transition-all ${i === active ? "w-6 bg-ink" : "w-2 bg-ink-200 hover:bg-ink/40"}`}
+          />
+        ))}
+      </div>
+      <div ref={tabsRef} className="no-scrollbar mt-6 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap">
+        {pairs.map((p, i) => (
+          <button
+            key={p.key}
+            onClick={() => select(i)}
             aria-pressed={i === active}
             className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
               i === active ? "bg-ink text-white" : "bg-ink-200/60 text-ink hover:bg-ink-200"

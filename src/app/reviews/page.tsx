@@ -1,6 +1,6 @@
 import { SiteShell } from "@/components/site";
 import { PageHero } from "@/components/templates";
-import { Container, CtaBand, ReviewCard } from "@/components/ui";
+import { Container, CtaBand, ReviewCard, ReviewSourceLinks } from "@/components/ui";
 import { REVIEWS } from "@/content/reviews";
 import { pageMeta } from "@/lib/seo";
 
@@ -27,6 +27,7 @@ export default function ReviewsPage() {
               <ReviewCard key={r.text} r={r} i={i % 6} />
             ))}
           </div>
+          <ReviewSourceLinks className="mt-10" />
         </Container>
       </section>
       <CtaBand title="Want to be our next 5-star review?" />
