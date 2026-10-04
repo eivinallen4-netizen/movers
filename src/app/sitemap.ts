@@ -1,27 +1,32 @@
 import type { MetadataRoute } from "next";
 import { AREAS } from "@/content/areas";
 import { GUIDES } from "@/content/guides";
+import { pagePhoto } from "@/content/photos";
 import { SERVICES, serviceHref } from "@/content/services";
 import { SITE_URL } from "@/content/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const page = (path: string, priority: number, lastModified?: string) => ({
-    url: `${SITE_URL}${path}`,
-    priority,
-    ...(lastModified && { lastModified }),
-  });
+  const page = (path: string, priority: number, { lastModified, photo }: { lastModified?: string; photo?: string } = {}) => {
+    const image = photo && pagePhoto(photo)?.src;
+    return {
+      url: `${SITE_URL}${path}`,
+      priority,
+      ...(lastModified && { lastModified }),
+      ...(image && { images: [`${SITE_URL}${image}`] }),
+    };
+  };
   return [
     page("", 1),
     page("/quote", 0.9),
     page("/moving", 0.9),
     page("/junk-removal", 0.9),
-    ...SERVICES.map((s) => page(serviceHref(s), 0.8)),
+    ...SERVICES.map((s) => page(serviceHref(s), 0.8, { photo: `${s.category}-${s.slug}` })),
     page("/service-areas", 0.8),
-    ...AREAS.map((a) => page(`/service-areas/${a.slug}`, 0.8)),
+    ...AREAS.map((a) => page(`/service-areas/${a.slug}`, 0.8, { photo: `area-${a.slug}` })),
     page("/free-tools", 0.6),
     page("/free-tools/moving-cost-calculator", 0.7),
     page("/guides", 0.6),
-    ...GUIDES.map((g) => page(`/guides/${g.slug}`, 0.6, g.updated)),
+    ...GUIDES.map((g) => page(`/guides/${g.slug}`, 0.6, { lastModified: g.updated, photo: `guide-${g.slug}` })),
     page("/reviews", 0.6),
     page("/about", 0.5),
     page("/contact", 0.5),

@@ -33,11 +33,11 @@ const PHOTOS: Record<string, Omit<PagePhoto, "src">> = {
   "junk-removal-appliance-removal": { alt: "Old refrigerator and household junk waiting to be hauled away" },
   "junk-removal-garage-cleanouts": { alt: "Cluttered garage packed with tools, bins and equipment" },
   "junk-removal-estate-cleanouts": { alt: "Attic full of furniture, clothes and stored belongings" },
-  "junk-removal-move-out-junk-haul": { alt: "Empty, cleared-out apartment after move-out" },
+  "junk-removal-move-out-junk-haul": { alt: "Empty, cleared-out apartment living room after move-out" },
   "junk-removal-same-day-junk-pickup": { alt: "Pickup truck bed piled high with bagged junk" },
   "junk-removal-mattress-removal": { alt: "Person carrying an old mattress down a sidewalk" },
   "junk-removal-hot-tub-removal": { alt: "Backyard hot tub on a patio" },
-  "junk-removal-rental-eviction-cleanouts": { alt: "Cleaning a bright, empty rental unit after a cleanout" },
+  "junk-removal-rental-eviction-cleanouts": { alt: "Empty rental kitchen with bare counters after a cleanout" },
 
   /* Service areas */
   "area-las-vegas": { alt: "Fremont Street Experience canopy in downtown Las Vegas" },

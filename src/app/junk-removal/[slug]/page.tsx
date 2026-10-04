@@ -13,7 +13,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/junk-removal/[slug]">) {
   const s = findService("junk-removal", (await params).slug);
   if (!s) return {};
-  return pageMeta({ title: s.metaTitle, description: s.metaDescription, path: serviceHref(s) });
+  return pageMeta({ title: s.metaTitle, description: s.metaDescription, path: serviceHref(s), photo: `${s.category}-${s.slug}` });
 }
 
 export default async function Page({ params }: PageProps<"/junk-removal/[slug]">) {

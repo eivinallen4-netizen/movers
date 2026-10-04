@@ -19,17 +19,24 @@ import {
   Instagram,
   Play,
 } from "@/components/icons";
-import { Accordion, PhotoStrip, ReviewPager, VideoCarousel } from "@/components/interactive";
+import { Accordion, BeforeAfter, PhotoStrip, ReviewPager, VideoCarousel } from "@/components/interactive";
 import { QuoteHeroForm } from "@/components/QuoteHeroForm";
 import { MediaFill, hasMedia } from "@/components/media-fill";
 import { SiteShell } from "@/components/site";
 import { BrandButton, Container, JsonLd, LearnMore, Photo, ReviewCard } from "@/components/ui";
+import { BEFORE_AFTER } from "@/content/before-after";
 import { REVIEWS } from "@/content/reviews";
 import { businessSchema } from "@/content/schema";
 import { INSTAGRAM, PHONE, PHONE_HREF } from "@/content/site";
 import { media } from "@/lib/media";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = { alternates: { canonical: "/" } };
+export const metadata = pageMeta({
+  title: "Movers and Junk Removal | Las Vegas Movers & Junk Removal",
+  description:
+    "Local Las Vegas movers and junk removal serving Henderson, Summerlin and the whole valley. Honest pricing, no surprises. Free quote: (702) 527-8565.",
+  path: "/",
+});
 
 /*
  * NOTE: Copy follows the Movers and Junk Removal brand brief. Reviews are still placeholders:
@@ -45,6 +52,7 @@ export default function Home() {
       {/* Confirm we do what they need, answer the #1 worry (price), then prove it */}
       <Services />
       <HonestPricing />
+      <PackedToEmpty />
       <Reviews />
       <PressMarquee />
       {/* Second service + engagement */}
@@ -442,6 +450,31 @@ const JUNK = [
     body: "Call in the morning, junk gone today. Upfront pricing before we load a single thing.",
   },
 ];
+
+function PackedToEmpty() {
+  return (
+    <section className="bg-sky-100 py-12 lg:py-16">
+      <Container className="grid items-center gap-12 lg:grid-cols-[2fr_3fr]">
+        <div>
+          <h2 className="text-4xl font-bold leading-tight text-ink sm:text-[44px]">
+            From packed to <span className="text-sky-600">empty</span>. Every room, every box.
+          </h2>
+          <p className="mt-6 text-lg font-semibold leading-snug text-ink">
+            Drag the slider to see move day when the job&apos;s actually finished. Nothing left
+            behind for you to deal with.
+          </p>
+          <p className="mt-6 text-xs text-ink-600">
+            Real Las Vegas homes. &ldquo;After&rdquo; views are digitally edited from the same photo to
+            show the cleared room.
+          </p>
+        </div>
+        <div className="lg:mr-4">
+          <BeforeAfter pairs={BEFORE_AFTER} />
+        </div>
+      </Container>
+    </section>
+  );
+}
 
 function JunkRemoval() {
   return (

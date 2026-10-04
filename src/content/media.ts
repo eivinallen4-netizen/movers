@@ -17,11 +17,11 @@ export const MEDIA = {
 
   /* Section photos */
   "pricing-photo": {
-    alt: "Moving crew and truck",
+    alt: "Las Vegas living room mid-move with packed boxes and a plastic-wrapped chair",
     tone: "linear-gradient(135deg,#31a2fd 0%,#0b72c6 55%,#000000 100%)",
   },
-  "calculator-photo": { alt: "Crew loading boxes into a truck", tone: "linear-gradient(135deg,#f3e6da,#d9b996)" },
-  "junk-photo": { alt: "Junk removal job in Las Vegas", tone: "linear-gradient(135deg,#f5f1ec,#cfc6bb)" },
+  "calculator-photo": { alt: "Bedroom stacked with packed moving boxes, a bookcase and a wrapped mattress", tone: "linear-gradient(135deg,#f3e6da,#d9b996)" },
+  "junk-photo": { alt: "Bedroom crowded with bins, a wrapped mattress and boxes waiting to be cleared out", tone: "linear-gradient(135deg,#f5f1ec,#cfc6bb)" },
   "area-video": {
     alt: "Our crew working across the Las Vegas valley",
     tone: "linear-gradient(160deg,#a9d7ff 0%,#4b5058 55%,#000000 100%)",

@@ -1,15 +1,17 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import logoWhite from "../../../public/logo white.png";
 import { Phone } from "@/components/icons";
 import { decodeAddressRef } from "@/lib/server/address-token";
+import { pageMeta } from "@/lib/seo";
 import { QuoteWizard } from "./QuoteWizard";
 
-export const metadata: Metadata = {
-  title: "Get Your Free Moving Quote",
+// Canonical keeps /quote?from=…&to=… links from the hero form from being indexed as separate pages.
+export const metadata = pageMeta({
+  title: "Get Your Free Moving Quote | Movers and Junk Removal",
   description: "Tell us about your move and get an honest, upfront quote from a local Las Vegas crew.",
-};
+  path: "/quote",
+});
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? "";
 
@@ -40,6 +42,7 @@ export default async function QuotePage({
           </a>
         </div>
       </header>
+      <h1 className="sr-only">Get your free Las Vegas moving quote</h1>
       <QuoteWizard
         initialFrom={{ text: from?.label ?? one(sp.from).slice(0, 200), selected: from }}
         initialTo={{ text: to?.label ?? one(sp.to).slice(0, 200), selected: to }}

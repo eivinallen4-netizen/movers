@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Check, Chevron, Phone, Play } from "./icons";
 import { MediaFill, hasMedia, type ResolvedMedia } from "./media-fill";
+import { beforeAfterSrc, type BeforeAfterPair } from "@/content/before-after";
 
 /* ---------- Mobile navigation toggle ---------- */
 type MenuLink = { label: string; href: string; children?: { label: string; href: string }[] };
@@ -234,6 +236,62 @@ export function PhotoStrip({ items }: { items: ResolvedMedia[] }) {
       >
         ›
       </button>
+    </div>
+  );
+}
+
+/* ---------- Before / after slider ---------- */
+export function BeforeAfter({ pairs }: { pairs: BeforeAfterPair[] }) {
+  const [active, setActive] = useState(0);
+  const [pos, setPos] = useState(50);
+  const pair = pairs[active];
+  const sizes = "(min-width: 1024px) 760px, 100vw";
+  return (
+    <div>
+      <div className="relative aspect-[3/2] select-none overflow-hidden rounded-lg bg-ink-200 offset-sky">
+        <Image src={beforeAfterSrc(pair.key, "after")} alt={pair.after} fill sizes={sizes} className="object-cover" />
+        <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
+          <Image src={beforeAfterSrc(pair.key, "before")} alt={pair.before} fill sizes={sizes} className="object-cover" />
+        </div>
+        <span className="pointer-events-none absolute left-3 top-3 rounded bg-ink/80 px-2 py-1 text-xs font-bold uppercase tracking-wide text-white">
+          Before
+        </span>
+        <span className="pointer-events-none absolute right-3 top-3 rounded bg-sky px-2 py-1 text-xs font-bold uppercase tracking-wide text-ink">
+          After
+        </span>
+        <div className="pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-white" style={{ left: `${pos}%` }}>
+          <span className="absolute left-1/2 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-xl font-bold text-ink shadow-lg">
+            ‹›
+          </span>
+        </div>
+        {/* A native range input drives the divider: free touch, mouse and keyboard support. */}
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={pos}
+          onChange={(e) => setPos(Number(e.target.value))}
+          aria-label={`${pair.room}: drag to compare before and after`}
+          className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0"
+        />
+      </div>
+      <div className="no-scrollbar mt-8 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap">
+        {pairs.map((p, i) => (
+          <button
+            key={p.key}
+            onClick={() => {
+              setActive(i);
+              setPos(50);
+            }}
+            aria-pressed={i === active}
+            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
+              i === active ? "bg-ink text-white" : "bg-ink-200/60 text-ink hover:bg-ink-200"
+            }`}
+          >
+            {p.room}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

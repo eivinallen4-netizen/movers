@@ -13,7 +13,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/guides/[slug]">) {
   const g = findGuide((await params).slug);
   if (!g) return {};
-  return pageMeta({ title: g.metaTitle, description: g.metaDescription, path: `/guides/${g.slug}`, type: "article" });
+  return pageMeta({ title: g.metaTitle, description: g.metaDescription, path: `/guides/${g.slug}`, type: "article", photo: `guide-${g.slug}` });
 }
 
 export default async function Page({ params }: PageProps<"/guides/[slug]">) {
