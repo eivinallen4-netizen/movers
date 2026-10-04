@@ -309,7 +309,7 @@ export function QuoteWizard({
         )}
 
         {step === 1 && (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
             <Field label="Move date *" error={e.moveDate}>
               {(p) => (
                 <input
@@ -318,7 +318,7 @@ export function QuoteWizard({
                   min={todayInVegas()}
                   value={d.moveDate}
                   onChange={(ev) => set("moveDate", ev.target.value)}
-                  className={inputCls(p["aria-invalid"])}
+                  className={`${inputCls(p["aria-invalid"])} block min-w-0 max-w-full appearance-none [&::-webkit-date-and-time-value]:text-left`}
                 />
               )}
             </Field>
@@ -326,7 +326,7 @@ export function QuoteWizard({
             <OneOf label="Type of move *" options={MOVE_TYPES} value={d.moveType} onChange={(v) => set("moveType", v)} error={e.moveType} />
             <Select label="Size of move *" options={MOVE_SIZES} value={d.moveSize} onChange={(v) => set("moveSize", v)} error={e.moveSize} />
 
-            <fieldset className="grid gap-4 border border-ink-200 bg-white p-4 sm:col-span-1">
+            <fieldset className="grid min-w-0 gap-4 border border-ink-200 bg-white p-4">
               <legend className="px-1 text-sm font-bold">Pickup location</legend>
               <Select
                 label="Access *"
@@ -340,7 +340,7 @@ export function QuoteWizard({
               />
               <Select label="Floor *" options={FLOOR_LEVELS} value={d.fromFloor} onChange={(v) => set("fromFloor", v)} error={e.fromFloor} />
             </fieldset>
-            <fieldset className="grid gap-4 border border-ink-200 bg-white p-4 sm:col-span-1">
+            <fieldset className="grid min-w-0 gap-4 border border-ink-200 bg-white p-4">
               <legend className="px-1 text-sm font-bold">Drop-off location</legend>
               <Select
                 label="Access *"
@@ -358,7 +358,7 @@ export function QuoteWizard({
         )}
 
         {step === 2 && (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
             <Text label="First name *" autoComplete="given-name" value={d.firstName} onChange={(v) => set("firstName", v)} error={e.firstName} />
             <Text label="Last name *" autoComplete="family-name" value={d.lastName} onChange={(v) => set("lastName", v)} error={e.lastName} />
             <Text label="Phone *" type="tel" autoComplete="tel" inputMode="tel" value={d.phone} onChange={(v) => set("phone", v)} error={e.phone} />
@@ -490,7 +490,7 @@ export function QuoteWizard({
           </p>
         )}
 
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-ink-200 pt-6">
+        <div className="mt-8 flex items-center justify-between gap-4 border-t border-ink-200 pt-6">
           {step > 0 ? (
             <button type="button" onClick={() => goTo(step - 1)} className="text-sm font-bold text-sky-700 hover:underline">
               ← Back
@@ -501,7 +501,7 @@ export function QuoteWizard({
           <button
             type="submit"
             disabled={status === "sending" || (step === STEPS.length - 1 && uploading)}
-            className="flex h-12 items-center gap-2 bg-sky px-8 text-sm font-bold uppercase text-ink transition hover:bg-sky-600 disabled:cursor-wait disabled:opacity-60"
+            className="flex h-12 flex-1 items-center justify-center gap-2 bg-sky px-8 text-sm sm:flex-none font-bold uppercase text-ink transition hover:bg-sky-600 disabled:cursor-wait disabled:opacity-60"
           >
             {step < STEPS.length - 1
               ? "Next"
@@ -522,8 +522,8 @@ export function QuoteWizard({
 
 function Shell({ children, cardRef }: { children: ReactNode; cardRef: React.RefObject<HTMLDivElement | null> }) {
   return (
-    <div className="mx-auto w-full max-w-[760px] px-4 py-10 sm:px-6 sm:py-14">
-      <div ref={cardRef} className="scroll-mt-4 border border-ink bg-white p-5 offset-sky-sm sm:p-10">
+    <div className="mx-auto w-full max-w-[760px] px-3 py-6 sm:px-6 sm:py-14">
+      <div ref={cardRef} className="scroll-mt-4 min-w-0 border border-ink bg-white p-4 offset-sky-sm sm:p-10">
         {children}
       </div>
     </div>
@@ -559,7 +559,7 @@ function Progress({ step, onJump }: { step: number; onJump: (n: number) => void 
 }
 
 const inputCls = (invalid?: boolean) =>
-  `h-12 w-full border bg-white px-3 text-sm text-ink outline-none focus:ring-2 focus:ring-sky read-only:cursor-default read-only:bg-sky-100/50 read-only:focus:ring-0 ${
+  `h-12 w-full min-w-0 border bg-white px-3 text-base text-ink sm:text-sm outline-none focus:ring-2 focus:ring-sky read-only:cursor-default read-only:bg-sky-100/50 read-only:focus:ring-0 ${
     invalid ? "border-red-500 ring-1 ring-red-500" : "border-ink-200"
   }`;
 
@@ -576,7 +576,7 @@ function Field({
 }) {
   const id = useId();
   return (
-    <div>
+    <div className="min-w-0">
       <label htmlFor={id} className="mb-1.5 block text-sm font-bold">
         {label}
       </label>
@@ -649,7 +649,7 @@ function Select({
   );
 }
 
-/** Checkboxes where at most one can be ticked: ticking one unticks the other, ticking it again clears it. */
+/** Toggle buttons where at most one can be on: ticking one unticks the other, ticking it again clears it. */
 function OneOf({
   label,
   options,
@@ -665,26 +665,29 @@ function OneOf({
 }) {
   const id = useId();
   return (
-    <fieldset aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-err` : undefined}>
+    <fieldset className="min-w-0" aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-err` : undefined}>
       <legend className="mb-1.5 text-sm font-bold">{label}</legend>
       <div className="grid grid-cols-2 gap-2">
         {options.map((o) => {
           const on = value === o.value;
           return (
-            <label
+            <button
               key={o.value}
-              className={`flex h-12 cursor-pointer items-center gap-2.5 border px-3 text-sm font-bold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-sky ${
+              type="button"
+              aria-pressed={on}
+              onClick={() => onChange(on ? "" : o.value)}
+              className={`flex h-12 min-w-0 touch-manipulation items-center gap-2.5 border px-3 text-left text-sm font-bold outline-none focus-visible:ring-2 focus-visible:ring-sky ${
                 on ? "border-ink bg-sky-100" : error ? "border-red-500 bg-white" : "border-ink-200 bg-white hover:border-sky"
               }`}
             >
-              <input
-                type="checkbox"
-                checked={on}
-                onChange={() => onChange(on ? "" : o.value)}
-                className="h-5 w-5 shrink-0 cursor-pointer accent-ink"
-              />
-              {o.label}
-            </label>
+              <span
+                aria-hidden
+                className={`flex h-5 w-5 shrink-0 items-center justify-center border-2 ${on ? "border-ink bg-ink text-white" : "border-ink-200 bg-white"}`}
+              >
+                {on && <Check width={12} height={12} />}
+              </span>
+              <span className="truncate">{o.label}</span>
+            </button>
           );
         })}
       </div>
