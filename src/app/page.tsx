@@ -454,7 +454,7 @@ const JUNK = [
 function PackedToEmpty() {
   return (
     <section className="bg-sky-100 py-12 lg:py-16">
-      <Container className="grid items-center gap-12 lg:grid-cols-[2fr_3fr]">
+      <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[2fr_3fr]">
         <div>
           <h2 className="text-4xl font-bold leading-tight text-ink sm:text-[44px]">
             From packed to <span className="text-sky-600">empty</span>. Every room, every box.
@@ -468,7 +468,7 @@ function PackedToEmpty() {
             show the cleared room.
           </p>
         </div>
-        <div className="lg:mr-4">
+        <div className="mr-4 min-w-0">
           <BeforeAfter pairs={BEFORE_AFTER} />
         </div>
       </Container>
