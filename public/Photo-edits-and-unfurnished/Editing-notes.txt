@@ -1,0 +1,57 @@
+PHOTO EDITS — OCTOBER 2, 2026
+
+20 PNG images: 10 edited photographs and 10 unfurnished variants.
+Each output is 1536 × 1024 pixels (3:2 landscape).
+
+Open Photo-review.html in a browser for a side-by-side gallery. Keep it beside the edited and unfurnished folders. Images can also be opened directly.
+
+EDITING APPROACH
+Natural real-estate style: balanced exposure, neutral color, clearer shadows, controlled highlights, and subtle perspective adjustment where needed. Standard edits retain the original contents. Unfurnished variants remove movable furniture, boxes, and loose objects, retaining permanent fixtures and finishes.
+
+METHOD AND LIMITS
+Used the built-in image generation/editing tool. Inputs were the 6960 × 4640 camera-rendered JPEG previews embedded in the Canon CR3 files. The editor returned 1536 × 1024 images; these have not been artificially enlarged. Original CR3 files were only read and remain unchanged.
+
+These are AI-assisted image exports, not RAW adjustments or sidecar files. Generated retouching may alter fine detail, lettering, or geometry. Surfaces hidden behind furniture are reconstructed and are not a measured record of the actual space.
+
+SOURCE MAPPING
+5P3A6286.CR3
+  edited/5P3A6286-edited.png
+  unfurnished/5P3A6286-unfurnished.png
+
+5P3A6275.CR3
+  edited/5P3A6275-edited.png
+  unfurnished/5P3A6275-unfurnished.png
+
+5P3A6243.CR3
+  edited/5P3A6243-edited.png
+  unfurnished/5P3A6243-unfurnished.png
+
+5P3A6252.CR3
+  edited/5P3A6252-edited.png
+  unfurnished/5P3A6252-unfurnished.png
+
+5P3A6281.CR3
+  edited/5P3A6281-edited.png
+  unfurnished/5P3A6281-unfurnished.png
+
+5P3A6301.CR3
+  edited/5P3A6301-edited.png
+  unfurnished/5P3A6301-unfurnished.png
+
+5P3A6246.CR3
+  edited/5P3A6246-edited.png
+  unfurnished/5P3A6246-unfurnished.png
+
+5P3A6288.CR3
+  edited/5P3A6288-edited.png
+  unfurnished/5P3A6288-unfurnished.png
+
+5P3A6237.CR3
+  edited/5P3A6237-edited.png
+  unfurnished/5P3A6237-unfurnished.png
+
+5P3A6260.CR3
+  edited/5P3A6260-edited.png
+  unfurnished/5P3A6260-unfurnished.png
+
+Exact prompts are included in Prompts.txt.

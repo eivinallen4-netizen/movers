@@ -1,0 +1,39 @@
+import { BUSINESS, CITIES, PHONE_E164, SITE_URL } from "./site";
+
+/*
+ * schema.org structured data. No ratings or reviews here until the reviews on the site are real.
+ * TODO: add "address" (if you have a public office) and "sameAs" (Google Business, Instagram, Yelp).
+ */
+
+export const BUSINESS_ID = `${SITE_URL}/#business`;
+
+export function businessSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "MovingCompany",
+    "@id": BUSINESS_ID,
+    name: BUSINESS,
+    slogan: "Moving Shouldn't Be a Headache.",
+    url: SITE_URL,
+    telephone: PHONE_E164,
+    logo: `${SITE_URL}/logo.png`,
+    image: `${SITE_URL}/logo.png`,
+    priceRange: "$$",
+    areaServed: CITIES.map((name) => ({ "@type": "City", name: `${name}, NV` })),
+    description:
+      "Local Las Vegas movers and junk removal. On time, fast and careful, with honest upfront pricing and no hidden fees.",
+  };
+}
+
+export function serviceSchema({ name, description, url, area }: { name: string; description: string; url: string; area?: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name,
+    serviceType: name,
+    description,
+    url: `${SITE_URL}${url}`,
+    provider: { "@id": BUSINESS_ID, "@type": "MovingCompany", name: BUSINESS, telephone: PHONE_E164 },
+    areaServed: (area ? [area] : CITIES).map((c) => ({ "@type": "City", name: `${c}, NV` })),
+  };
+}

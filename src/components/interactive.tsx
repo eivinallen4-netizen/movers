@@ -1,0 +1,239 @@
+"use client";
+
+import { useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { Check, Chevron, Phone, Play } from "./icons";
+import { MediaFill, hasMedia, type ResolvedMedia } from "./media-fill";
+
+/* ---------- Mobile navigation toggle ---------- */
+type MenuLink = { label: string; href: string; children?: { label: string; href: string }[] };
+
+export function MobileMenu({
+  links,
+  phone,
+  phoneHref,
+  quoteHref,
+}: {
+  links: MenuLink[];
+  phone: string;
+  phoneHref: string;
+  quoteHref: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+  return (
+    <div className="xl:hidden">
+      <button
+        aria-label={open ? "Close menu" : "Open menu"}
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+        className="-mr-2 flex h-12 w-12 flex-col items-center justify-center gap-1.5"
+      >
+        <span className={`h-0.5 w-6 bg-white transition ${open ? "translate-y-2 rotate-45" : ""}`} />
+        <span className={`h-0.5 w-6 bg-white transition ${open ? "opacity-0" : ""}`} />
+        <span className={`h-0.5 w-6 bg-white transition ${open ? "-translate-y-2 -rotate-45" : ""}`} />
+      </button>
+      {open && (
+        <nav className="absolute inset-x-0 top-full z-40 border-t border-white/10 bg-ink shadow-lg">
+          <div className="mx-auto w-full max-w-[1320px] px-4 pb-6 sm:px-6">
+            <ul className="divide-y divide-white/10">
+              {links.map((l) =>
+                l.children ? (
+                  <li key={l.href}>
+                    <details className="group">
+                      <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm font-bold uppercase tracking-wide text-white hover:text-sky [&::-webkit-details-marker]:hidden">
+                        {l.label}
+                        <span aria-hidden className="text-xl leading-none text-sky transition group-open:rotate-45">
+                          +
+                        </span>
+                      </summary>
+                      <ul className="pb-4 pl-3">
+                        {[{ label: `All ${l.label}`, href: l.href }, ...l.children].map((c) => (
+                          <li key={c.href}>
+                            <Link href={c.href} onClick={close} className="block py-2 text-sm font-semibold text-white/85 hover:text-sky">
+                              {c.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  </li>
+                ) : (
+                  <li key={l.href}>
+                    <Link
+                      href={l.href}
+                      onClick={close}
+                      className="block py-4 text-sm font-bold uppercase tracking-wide text-white hover:text-sky"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ),
+              )}
+            </ul>
+            {/* Header CTAs are hidden below md, so phones get them here */}
+            <div className="mt-2 grid gap-3 sm:grid-cols-2 md:hidden">
+              <a
+                href={quoteHref}
+                onClick={close}
+                className="flex h-12 items-center justify-center bg-sky text-sm font-bold uppercase text-ink"
+              >
+                Free Quote
+              </a>
+              <a
+                href={phoneHref}
+                className="flex h-12 items-center justify-center gap-2 bg-white text-sm font-bold text-ink"
+              >
+                <Phone width={16} height={16} /> {phone}
+              </a>
+            </div>
+          </div>
+        </nav>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Scrolling video-testimonial carousel ---------- */
+export function VideoCarousel({ items }: { items: { caption: string; media: ResolvedMedia }[] }) {
+  const track = useRef<HTMLDivElement>(null);
+  const scroll = (dir: number) =>
+    track.current?.scrollBy({ left: dir * (track.current.clientWidth / 2), behavior: "smooth" });
+
+  return (
+    <div className="relative mx-auto max-w-[1200px] px-10">
+      <button
+        aria-label="Previous"
+        onClick={() => scroll(-1)}
+        className="absolute left-2 top-1/2 -translate-y-1/2 text-3xl text-sky-700"
+      >
+        ‹
+      </button>
+      <div ref={track} className="no-scrollbar flex snap-x gap-7 overflow-x-auto px-1 py-2">
+        {items.map((v, i) => (
+          <div
+            key={i}
+            className="relative aspect-[9/16] w-[calc(50%-14px)] shrink-0 snap-start overflow-hidden rounded-lg shadow-md sm:w-[calc(33.33%-19px)] lg:w-[calc(25%-21px)] lg:aspect-[4/7]"
+            style={{ background: v.media.tone }}
+          >
+            {hasMedia(v.media) ? (
+              <MediaFill media={v.media} sizes="(min-width: 1024px) 270px, (min-width: 640px) 33vw, 50vw" />
+            ) : (
+              <>
+                <Silhouette />
+                <button aria-label="Play video" className="absolute right-3 top-3 text-sky">
+                  <Play />
+                </button>
+              </>
+            )}
+            <p className="pointer-events-none absolute inset-x-6 bottom-14 bg-sky px-2 py-1 text-center text-xs font-bold leading-tight text-ink">
+              {v.caption}
+            </p>
+          </div>
+        ))}
+      </div>
+      <button
+        aria-label="Next"
+        onClick={() => scroll(1)}
+        className="absolute right-2 top-1/2 -translate-y-1/2 text-3xl text-sky-700"
+      >
+        ›
+      </button>
+    </div>
+  );
+}
+
+function Silhouette() {
+  return (
+    <svg viewBox="0 0 100 160" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMax slice">
+      <circle cx="50" cy="62" r="20" fill="#fff" opacity=".35" />
+      <path d="M14 160c0-34 16-52 36-52s36 18 36 52z" fill="#fff" opacity=".35" />
+    </svg>
+  );
+}
+
+/* ---------- Flat-fee accordion ---------- */
+export function Accordion({ items }: { items: { title: string; points: string[] }[] }) {
+  const [open, setOpen] = useState(0);
+  return (
+    <div className="mt-4">
+      {items.map((item, i) => (
+        <div key={item.title} className="py-3">
+          <button
+            onClick={() => setOpen(open === i ? -1 : i)}
+            className="flex w-full items-start justify-between gap-4 text-left text-lg font-semibold text-ink"
+            aria-expanded={open === i}
+          >
+            {item.title}
+            <Chevron open={open === i} className="mt-1 shrink-0" />
+          </button>
+          {open === i && (
+            <ul className="mt-4 space-y-3">
+              {item.points.map((p) => (
+                <li key={p} className="flex gap-2 text-[15px] text-ink">
+                  <Check className="mt-1 shrink-0" />
+                  {p}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ---------- Paged review cards ---------- */
+export function ReviewPager({ pages }: { pages: ReactNode[][] }) {
+  const [page, setPage] = useState(0);
+  return (
+    <div>
+      <div className="grid gap-8 md:grid-cols-2 md:gap-x-9 md:gap-y-10">{pages[page]}</div>
+      <div className="mt-12 flex justify-center gap-3">
+        {pages.map((_, i) => (
+          <button
+            key={i}
+            aria-label={`Reviews page ${i + 1}`}
+            onClick={() => setPage(i)}
+            className={`h-3 w-3 rounded-full ${i === page ? "bg-sky" : "bg-ink-200"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Photo strip with arrows ---------- */
+export function PhotoStrip({ items }: { items: ResolvedMedia[] }) {
+  const track = useRef<HTMLDivElement>(null);
+  const scroll = (dir: number) => track.current?.scrollBy({ left: dir * 300, behavior: "smooth" });
+  return (
+    <div className="relative">
+      <div ref={track} className="no-scrollbar flex gap-2 overflow-x-auto">
+        {items.map((m, i) => (
+          <div
+            key={i}
+            className="relative aspect-[3/4] w-[46%] shrink-0 overflow-hidden rounded-md sm:w-[23%] lg:w-[15.8%]"
+            style={{ background: m.tone }}
+          >
+            {hasMedia(m) ? <MediaFill media={m} sizes="(min-width: 1024px) 16vw, (min-width: 640px) 23vw, 46vw" /> : <Silhouette />}
+          </div>
+        ))}
+      </div>
+      <button
+        aria-label="Previous photos"
+        onClick={() => scroll(-1)}
+        className="absolute left-8 top-1/2 -translate-y-1/2 text-5xl font-light text-white"
+      >
+        ‹
+      </button>
+      <button
+        aria-label="Next photos"
+        onClick={() => scroll(1)}
+        className="absolute right-8 top-1/2 -translate-y-1/2 text-5xl font-light text-white"
+      >
+        ›
+      </button>
+    </div>
+  );
+}

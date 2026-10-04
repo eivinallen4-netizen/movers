@@ -1,0 +1,155 @@
+FINAL PHOTO EDIT PROMPTS
+
+Tool: built-in imagegen. One image per variant. Source camera JPEGs were extracted from the user-specified CR3 files without changing the originals.
+
+5P3A6286 — EDITED
+File: edited/5P3A6286-edited.png
+Source: 5P3A6286.CR3 (embedded camera JPEG)
+Use case: lighting-weather. Asset type: professionally edited real estate photograph.
+Input image 1 is the edit target, camera JPEG from 5P3A6286.CR3. Create one polished photographic edit of this exact view. Keep every existing object including sofas, tables, moving boxes, wrapped chair, vacuum, packing materials, pillows and wall marks in the exact same positions.
+Improve exposure and natural white balance: neutral off-white walls, gentle brightness and shadow recovery, realistic contrast and texture, restrained highlight roll-off. Keep windows bright naturally and do not invent an exterior view. Subtle leveling and vertical correction is allowed while preserving full source field of view and exact room proportions. Preserve three windows and blinds, ceiling fan, all architecture, fixtures, flooring, material colors and visible wear/scuffs/blue tape. No redesign, staging, added objects, removed objects, text overlays, watermark, collage or split image.
+Output a single landscape 3:2 image at high resolution, preferably 3072x2048. Photorealistic and clean, not HDR-looking.
+
+========================================================================
+
+5P3A6286 — UNFURNISHED
+File: unfurnished/5P3A6286-unfurnished.png
+Source: 5P3A6286.CR3 (embedded camera JPEG)
+Use case: precise-object-edit. Asset type: unfurnished real estate photograph.
+Input image 1 is the edit target, camera JPEG from 5P3A6286.CR3. Create one photorealistic edited version of this EXACT room and camera view with all movable contents removed: remove the cream sofa and pillows, dark loveseat, wood tables, all stacked furniture and tabletops, green plastic wrapped chair, vacuum, freestanding metal frame, all moving boxes, packing bags and materials and every loose object. Show a completely unfurnished room.
+Reconstruct occluded surfaces using the visible light brown oak-pattern floor as the exact guide for color, grain, board width, and direction, and continue existing walls/baseboards. Maintain the exact room proportions, same three windows and blinds, ceiling fan and ceiling, wall corners and materials. Preserve visible wall scuffs, wear and blue tape; do not repaint or repair. Keep all permanent electrical outlets and fixtures, do not invent new windows, doors, or room openings.
+Apply tasteful neutral bright real-estate photography exposure and white balance with clear natural shadow detail, restrained highlights and realistic texture. Keep natural bright window light without inventing an exterior view. Subtle leveling and vertical correction permitted, but preserve full source field of view and all architectural geometry. No added furniture, decoration, staging, text overlays, watermark, collage or split image. Single landscape 3:2 image at high resolution, preferably 3072x2048.
+
+========================================================================
+
+5P3A6275 — EDITED
+File: edited/5P3A6275-edited.png
+Source: 5P3A6275.CR3 (embedded camera JPEG)
+Use case: lighting-weather. Asset type: edited real-estate interior photograph. Input image: sole edit target, source 5P3A6275. Edit this exact photograph with natural professional real-estate exposure/color: lift deep shadows, reveal detail in black furniture, neutralize color cast retaining original warm neutral walls, gently control blown blind highlights only using known slat structure, no invented exterior, mild realistic sharpening to improve the slightly soft original without changing design. Preserve camera position, original wide-angle view, perspective and 3:2 crop. Only subtle leveling/vertical correction. Keep every furnishing and object in its same position: black bookcase at left, desk and monitor/electronics/keyboard and small objects, black drawers below, circular colorful mirror with its existing reflection, black blue gaming chair, black oval item and small items on floor, cables, bed wrapped in translucent plastic lower right and leaning wooden rail. Preserve exactly one window with white closed blinds, off-white walls, corner, white baseboard and gray-brown carpet, exposed outlet cover condition and all visible wear/marks/defects. Do not remove clutter, add or delete furnishings, alter dimensions, relocate openings, repaint or repair damage. Natural photographic finish, no HDR halos. Landscape 3:2 high resolution ideally 3072x2048. No text overlay, labels or watermark.
+
+========================================================================
+
+5P3A6275 — UNFURNISHED
+File: unfurnished/5P3A6275-unfurnished.png
+Source: 5P3A6275.CR3 (embedded camera JPEG)
+Use case: precise-object-edit. Asset type: unfurnished real-estate interior photograph. Input image: sole edit target, source 5P3A6275. Create a completely empty vacant version of this exact bedroom/office. Remove ALL movable furniture and possessions: entire black bookcase at left, desk and every monitor/electronic/keyboard/plant/small object, drawers, chair, circular decorative colorful wall mirror, mattress/bed and all plastic wrap lower right, leaning wooden rail, black oval pet bed/bag and other floor items, loose cables/plugs and all clutter. Restore only the obscured same warm-neutral walls, white baseboards and gray-brown carpet in correct perspective, extending visible original surfaces naturally. Preserve camera position, exact original wide-angle 3:2 framing, precise position/size of the one existing window and its closed white blinds, wall corner, all visible wall marks/defects and outlet condition. Specifically retain the outlet assembly under the left window with the same exposed metal upper detail and partial white cover seen in the original; do not magically repair it when removing plug/cable. Do not add outlets, openings, doors or new exterior details, widen room, change carpet or repaint walls. Natural professional real-estate exposure/color: brighten shadows, balance neutral daylight, control blind highlights using known slat structure, subtle realistic clarity. Do not redesign or repair damage. No furnishings or decorations left. Landscape 3:2 high resolution ideally 3072x2048. No overlay text or watermark.
+
+========================================================================
+
+5P3A6243 — EDITED
+File: edited/5P3A6243-edited.png
+Source: 5P3A6243.CR3 (embedded camera JPEG)
+Use case: lighting-weather. The supplied original 5P3A6243.jpg is the exact edit target. Professionally edit exposure, color and clarity while preserving ALL original contents and exact layout. Retain mattress/plastic wrapping, green-wrapped panels, black frames and chair, boxes, drawers and right edge of large wooden shelving. Retain wall holes at upper left and carpet condition. Don't remove clutter. Keep actual blue back wall and white left wall, existing bright window and blind in their current location. Style: faithful, natural real-estate photography. Neutral white balance and balanced bright exposure with visible shadow detail and controlled highlights. Preserve original surfaces, actual paint colors, texture, wear, small holes, stains and visible damage. Gentle level/vertical correction only. Keep exact camera position, field of view, room size, walls, ceiling, flooring, trim, doors, windows, switches/outlets and all fixed architectural elements. No redesign, no invented window, no widened room or invented exterior. Landscape 3:2; ideally 3072x2048; no watermark or added text.
+
+========================================================================
+
+5P3A6243 — UNFURNISHED
+File: unfurnished/5P3A6243-unfurnished.png
+Source: 5P3A6243.CR3 (embedded camera JPEG)
+Use case: precise-object-edit. This image is the edit target. Remove ONLY the entire brown wood-grain vertical object along the far right edge, occupying approximately the rightmost 14% of the image from top to bottom. It is a freestanding BOOKCASE side panel, NOT a door, NOT a wall and NOT structural trim. The user wants no furniture. Replace this entire right-edge bookcase panel with the natural continuation of the empty room, blue back wall/window where appropriate and carpet below, with a narrow white right wall if visible according to perspective. Keep ALL other image content unchanged: exact camera view, ceiling lines, left white wall and existing nail holes, blue back wall, large near-square white blind-covered window and sill, carpet, lighting, colors and exposure. Do not re-add any furniture. Do not make window shorter, move it, or change its top or bottom height. Natural photorealistic empty room.
+
+========================================================================
+
+5P3A6252 — EDITED
+File: edited/5P3A6252-edited.png
+Source: 5P3A6252.CR3 (embedded camera JPEG)
+Use case: lighting-weather. Asset type: edited real-estate interior photograph. Input image: sole edit target, source 5P3A6252. Edit this exact photograph with neutral, clean, natural real-estate exposure and color: modestly brighten shadow detail, neutralize the yellow cast while keeping warm beige walls, balance existing light, control highlights, gentle clarity and realistic detail. Keep the camera position, wide-angle view, 3:2 framing, perspective and all architecture. Only very subtle leveling/vertical correction if required. Preserve every existing object including every cardboard box, torn tall cardboard package at left, white freestanding drawer unit, cart, doors and handles. Preserve all text on boxes exactly as visible. Preserve ceiling HVAC grilles, wall/floor textures, trim, visible wear and damage. No decluttering, no new objects, no redesigned finishes, no invented openings or exterior. It must remain the same documented room and scene, only professionally color/exposure edited. High resolution landscape 3:2, ideally 3072x2048. No text overlay or watermark.
+
+========================================================================
+
+5P3A6252 — UNFURNISHED
+File: unfurnished/5P3A6252-unfurnished.png
+Source: 5P3A6252.CR3 (embedded camera JPEG)
+Use case: precise-object-edit. Asset type: unfurnished real-estate interior photograph. Input image: sole edit target, source 5P3A6252. Edit this exact hallway photograph into a vacant unfurnished version. Remove ALL cardboard boxes and packaging including the tall torn cardboard package at left and ALL stacks right and center, remove the freestanding white drawer dresser and narrow white panels, the small brown rolling cart, and all loose portable possessions. Leave the hallway completely empty. Reconstruct only the obscured existing continuous light brown wood-look floor, beige textured walls and white baseboard with matching perspective and grain; retain original actual corridor boundaries. Preserve both ceiling HVAC vent grilles and the exact ceiling angle, visible original doorways, door positions, hinges and silver door handles, floor finish, wall texture, trim and existing wear. The far partially open blue-tinted door and opening remain as photographed. Do not add any door, opening, window, room, cabinetry or imaginary detail. Keep camera position, angle, original wide-angle view and same 3:2 framing. Apply natural real-estate color/exposure: lift shadow detail, neutralize excess yellow cast retaining warm beige walls, control highlights, crisp realistic detail without sterile rendering. Do not widen the hallway or view, redesign finishes or repair visible damage. Landscape 3:2 high resolution, ideally 3072x2048. No overlay text, labels or watermark.
+
+========================================================================
+
+5P3A6281 — EDITED
+File: edited/5P3A6281-edited.png
+Source: 5P3A6281.CR3 (embedded camera JPEG)
+Use case: lighting-weather. Asset type: edited real-estate interior photograph. Input image is the sole edit target, original kitchen photo 5P3A6281. Produce a naturally polished photographic edit: neutralize the slight gray/green cast, lift exposure and shadow detail, control bright window and cabinet highlights with natural contrast and clean realistic color. Preserve all existing objects and contents EXACTLY including counter clutter, boxes, furniture edges, trash bin, appliances, refrigerator smudges, floor/wall/cabinet surface wear and defects. Keep all geometry, built-in fixtures, cabinet layout, door/window/blinds, six ceiling lights and hardware unchanged. Preserve original camera view, crop and 3:2 aspect; allow only subtle leveling if needed and do not widen the view or redesign. No removal, additions, staged decor, invented exterior, altered materials, cosmetic repairs, text or watermark. Request high-resolution 3072x2048 output if supported.
+
+========================================================================
+
+5P3A6281 — UNFURNISHED
+File: unfurnished/5P3A6281-unfurnished.png
+Source: 5P3A6281.CR3 (embedded camera JPEG)
+Use case: precise-object-edit. Asset type: unfurnished real-estate interior photograph. Input image is sole edit target, original kitchen photo 5P3A6281. Create an empty kitchen variant with natural polished exposure and neutral clean white balance, brighter shadows, retained highlight detail. Remove EVERY movable object: all cardboard boxes, black chair/frame at far left, fabrics and bags, baskets at door, green wrapping, black trash bin, all counter/stovetop items including jars, bottles, cleaning products, small appliances, soap, dishes, shelf/rack, containers, cloths and cables. Countertops and floor should be empty. Reconstruct hidden portions only with continuation of matching existing surfaces and perspective. KEEP the refrigerator, dishwasher, range/stove/oven, installed microwave, sink, faucet, cabinetry, handles, backsplash, outlets, six ceiling lights, walls, baseboards, door and blinds exactly in the same original positions and shapes. Preserve visible floor/cabinet/paint wear, refrigerator smudges and defects; do not cosmetically repair. Preserve original camera view and architecture, 3:2 crop; subtle leveling only, no wider view, no invented room/windows/exterior, no redesign, no staging or new objects. Realistic photograph, not rendering. Request 3072x2048 high-resolution output if supported.
+
+========================================================================
+
+5P3A6301 — EDITED
+File: edited/5P3A6301-edited.png
+Source: 5P3A6301.CR3 (embedded camera JPEG)
+Use case: lighting-weather. Asset type: real-estate photograph. Input image 1 is the edit target from 5P3A6301.CR3. Preserve this exact room, composition, field of view, viewpoint and room proportions, with only very gentle leveling allowed. Preserve the original ceiling fan, sprinkler, three windows along the back wall, one window on right wall, and far-right glazed door with blinds, all trim, ceiling and walls. Keep natural window brightness; do not fabricate a new exterior view or replace the sky. Use neutral natural white balance, brighter shadow detail, restrained contrast, balanced exposure, realistic textures and soft highlight rolloff, without HDR halos or plastic textures. Output one single 3:2 landscape photograph, at the highest available resolution. No text overlays, watermark, collage or split panels. Retain every existing object in its exact place: stacked inverted dark chairs/tables, dark tall furniture panel on the far left, stainless trashcan, sofas/cushions, green wrapped chair, boxes, tabletop, cup and belongings. Only improve photographic color, light and gentle tonal clarity. Preserve wear and imperfections. No redesign or changes to the contents.
+
+========================================================================
+
+5P3A6301 — UNFURNISHED
+File: unfurnished/5P3A6301-unfurnished.png
+Source: 5P3A6301.CR3 (embedded camera JPEG)
+Supporting reference: 5P3A6286-unfurnished.png
+Use case: precise-object-edit. Asset type: real-estate photograph. Input image 1 is the edit target from 5P3A6301.CR3. Preserve this exact room, composition, field of view, viewpoint and room proportions, with only very gentle leveling allowed. Preserve the original ceiling fan, sprinkler, three windows along the back wall, one window on right wall, and far-right glazed door with blinds, all trim, ceiling and walls. Keep natural window brightness; do not fabricate a new exterior view or replace the sky. Use neutral natural white balance, brighter shadow detail, restrained contrast, balanced exposure, realistic textures and soft highlight rolloff, without HDR halos or plastic textures. Output one single 3:2 landscape photograph, at the highest available resolution. No text overlays, watermark, collage or split panels. Remove ALL movable furniture and loose contents: all stacked inverted chairs and tables and freestanding panels, sofas, cushions, green wrapped chair, boxes, stainless trashcan, vacuum, tabletops, cup, bags and belongings. Leave the room completely empty of movable contents. Reconstruct hidden floor and wall surfaces plausibly. Input image 2 is ONLY a consistency reference showing the same living room from a different angle: use its light neutral brown wood floor material and white baseboard style. Do not copy image 2's camera angle. Match the TARGET image 1's original window, door and fan positions and view. Retain all permanent features, visible wall wear and scuffs; do not repaint or repair. No invented doors, windows, exterior scenery, decorations or new furniture.
+
+========================================================================
+
+5P3A6246 — EDITED
+File: edited/5P3A6246-edited.png
+Source: 5P3A6246.CR3 (embedded camera JPEG)
+Use case: lighting-weather. The supplied original 5P3A6246.jpg is the exact edit target. Professionally edit exposure, color and clarity while preserving ALL original contents and exact layout. Retain large black bedframe pieces, black gaming chair, green plastic-wrapped furniture panels, desk, blue freestanding mini fridge and its cord, all boxes. Preserve broad blue wall area, adjoining white wall, door at left and view through open doorway, all trim/outlets and carpet condition. No decluttering. Style: faithful, natural real-estate photography. Neutral white balance and balanced bright exposure with visible shadow detail and controlled highlights. Preserve original surfaces, actual paint colors, texture, wear, small holes, stains and visible damage. Gentle level/vertical correction only. Keep exact camera position, field of view, room size, walls, ceiling, flooring, trim, doors, windows, switches/outlets and all fixed architectural elements. No redesign, no invented window, no widened room or invented exterior. Landscape 3:2; ideally 3072x2048; no watermark or added text.
+
+========================================================================
+
+5P3A6246 — UNFURNISHED
+File: unfurnished/5P3A6246-unfurnished.png
+Source: 5P3A6246.CR3 (embedded camera JPEG)
+Use case: precise-object-edit. The supplied original 5P3A6246.jpg is the exact edit target. Create a professionally edited unfurnished variant. Remove ALL movable contents: large black bedframe and all detached black metal pieces, black gaming chair, green plastic-wrapped furniture panels, black desk, blue freestanding mini refrigerator and loose power cord, all boxes including partially cropped ones. Fill hidden areas with continuous matching existing beige carpet, baseboard and original blue/white walls. Preserve the existing wall outlet at the desk position, upper wall bracket/holes, white door at left, open doorway/hall/bath glimpse with existing shower curtain and fixed fixtures. There is NO visible window in this camera view; don't invent any. Style: faithful, natural real-estate photography. Neutral white balance and balanced bright exposure with visible shadow detail and controlled highlights. Preserve original surfaces, actual paint colors, texture, wear, small holes, stains and visible damage. Gentle level/vertical correction only. Keep exact camera position, field of view, room size, walls, ceiling, flooring, trim, doors, windows, switches/outlets and all fixed architectural elements. No redesign, no invented window, no widened room or invented exterior. Landscape 3:2; ideally 3072x2048; no watermark or added text.
+
+========================================================================
+
+5P3A6288 — EDITED
+File: edited/5P3A6288-edited.png
+Source: 5P3A6288.CR3 (embedded camera JPEG)
+Use case: lighting-weather. Edit this exact original living-room photo 5P3A6288. ONLY apply restrained exposure and color correction: lift dark foreground shadows slightly, neutral white balance, natural photo finish. CRITICAL: retain exactly the original bright nearly white windows; do NOT recover/infer/generate exterior scenery, fence or trees, do not invent blind slats where highlights are clipped. Keep original wall marks, holes, blue tape as actually visible, with no new marks. Keep exact furniture and object layout: sofa and all cushions, dark panel, green-wrapped chair, boxes, tables, bags, vacuum, metal frame. Preserve original camera framing, geometry, room proportions, three windows with existing blinds, ceiling fan crop and materials with no redesign, wider view or repairs. Every object remains in place. No content additions/removals. Preserve 3:2 landscape. This is a subtle light/color edit of an existing photograph, not a new scene. Request high resolution 3072x2048 if available.
+
+========================================================================
+
+5P3A6288 — UNFURNISHED
+File: unfurnished/5P3A6288-unfurnished.png
+Source: 5P3A6288.CR3 (embedded camera JPEG)
+Use case: precise-object-edit. Asset type: unfurnished real-estate photo. Image 1 (5P3A6288) is the exact edit target and locks the camera view/crop/architecture. Image 2 (empty 5P3A6286) is same-room reference ONLY for matching floor color/grain and baseboard continuation; do not copy its camera view. Remove ALL movable furniture and objects from image 1: sofa, cushions, dark panel behind it, green-wrapped chair, vacuum, metal frames, all tables/cabinets/furniture parts, cardboard boxes, bags, wrapping, loose items. Show empty floor and walls with plausible matching continuation of occluded surfaces. Preserve original three windows and blind positions, ceiling fan, original wall scuffs/holes/paint marks including blue tape, wall shapes and floor material. Keep fixtures that are visible; do not invent extra outlets or architectural features. Neutral clean white balance and gentle shadow brightening. CRITICAL: windows must retain original nearly-white clipped highlights; no inferred exterior scenes or new blind details. Do not repair wall or floor damage. Same original framing, camera view and room proportions, 3:2 landscape, no wider view, no redesign, no new objects/text/watermark. High resolution 3072x2048 if supported.
+
+========================================================================
+
+5P3A6237 — EDITED
+File: edited/5P3A6237-edited.png
+Source: 5P3A6237.CR3 (embedded camera JPEG)
+Use case: lighting-weather.
+Asset type: polished real-estate photograph, faithful edit.
+Input image: the supplied original 5P3A6237.jpg is the exact edit target.
+Primary request: professionally develop this same room photograph. Neutralize excessive yellow cast while preserving the actual blue back wall, brighten dark shadow detail, gently balance exposure and highlights, crisp but natural detail, subtle level and vertical correction. Keep realistic lighting, textures, and all existing defects.
+Constraints: retain EVERY original object, furniture, mattress, shelving, boxes, debris and their exact placement. Preserve existing architecture, room dimensions, window size/location, blinded window, open door, ceiling fixtures, walls and carpet. Preserve original camera position and framing; do not widen or redesign. Window overexposure should be controlled naturally without inventing any exterior view. No text or watermarks. Output landscape 3:2, ideally 3072x2048.
+
+========================================================================
+
+5P3A6237 — UNFURNISHED
+File: unfurnished/5P3A6237-unfurnished.png
+Source: 5P3A6237.CR3 (embedded camera JPEG)
+Use case: precise-object-edit. The supplied original 5P3A6237.jpg is the exact edit target. Create a professionally edited unfurnished variant. Remove ALL movable contents: all boxes, mattress and plastic wrap, large wood shelving units, all black racks/furniture parts, stacks of wood drawers/panels, and loose clutter/debris. Reveal an empty room with continuous existing beige carpet, white side walls and blue back wall. Fill previously occluded areas plausibly from adjacent real surfaces. Preserve open foreground door, existing ceiling light and small ceiling fixture, and existing single blind-covered back-wall window in its exact position and proportions; don't invent a larger window or exterior view. Style: faithful, natural real-estate photography. Neutral white balance and balanced bright exposure with visible shadow detail and controlled highlights. Preserve original surfaces, actual paint colors, texture, wear, small holes, stains and visible damage. Gentle level/vertical correction only. Keep exact camera position, field of view, room size, walls, ceiling, flooring, trim, doors, windows, switches/outlets and all fixed architectural elements. No redesign, no invented window, no widened room or invented exterior. Landscape 3:2; ideally 3072x2048; no watermark or added text.
+
+========================================================================
+
+5P3A6260 — EDITED
+File: edited/5P3A6260-edited.png
+Source: 5P3A6260.CR3 (embedded camera JPEG)
+Use case: lighting-weather. Asset type: edited real-estate interior photograph. Input image: sole edit target, source 5P3A6260. Edit this exact photograph with natural professional real-estate exposure/color: brighten dark shadow detail to reveal existing furnishings, reduce warm cast on door casing, retain pale pink left/back accent wall and off-white right wall, balance natural daylight, control highlights in the closed white blinds without inventing exterior. Keep the camera position, original wide-angle view, perspective and 3:2 framing. Only very subtle leveling/vertical correction. Preserve every object: clear toy storage tubs at left, cardboard boxes, green wrapped furniture left foreground and right edge, leaning wrapped mattresses, dark metal bed frame, pink chair and small white/pink portable appliance at right, baskets, bags and clutter. Preserve exactly the two existing windows and closed blinds, doorway and strike plate, wall/ceiling texture, gray brown carpet, white trim, all visible wear and defects. Do not remove or add objects, tidy the scene, repaint surfaces, change room geometry, invent windows or new exterior, repair damage, or produce HDR halos. High resolution landscape 3:2, ideally 3072x2048. No text overlay or watermark.
+
+========================================================================
+
+5P3A6260 — UNFURNISHED
+File: unfurnished/5P3A6260-unfurnished.png
+Source: 5P3A6260.CR3 (embedded camera JPEG)
+Use case: precise-object-edit. Asset type: unfurnished real-estate interior photograph. Input image: sole edit target source 5P3A6260. Create an empty vacant version of this exact room. Remove ALL movable furniture and possessions: clear toy tubs and all boxes at left, all green-wrapped furniture at left foreground and right edge, every mattress and metal bed frame, pink chair, small pink/white appliance, baskets, bags, plastic containers, loose cords, toys, paper, packaging and clutter. The room must be completely unfurnished. Reconstruct only the obscured same gray-brown carpet and same walls/white baseboards in correct perspective, using visible original material as reference. Keep camera position, original wide-angle 3:2 framing, precise size and positions of both existing windows, closed white blinds, doorway edges/strike plate, and the original wall corner. Preserve the actual pale pink left/back wall and off-white right wall, ceiling, wall texture, existing wear/defects. Do not add or relocate openings/windows/doors, reveal invented exterior, widen room, change carpet, repaint or repair damage. Apply natural professional real-estate exposure/color: brighten shadow detail, neutralize excess orange cast on trim, control blind highlights, gentle crisp detail and realistic daylight. No new objects. Landscape 3:2 high resolution, ideally 3072x2048. No text overlay or watermark.
+
+========================================================================
+
