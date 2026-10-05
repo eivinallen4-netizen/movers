@@ -9,8 +9,7 @@ export const PHONE = "(702) 527-8565";
 export const PHONE_HREF = "tel:+17025278565";
 export const PHONE_E164 = "+17025278565";
 export const DOMAIN = "moversandjunkremoval.net";
-// TODO: set the real Instagram URL.
-export const INSTAGRAM = "https://www.instagram.com/";
+export const INSTAGRAM = "https://www.instagram.com/moverandjunkremoval/";
 
 /** Business hours for Google ("movers open today"). Left out of the schema while empty. */
 export const HOURS: { days: string[]; opens: string; closes: string }[] = [

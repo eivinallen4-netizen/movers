@@ -1,9 +1,9 @@
 import { THUMBTACK_URL, YELP_URL } from "./reviews";
-import { BUSINESS, CITIES, HOURS, PHONE_E164, SITE_URL } from "./site";
+import { BUSINESS, CITIES, HOURS, INSTAGRAM, PHONE_E164, SITE_URL } from "./site";
 
 /*
  * schema.org structured data. No ratings/reviews: Google ignores self-serving LocalBusiness review markup.
- * TODO: add "address" (if you have a public office) and more "sameAs" links (Google Business, Instagram).
+ * TODO: add "address" (if you have a public office) and more "sameAs" links (Google Business).
  */
 
 export const BUSINESS_ID = `${SITE_URL}/#business`;
@@ -20,7 +20,7 @@ export function businessSchema() {
     logo: `${SITE_URL}/logo.png`,
     image: `${SITE_URL}/logo.png`,
     priceRange: "$$",
-    sameAs: [YELP_URL, THUMBTACK_URL],
+    sameAs: [YELP_URL, THUMBTACK_URL, INSTAGRAM],
     areaServed: CITIES.map((name) => ({ "@type": "City", name: `${name}, NV` })),
     ...(HOURS.length > 0 && {
       openingHoursSpecification: HOURS.map((h) => ({ "@type": "OpeningHoursSpecification", dayOfWeek: h.days, opens: h.opens, closes: h.closes })),
