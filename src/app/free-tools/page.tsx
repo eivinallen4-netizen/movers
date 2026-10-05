@@ -1,8 +1,10 @@
 import { SiteShell } from "@/components/site";
+import Image from "next/image";
 import { PageHero } from "@/components/templates";
 import { BrandButton, Container, CtaBand, LinkCards, SectionTitle } from "@/components/ui";
 import { GUIDES } from "@/content/guides";
 import { pageMeta } from "@/lib/seo";
+import { editorialImage } from "@/content/editorial-images";
 
 export const metadata = pageMeta({
   title: "Free Moving Tools: Cost Calculator & Checklists | Las Vegas",
@@ -20,9 +22,13 @@ export default function ToolsHub() {
         tagline="Plan your move, see what it should cost, then get an exact quote in minutes."
         points={["Moving cost calculator: ballpark in under a minute", "Printable moving day & garage checklists", "Real Las Vegas junk removal prices"]}
         lead={{ heading: "Want an exact price instead?" }}
+        backdrop={editorialImage("moving-cost-calculator")}
       />
       <section className="py-12 lg:py-16">
-        <Container className="grid items-center gap-10 border border-ink p-6 offset-sky sm:p-10 lg:grid-cols-[1.4fr_1fr]">
+        <Container className="grid items-center gap-8 border border-ink p-6 offset-sky sm:p-10 lg:grid-cols-[220px_1fr_auto]">
+          <div className="relative aspect-[4/3] overflow-hidden lg:aspect-square">
+            <Image src={editorialImage("moving-cost-calculator")} alt="" fill sizes="(min-width: 1024px) 220px, 100vw" className="object-cover" />
+          </div>
           <div>
             <p className="text-xs font-extrabold uppercase tracking-widest text-sky-700">Most popular</p>
             <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-[40px]">Las Vegas Moving Cost Calculator</h2>
@@ -40,7 +46,7 @@ export default function ToolsHub() {
         <Container>
           <SectionTitle>Checklists &amp; guides</SectionTitle>
           <div className="mt-8">
-            <LinkCards links={GUIDES.map((g) => ({ href: `/guides/${g.slug}`, label: g.title, body: g.excerpt }))} />
+            <LinkCards links={GUIDES.map((g) => ({ href: `/guides/${g.slug}`, label: g.title, body: g.excerpt, image: editorialImage(g.slug) }))} />
           </div>
         </Container>
       </section>

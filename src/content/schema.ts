@@ -1,5 +1,5 @@
 import { THUMBTACK_URL, YELP_URL } from "./reviews";
-import { BUSINESS, CITIES, PHONE_E164, SITE_URL } from "./site";
+import { BUSINESS, CITIES, HOURS, PHONE_E164, SITE_URL } from "./site";
 
 /*
  * schema.org structured data. No ratings/reviews: Google ignores self-serving LocalBusiness review markup.
@@ -22,6 +22,9 @@ export function businessSchema() {
     priceRange: "$$",
     sameAs: [YELP_URL, THUMBTACK_URL],
     areaServed: CITIES.map((name) => ({ "@type": "City", name: `${name}, NV` })),
+    ...(HOURS.length > 0 && {
+      openingHoursSpecification: HOURS.map((h) => ({ "@type": "OpeningHoursSpecification", dayOfWeek: h.days, opens: h.opens, closes: h.closes })),
+    }),
     description:
       "Local Las Vegas movers and junk removal. On time, fast and careful, with honest upfront pricing and no hidden fees.",
   };

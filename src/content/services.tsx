@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import {
-  IconBin,
   IconBuildings,
-  IconDiamond,
   IconGloves,
   IconHourglass,
   IconPins,
@@ -533,7 +532,7 @@ export const SERVICES: Service[] = [
     category: "junk-removal",
     name: "Furniture Removal",
     short: "Old couches, mattresses, dressers and tables. Point to it and it's gone.",
-    icon: <IconSofa />,
+    icon: <Image src="/icons/junk-removal/furniture-removal.svg" alt="" width={140} height={100} />,
     leadService: "junk-removal",
     metaTitle: "Furniture Removal Las Vegas | Couch & Mattress Pickup",
     metaDescription:
@@ -583,7 +582,7 @@ export const SERVICES: Service[] = [
     category: "junk-removal",
     name: "Appliance Removal",
     short: "Fridges, washers, dryers and water heaters hauled out without scratching your floors.",
-    icon: <IconDiamond />,
+    icon: <Image src="/icons/junk-removal/appliance-removal.svg" alt="" width={140} height={100} />,
     leadService: "junk-removal",
     metaTitle: "Appliance Removal Las Vegas | Fridge, Washer & Dryer Pickup",
     metaDescription:
@@ -632,7 +631,7 @@ export const SERVICES: Service[] = [
     category: "junk-removal",
     name: "Garage Cleanouts",
     short: "Your garage called. It wants to be a garage again. We clear it top to bottom.",
-    icon: <IconTapeBox />,
+    icon: <Image src="/icons/junk-removal/garage-cleanouts.svg" alt="" width={140} height={100} />,
     leadService: "garage-cleanout",
     metaTitle: "Garage Cleanout Las Vegas | Park in Your Garage Again",
     metaDescription:
@@ -682,7 +681,7 @@ export const SERVICES: Service[] = [
     category: "junk-removal",
     name: "Estate Cleanouts",
     short: "A respectful, patient crew for a hard time. We clear the whole home with care.",
-    icon: <IconBuildings />,
+    icon: <Image src="/icons/junk-removal/estate-cleanouts.svg" alt="" width={140} height={100} />,
     leadService: "estate-cleanout",
     metaTitle: "Estate Cleanout Las Vegas | Respectful Whole-Home Cleanouts",
     metaDescription:
@@ -733,7 +732,7 @@ export const SERVICES: Service[] = [
     category: "junk-removal",
     name: "Move-Out Junk Haul",
     short: "Leaving stuff behind? We haul away everything that isn't coming to the new place.",
-    icon: <IconBin />,
+    icon: <Image src="/icons/junk-removal/move-out-junk-haul.svg" alt="" width={140} height={100} />,
     leadService: "junk-removal",
     metaTitle: "Move-Out Junk Removal Las Vegas | Leave It Empty",
     metaDescription:
@@ -777,7 +776,7 @@ export const SERVICES: Service[] = [
     category: "junk-removal",
     name: "Same-Day Junk Pickup",
     short: "Call in the morning, junk gone today. Upfront pricing before we load a single thing.",
-    icon: <IconHourglass />,
+    icon: <Image src="/icons/junk-removal/same-day-junk-pickup.svg" alt="" width={140} height={100} />,
     leadService: "junk-removal",
     metaTitle: "Same Day Junk Removal Las Vegas | Junk Gone Today",
     metaDescription:
@@ -821,7 +820,7 @@ export const SERVICES: Service[] = [
     category: "junk-removal",
     name: "Mattress Removal",
     short: "Old mattress and box spring carried out from any room and hauled away. No curb, no plastic wrap.",
-    icon: <IconSofa />,
+    icon: <Image src="/icons/junk-removal/mattress-removal.svg" alt="" width={140} height={100} />,
     leadService: "junk-removal",
     metaTitle: "Mattress Removal Las Vegas | Same-Day Mattress Disposal",
     metaDescription:
@@ -873,7 +872,7 @@ export const SERVICES: Service[] = [
     category: "junk-removal",
     name: "Hot Tub Removal",
     short: "Old spa taking over the backyard? We take it apart, haul it out and leave the pad clean.",
-    icon: <IconBin />,
+    icon: <Image src="/icons/junk-removal/hot-tub-removal.svg" alt="" width={140} height={100} />,
     leadService: "junk-removal",
     metaTitle: "Hot Tub Removal Las Vegas | Spa Removal & Disposal",
     metaDescription:
@@ -924,7 +923,7 @@ export const SERVICES: Service[] = [
     category: "junk-removal",
     name: "Rental & Eviction Cleanouts",
     short: "Tenant left a mess? We clear the unit fast so you can clean, repair and relist.",
-    icon: <IconBuildings />,
+    icon: <Image src="/icons/junk-removal/rental-eviction-cleanouts.svg" alt="" width={140} height={100} />,
     leadService: "junk-removal",
     metaTitle: "Eviction Cleanout Las Vegas | Rental Turnover Cleanouts",
     metaDescription:

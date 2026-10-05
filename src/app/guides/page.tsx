@@ -1,10 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SiteShell } from "@/components/site";
 import { QuoteCard } from "@/components/QuoteHeroForm";
 import { Breadcrumbs, Container, CtaBand, LearnMore } from "@/components/ui";
-import { BoxMark } from "@/components/icons";
 import { GUIDES } from "@/content/guides";
 import { pageMeta } from "@/lib/seo";
+import { editorialImage } from "@/content/editorial-images";
 
 export const metadata = pageMeta({
   title: "Las Vegas Moving & Junk Removal Guides | Local Mover Tips",
@@ -16,8 +17,10 @@ export const metadata = pageMeta({
 export default function GuidesHub() {
   return (
     <SiteShell>
-      <section className="bg-ink pb-12 pt-8 text-white lg:pb-16 lg:pt-10">
-        <Container>
+      <section className="relative overflow-hidden bg-ink pb-12 pt-8 text-white lg:pb-16 lg:pt-10">
+        <Image src={editorialImage("moving-day-checklist")} alt="" fill priority sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.91),rgba(0,0,0,.73)_58%,rgba(0,0,0,.56))]" />
+        <Container className="relative">
           <Breadcrumbs trail={[{ label: "Guides", href: "/guides" }]} />
           <h1 className="mt-6 text-4xl font-bold leading-[1.1] sm:text-5xl">Moving &amp; Junk Removal Guides</h1>
           <p className="mt-5 max-w-[720px] text-lg font-bold leading-snug text-sky">
@@ -29,7 +32,7 @@ export default function GuidesHub() {
         <div className="grid gap-x-7 gap-y-12 sm:grid-cols-2">
           <article>
             <Link href="/free-tools/moving-cost-calculator" className="relative block aspect-[8/5] overflow-hidden rounded-lg bg-sky">
-              <BoxMark className="absolute right-3 top-3 h-14 w-14 text-ink" />
+              <Image src={editorialImage("moving-cost-calculator")} alt="" fill sizes="(min-width: 640px) 360px, 100vw" className="object-cover" />
               <span className="absolute bottom-3 left-3 bg-ink px-2 py-1 text-xs font-bold uppercase text-sky">Free tool</span>
             </Link>
             <h2 className="mt-5 text-lg font-bold leading-snug text-ink">
@@ -40,14 +43,14 @@ export default function GuidesHub() {
             <p className="mt-3 text-sm leading-6 text-ink">See what your local move should cost before you call anyone.</p>
             <LearnMore href="/free-tools/moving-cost-calculator" label="Try it" />
           </article>
-          {GUIDES.map((g, i) => (
+          {GUIDES.map((g) => (
             <article key={g.slug}>
               <Link
                 href={`/guides/${g.slug}`}
                 className="relative block aspect-[8/5] overflow-hidden rounded-lg"
-                style={{ background: i % 2 ? "linear-gradient(160deg,#7cc4ff,#1c1f24)" : "linear-gradient(160deg,#31a2fd,#000000)" }}
+                style={{ background: "#1c1f24" }}
               >
-                <BoxMark className="absolute right-3 top-3 h-14 w-14 text-white/80" />
+                <Image src={editorialImage(g.slug)} alt="" fill sizes="(min-width: 640px) 360px, 100vw" className="object-cover" />
                 {g.printable && <span className="absolute bottom-3 left-3 bg-white px-2 py-1 text-xs font-bold uppercase text-ink">Printable</span>}
               </Link>
               <h2 className="mt-5 text-lg font-bold leading-snug text-ink">

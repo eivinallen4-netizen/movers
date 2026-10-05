@@ -5,6 +5,7 @@ import { BoxMark } from "@/components/icons";
 import { REVIEWS } from "@/content/reviews";
 import { businessSchema } from "@/content/schema";
 import { pageMeta } from "@/lib/seo";
+import { editorialImage } from "@/content/editorial-images";
 
 export const metadata = pageMeta({
   title: "About Us | Local Las Vegas Movers & Junk Removal",
@@ -27,6 +28,7 @@ export default function AboutPage() {
     <SiteShell>
       <JsonLd data={{ "@context": "https://schema.org", "@type": "AboutPage", mainEntity: businessSchema() }} />
       <PageHero
+        backdrop={editorialImage("about")}
         trail={[{ label: "About", href: "/about" }]}
         h1="Local Crew. Real Care."
         tagline="Moving is stressful enough. We're here to make sure it isn't a headache."

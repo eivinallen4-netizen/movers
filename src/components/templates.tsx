@@ -24,6 +24,7 @@ import { linkCard } from "@/content/links";
 import { reviewsFor } from "@/content/reviews";
 import { businessSchema, serviceSchema, BUSINESS_ID } from "@/content/schema";
 import { pagePhoto, type PagePhoto } from "@/content/photos";
+import { editorialImage } from "@/content/editorial-images";
 
 /* ============ Hero with the quote form: every inner page opens with a way to get a quote ============ */
 
@@ -34,6 +35,7 @@ export function PageHero({
   points = [],
   lead,
   children,
+  backdrop,
 }: {
   trail: { label: string; href: string }[];
   h1: ReactNode;
@@ -41,10 +43,12 @@ export function PageHero({
   points?: string[];
   lead: { heading?: string; sub?: string };
   children?: ReactNode;
+  backdrop?: string;
 }) {
   return (
-    <section className="bg-ink pb-16 pt-8 text-white lg:pb-20 lg:pt-10">
-      <Container className="grid items-start gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
+    <section className="relative overflow-hidden bg-ink pb-16 pt-8 text-white lg:pb-20 lg:pt-10">
+      {backdrop && <><Image src={backdrop} alt="" fill priority sizes="100vw" className="object-cover object-center" /><div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.91),rgba(0,0,0,.72)_55%,rgba(0,0,0,.56))]" /></>}
+      <Container className="relative grid items-start gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
         <div className="lg:pt-6">
           <Breadcrumbs trail={trail} />
           <h1 className="mt-6 text-4xl font-bold leading-[1.1] sm:text-5xl lg:text-[52px]">{h1}</h1>
@@ -225,6 +229,7 @@ export function ServiceView({ s }: { s: Service }) {
     <>
       <JsonLd data={serviceSchema({ name: s.name, description: s.metaDescription, url: serviceHref(s) })} />
       <PageHero
+        backdrop={pagePhoto(`${s.category}-${s.slug}`)?.src}
         trail={[hub, { label: s.name, href: serviceHref(s) }]}
         h1={s.h1}
         tagline={s.tagline}
@@ -305,6 +310,7 @@ export function AreaView({ a }: { a: Area }) {
         }}
       />
       <PageHero
+        backdrop={pagePhoto(`area-${a.slug}`)?.src}
         trail={[{ label: "Service Areas", href: "/service-areas" }, { label: a.name, href }]}
         h1={a.h1}
         tagline={a.tagline}
@@ -386,8 +392,10 @@ export function GuideView({ g }: { g: Guide }) {
           publisher: { "@id": BUSINESS_ID, "@type": "Organization", name: BUSINESS },
         }}
       />
-      <section className="bg-ink pb-12 pt-8 text-white lg:pb-16 lg:pt-10 print:bg-white print:pb-4 print:text-ink">
-        <Container>
+      <section className="relative overflow-hidden bg-ink pb-12 pt-8 text-white lg:pb-16 lg:pt-10 print:bg-white print:pb-4 print:text-ink">
+        <Image src={editorialImage(g.slug)} alt="" fill priority sizes="100vw" className="object-cover object-center print:hidden" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.91),rgba(0,0,0,.73)_58%,rgba(0,0,0,.56))] print:hidden" />
+        <Container className="relative">
           <div className="print:hidden">
             <Breadcrumbs trail={[{ label: "Guides", href: "/guides" }, { label: g.title, href }]} />
           </div>

@@ -5,6 +5,7 @@ import { JUNK_STEPS, servicesIn } from "@/content/services";
 import { reviewsFor } from "@/content/reviews";
 import { serviceSchema } from "@/content/schema";
 import { pageMeta } from "@/lib/seo";
+import { editorialImage } from "@/content/editorial-images";
 
 const TITLE = "Junk Removal Las Vegas | Same-Day Pickup, Upfront Pricing";
 const DESCRIPTION =
@@ -17,6 +18,7 @@ export default function JunkHub() {
     <SiteShell>
       <JsonLd data={serviceSchema({ name: "Junk removal", description: DESCRIPTION, url: "/junk-removal" })} />
       <PageHero
+        backdrop={editorialImage("junk-removal")}
         trail={[{ label: "Junk Removal", href: "/junk-removal" }]}
         h1="Junk Removal in Las Vegas. Junk Gone Today."
         tagline="One item or a whole house. Honest pricing and no heavy lifting for you."

@@ -4,6 +4,8 @@ import { linkCard } from "@/content/links";
 import { SITE_URL } from "@/content/site";
 import { pageMeta } from "@/lib/seo";
 import { Calculator } from "./Calculator";
+import Image from "next/image";
+import { editorialImage } from "@/content/editorial-images";
 
 const TITLE = "Las Vegas Moving Cost Calculator [2026] | Free Estimate";
 const DESCRIPTION =
@@ -26,8 +28,10 @@ export default function CalculatorPage() {
           description: DESCRIPTION,
         }}
       />
-      <section className="bg-ink pb-12 pt-8 text-white lg:pb-14 lg:pt-10">
-        <Container>
+      <section className="relative overflow-hidden bg-ink pb-12 pt-8 text-white lg:pb-14 lg:pt-10">
+        <Image src={editorialImage("moving-cost-calculator")} alt="" fill priority sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.91),rgba(0,0,0,.73)_58%,rgba(0,0,0,.56))]" />
+        <Container className="relative">
           <Breadcrumbs
             trail={[
               { label: "Free Tools", href: "/free-tools" },

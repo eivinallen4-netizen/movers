@@ -7,6 +7,7 @@ import { reviewsFor } from "@/content/reviews";
 import { serviceSchema } from "@/content/schema";
 import { AREA_LINKS } from "@/content/site";
 import { pageMeta } from "@/lib/seo";
+import { editorialImage } from "@/content/editorial-images";
 
 const TITLE = "Las Vegas Movers | Honest, On-Time Local Moving Company";
 const DESCRIPTION =
@@ -19,6 +20,7 @@ export default function MovingHub() {
     <SiteShell>
       <JsonLd data={serviceSchema({ name: "Local moving", description: DESCRIPTION, url: "/moving" })} />
       <PageHero
+        backdrop={editorialImage("moving")}
         trail={[{ label: "Moving", href: "/moving" }]}
         h1="Las Vegas Movers Who Make Moving Easy"
         tagline="Stress-free moves from start to finish. We carry the weight so you don't have to."

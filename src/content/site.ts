@@ -12,6 +12,11 @@ export const DOMAIN = "moversandjunkremoval.net";
 // TODO: set the real Instagram URL.
 export const INSTAGRAM = "https://www.instagram.com/";
 
+/** Business hours for Google ("movers open today"). Left out of the schema while empty. */
+export const HOURS: { days: string[]; opens: string; closes: string }[] = [
+  { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "07:00", closes: "22:00" },
+];
+
 export const CITIES = ["Las Vegas", "Henderson", "Summerlin", "Paradise", "North Las Vegas"];
 
 export type NavLink = { label: string; href: string };
@@ -75,9 +80,10 @@ export const FOOTER: Record<string, NavLink[]> = {
   "Free Tools": TOOL_LINKS,
   Resources: [
     { label: "FAQ", href: "/faq" },
+    { label: "How to Choose a Moving Company", href: "/guides/how-to-choose-a-moving-company-las-vegas" },
     { label: "7 Red Flags When Hiring Movers", href: "/guides/red-flags-hiring-movers" },
     { label: "How to Prepare for Moving Day", href: "/guides/how-to-prepare-for-moving-day" },
-    { label: "How Much Do Movers Cost?", href: "/guides/how-much-do-movers-cost-las-vegas" },
+    { label: "How Much Does a Moving Company Cost?", href: "/guides/how-much-do-movers-cost-las-vegas" },
     { label: "Las Vegas Bulk Trash Pickup", href: "/guides/las-vegas-bulk-trash-pickup" },
     { label: "Reviews", href: "/reviews" },
     { label: "Blog", href: "/guides" },

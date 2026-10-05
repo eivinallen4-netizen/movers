@@ -1,23 +1,8 @@
-import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
-  BadgeCareBox,
-  BadgeOnTime,
-  BadgePriceTag,
-  BadgeSameDay,
   BoxMark,
   BoxyMascot,
-  IconBin,
-  IconBuildings,
-  IconDiamond,
-  IconGloves,
-  IconHourglass,
-  IconPins,
-  IconSofa,
-  IconTapeBox,
-  IconTruckRoute,
-  Instagram,
-  Play,
 } from "@/components/icons";
 import { Accordion, BeforeAfter, PhotoStrip, ReviewPager, VideoCarousel } from "@/components/interactive";
 import { QuoteHeroForm } from "@/components/QuoteHeroForm";
@@ -154,10 +139,10 @@ function Hero() {
 
 function RatingsBar() {
   const sites = [
-    { name: "Upfront pricing", score: "Upfront", count: "No hidden fees", icon: <BadgePriceTag /> },
-    { name: "On time", score: "On Time", count: "We call when we're on the way", icon: <BadgeOnTime /> },
-    { name: "Careful", score: "Careful", count: "Handled like it's our own", icon: <BadgeCareBox /> },
-    { name: "Same day", score: "Same Day", count: "Last-minute moves & pickups", icon: <BadgeSameDay /> },
+    { name: "Upfront pricing", score: "Upfront", count: "No hidden fees", icon: "/icons/landing/upfront-pricing.svg" },
+    { name: "On time", score: "On Time", count: "We call when we're on the way", icon: "/icons/landing/on-time.svg" },
+    { name: "Careful", score: "Careful", count: "Handled like it's our own", icon: "/icons/landing/careful.svg" },
+    { name: "Same day", score: "Same Day", count: "Last-minute moves & pickups", icon: "/icons/landing/same-day.svg" },
   ];
   return (
     <section className="bg-white py-8">
@@ -171,7 +156,7 @@ function RatingsBar() {
           {sites.map((s) => (
             <div key={s.name} className="flex items-center gap-3" title={s.name}>
               <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-sky-100">
-                {s.icon}
+                <Image src={s.icon} alt="" width={44} height={44} />
               </span>
               <span>
                 <span className="block text-xl font-semibold leading-none text-ink">{s.score}</span>
@@ -211,49 +196,49 @@ function PressMarquee() {
 
 const SERVICES = [
   {
-    icon: <IconPins />,
+    icon: "/icons/landing/local-moving.svg",
     title: "Local Las Vegas Moves",
     href: "/moving/local-moving",
     body: "Houses, apartments and condos anywhere in the valley. We show up on time, get right to work and finish the job, not leave it in your garage.",
   },
   {
-    icon: <IconHourglass />,
+    icon: "/icons/landing/same-day-moving.svg",
     title: "Same-Day & Last-Minute Moves",
     href: "/moving/same-day-moving",
     body: "Other movers canceled? Lease ending sooner than planned? Call us. We've saved plenty of moving days on short notice.",
   },
   {
-    icon: <IconBuildings />,
+    icon: "/icons/landing/apartment-condo-moving.svg",
     title: "Apartment & Condo Moves",
     href: "/moving/apartment-condo-moving",
     body: "Stairs, elevators and tight hallways don't slow us down. We protect the walls and floors on the way out and on the way in.",
   },
   {
-    icon: <IconGloves />,
+    icon: "/icons/landing/moving-labor.svg",
     title: "Moving Labor",
     href: "/moving/moving-labor",
     body: "Already have a truck? Our crew does the heavy lifting, loading and unloading so you and your family don't have to.",
   },
   {
-    icon: <IconSofa />,
+    icon: "/icons/landing/furniture-wrapping-setup.svg",
     title: "Furniture Wrapping & Setup",
     href: "/moving/furniture-wrapping-setup",
     body: "Every piece is wrapped and protected. Beds and tables go back together and every box lands in the right room.",
   },
   {
-    icon: <IconTruckRoute />,
+    icon: "/icons/landing/move-junk-haul-away.svg",
     title: "Move + Junk Haul-Away",
     href: "/moving/move-and-junk-haul-away",
     body: "Don't pay to move stuff you don't want. We move what you keep and haul away the rest in the same trip.",
   },
 ];
 
-function ServiceGrid({ items }: { items: { icon: ReactNode; title: string; href: string; body: string }[] }) {
+function ServiceGrid({ items }: { items: { icon: string; title: string; href: string; body: string }[] }) {
   return (
     <div className="grid gap-x-9 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((s) => (
         <div key={s.title}>
-          <div className="flex h-24 items-end">{s.icon}</div>
+          <div className="flex h-24 items-end"><Image src={s.icon} alt="" width={140} height={100} /></div>
           <h3 className="mt-6 text-[26px] font-bold leading-tight text-ink">
             <Link href={s.href} className="hover:text-sky-700">
               {s.title}
@@ -414,37 +399,37 @@ function CostCalculator() {
 
 const JUNK = [
   {
-    icon: <IconSofa />,
+    icon: "/icons/junk-removal/furniture-removal.svg",
     title: "Furniture Removal",
     href: "/junk-removal/furniture-removal",
     body: "Old couches, mattresses, dressers and tables. Point to it and it's gone. We do all the lifting and carrying.",
   },
   {
-    icon: <IconDiamond />,
+    icon: "/icons/junk-removal/appliance-removal.svg",
     title: "Appliance Removal",
     href: "/junk-removal/appliance-removal",
     body: "Fridges, washers, dryers and water heaters hauled out without scratching your floors or walls.",
   },
   {
-    icon: <IconTapeBox />,
+    icon: "/icons/junk-removal/garage-cleanouts.svg",
     title: "Garage Cleanouts",
     href: "/junk-removal/garage-cleanouts",
     body: "Your garage called. It wants to be a garage again. We clear it out top to bottom so you can park in it.",
   },
   {
-    icon: <IconBuildings />,
+    icon: "/icons/junk-removal/estate-cleanouts.svg",
     title: "Estate Cleanouts",
     href: "/junk-removal/estate-cleanouts",
     body: "A respectful, patient crew for a hard time. We clear the whole home and treat every room with care.",
   },
   {
-    icon: <IconBin />,
+    icon: "/icons/junk-removal/move-out-junk-haul.svg",
     title: "Move-Out Junk Haul",
     href: "/junk-removal/move-out-junk-haul",
     body: "Leaving stuff behind? We haul away everything that isn't coming to the new place.",
   },
   {
-    icon: <IconHourglass />,
+    icon: "/icons/junk-removal/same-day-junk-pickup.svg",
     title: "Same-Day Junk Pickup",
     href: "/junk-removal/same-day-junk-pickup",
     body: "Call in the morning, junk gone today. Upfront pricing before we load a single thing.",
@@ -569,7 +554,7 @@ function ServiceArea() {
               <circle cx="205" cy="203" r="10" fill="#111" />
             </svg>
             <button aria-label="Play video" className="absolute bottom-4 right-4 text-white">
-              <Play className="h-14 w-14 [&>circle]:fill-white [&>path]:fill-sky-700" />
+              <Image src="/icons/landing/play.svg" alt="" width={56} height={56} />
             </button>
           </Photo>
           <div>
@@ -637,7 +622,7 @@ function OnTime() {
           >
             <BoxyMascot className="absolute inset-x-0 bottom-2 mx-auto h-[88%]" />
             <button aria-label="Play video" className="absolute bottom-4 right-4">
-              <Play className="h-14 w-14 [&>circle]:fill-white [&>path]:fill-sky-700" />
+              <Image src="/icons/landing/play.svg" alt="" width={56} height={56} />
             </button>
           </Photo>
         </div>
@@ -717,7 +702,7 @@ function InstagramCta() {
   return (
     <section className="py-12 lg:py-16">
       <Container className="flex items-center gap-4">
-        <Instagram />
+        <Image src="/icons/landing/instagram.svg" alt="" width={48} height={48} />
         <div>
           <p className="text-lg font-bold text-ink">Moving Shouldn&apos;t Be a Headache.</p>
           <p className="text-sm font-semibold text-ink">

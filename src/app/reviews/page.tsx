@@ -3,6 +3,7 @@ import { PageHero } from "@/components/templates";
 import { Container, CtaBand, ReviewCard, ReviewSourceLinks } from "@/components/ui";
 import { REVIEWS } from "@/content/reviews";
 import { pageMeta } from "@/lib/seo";
+import { editorialImage } from "@/content/editorial-images";
 
 export const metadata = pageMeta({
   title: "Reviews | What Las Vegas Customers Say About Our Movers",
@@ -15,6 +16,7 @@ export default function ReviewsPage() {
   return (
     <SiteShell>
       <PageHero
+        backdrop={editorialImage("reviews")}
         trail={[{ label: "Reviews", href: "/reviews" }]}
         h1="Moving Shouldn't Be a Headache. Here's What Customers Say."
         tagline="On time, careful and honest. Don't take our word for it."

@@ -4,6 +4,7 @@ import { Container, CtaBand, JsonLd, LinkCards, SectionTitle } from "@/component
 import { AREAS } from "@/content/areas";
 import { businessSchema } from "@/content/schema";
 import { pageMeta } from "@/lib/seo";
+import { editorialImage } from "@/content/editorial-images";
 
 export const metadata = pageMeta({
   title: "Service Areas | Las Vegas Valley Movers & Junk Removal",
@@ -17,6 +18,7 @@ export default function AreasHub() {
     <SiteShell>
       <JsonLd data={businessSchema()} />
       <PageHero
+        backdrop={editorialImage("service-areas")}
         trail={[{ label: "Service Areas", href: "/service-areas" }]}
         h1="Proudly Serving the Whole Las Vegas Valley"
         tagline="We live here too. Moving across town or clearing out the garage, one call gets it handled."

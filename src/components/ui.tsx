@@ -287,19 +287,22 @@ export function CtaBand({
   );
 }
 
-export function LinkCards({ links }: { links: { label: string; href: string; body?: string }[] }) {
+export function LinkCards({ links }: { links: { label: string; href: string; body?: string; image?: string }[] }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {links.map((l) => (
         <Link
           key={l.href}
           href={l.href}
-          className="group flex flex-col border border-ink bg-white p-5 transition hover:bg-sky-100"
+          className="group flex flex-col overflow-hidden border border-ink bg-white transition hover:bg-sky-100"
         >
-          <span className="flex items-center justify-between gap-3 text-lg font-bold text-ink">
-            {l.label} <ArrowUpRight className="shrink-0 text-sky-700" />
+          {l.image && <span className="relative block aspect-[8/5] overflow-hidden"><Image src={l.image} alt="" fill sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform group-hover:scale-105" /></span>}
+          <span className="flex flex-col p-5">
+            <span className="flex items-center justify-between gap-3 text-lg font-bold text-ink">
+              {l.label} <ArrowUpRight className="shrink-0 text-sky-700" />
+            </span>
+            {l.body && <span className="mt-2 text-sm leading-6 text-ink-600">{l.body}</span>}
           </span>
-          {l.body && <span className="mt-2 text-sm leading-6 text-ink-600">{l.body}</span>}
         </Link>
       ))}
     </div>

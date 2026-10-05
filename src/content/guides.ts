@@ -442,7 +442,108 @@ export const GUIDES: Guide[] = [
     ],
     leadService: "local-move",
     ctaHeading: "Ask us all seven. We'll answer.",
-    related: ["/moving/local-moving", "/moving/furniture-wrapping-setup", "/guides/moving-day-checklist"],
+    related: ["/guides/how-to-choose-a-moving-company-las-vegas", "/moving/local-moving", "/moving/furniture-wrapping-setup", "/guides/moving-day-checklist"],
+  },
+  {
+    slug: "how-to-choose-a-moving-company-las-vegas",
+    title: "How to Choose a Moving Company in Las Vegas (Free Checklist)",
+    metaTitle: "How to Choose a Moving Company in Las Vegas: 7-Step Checklist",
+    metaDescription:
+      "How to find a reliable, trustworthy local moving company in Las Vegas: check the license, read reviews the right way, compare written quotes and ask these questions before you hire.",
+    excerpt: "How to find a reliable local mover: check the license, read reviews the right way and ask the right questions before you hire.",
+    updated: "2026-10-05",
+    printable: true,
+    intro: [
+      "To choose a moving company in Las Vegas, check that it's licensed with the Nevada Transportation Authority, read its recent reviews, get two or three upfront quotes in writing and ask each mover exactly what could change the price. The one that answers clearly, picks up the phone and puts it in writing is usually the one to hire.",
+      "Here's how to do each step, plus a checklist you can print and take on your calls.",
+    ],
+    blocks: [
+      {
+        h2: "1. Check that the mover is licensed",
+        paras: [
+          "Moves within Nevada are regulated by the Nevada Transportation Authority (NTA). Ask for the company's NTA number and look it up. For a move out of state, the company also needs a USDOT number you can check with the FMCSA.",
+          "If a mover dodges the question or only gives you a cell number and a first name, keep looking.",
+        ],
+      },
+      {
+        h2: "2. Read the reviews the right way",
+        paras: [
+          "Don't stop at the star rating. Sort by newest and read the 1- and 2-star reviews. One bad day happens to everyone. The same complaint over and over (surprise fees, late crews, damage nobody owned up to) is a pattern.",
+          "Then look at how the company replies. A mover that responds calmly and fixes problems is a safer bet than one with a perfect score and no replies at all. Check Google, Yelp and the BBB, not just the reviews on the mover's own site.",
+        ],
+      },
+      {
+        h2: "3. Get 2–3 upfront quotes in writing",
+        paras: [
+          "A reliable mover will give you a clear price before moving day and tell you what's included. Be careful with a quote that's far below the others. The most common complaint about Las Vegas movers is a final bill that's double the quote, and it almost always starts with a lowball number over the phone.",
+          "Compare the total, not just the hourly rate: crew size, estimated hours, truck or travel fee and anything billed for stairs, long carries or heavy items.",
+        ],
+      },
+      {
+        h2: "4. Ask how they handle your move",
+        paras: [
+          "A trustworthy mover will answer these without hesitating. If you get vague answers now, you'll get vague answers on moving day.",
+        ],
+        checklist: [
+          "What's included in my price, and what could change it?",
+          "How many movers are you sending, and how long will it take?",
+          "Is drive time billed? Is there a truck or travel fee?",
+          "Do you wrap furniture and protect floors and door frames?",
+          "Will you take beds apart, put them back together and put boxes in the right rooms?",
+          "Will you call when you're on the way?",
+          "What happens if something is damaged?",
+        ],
+      },
+      {
+        h2: "5. Make sure they know the area",
+        paras: [
+          "A local Las Vegas moving company knows which HOAs need a guard-gate list, which high-rises need a loading dock reservation and why you don't start a July move at 2pm. That local knowledge saves hours, and on an hourly move, hours are money.",
+        ],
+      },
+      {
+        h2: "6. Test how easy they are to reach",
+        paras: [
+          "Call during business hours. Does a real person answer? Do they call back when they say they will? How a company treats you before you've paid is the best preview of how it'll treat you on moving day.",
+        ],
+      },
+      {
+        h2: "7. Don't pick on price alone",
+        paras: [
+          "The cheapest moving company near you is rarely the cheapest move. A slow crew on an hourly rate, surprise fees and a broken dresser all cost more than the difference between quotes. Pick the movers that are clear, reachable and careful, then compare prices among those.",
+        ],
+      },
+      {
+        h2: "Your mover checklist",
+        checklist: [
+          "Licensed with the Nevada Transportation Authority (and USDOT for out-of-state moves)",
+          "Recent reviews read, including the 1- and 2-star ones",
+          "2–3 written quotes, compared on the total price",
+          "Every possible fee listed in writing",
+          "Crew size and estimated hours confirmed",
+          "Furniture wrapping and reassembly included",
+          "Arrival window confirmed, with a call on the way",
+          "Damage policy explained",
+        ],
+      },
+      {
+        h2: "Where to check a mover",
+        links: [
+          { label: "Nevada Transportation Authority", href: "https://nta.nv.gov/", note: "Regulates household goods movers within Nevada. Check that a mover is licensed." },
+          { label: "Better Business Bureau", href: "https://www.bbb.org/", note: "Look up complaints and how the company responded." },
+          { label: "FMCSA: Protect Your Move", href: "https://www.fmcsa.dot.gov/protect-your-move", note: "For moves out of state. Look up a mover's USDOT number and know your rights." },
+        ],
+      },
+    ],
+    faqs: [
+      { q: "How do I find a reliable local moving company?", a: "Check the mover's Nevada Transportation Authority license, read its recent reviews on Google and Yelp, get two or three written quotes and ask what could change the price. Reliable movers answer clearly and put it in writing." },
+      { q: "How do I find a reputable moving company near me?", a: "Look for a local company with a license you can verify, a steady record of recent reviews and replies to complaints, and a real person who answers the phone. Avoid movers that won't give you a written quote." },
+      { q: "Which local moving company has the best reviews?", a: "Look past the star rating to the recent reviews and the bad ones. A company with lots of recent reviews, consistent praise for being on time and careful, and calm replies to complaints is a better sign than a perfect score from a handful of reviews." },
+      { q: "Can I find a moving company that's open today?", a: "Yes. Some Las Vegas movers, including us, do same-day and last-minute moves. Call as early in the day as you can so there's time to send a crew." },
+      { q: "How far ahead should I hire a moving company?", a: "Two to four weeks is ideal, longer if you're moving at the end or start of the month when leases turn over." },
+    ],
+    leadService: "local-move",
+    ctaHeading: "Ask us every question on the list.",
+    related: ["/guides/red-flags-hiring-movers", "/guides/how-much-do-movers-cost-las-vegas", "/moving/local-moving", "/moving/same-day-moving"],
   },
   {
     slug: "how-to-prepare-for-moving-day",
@@ -513,13 +614,14 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "how-much-do-movers-cost-las-vegas",
-    title: "How Much Do Movers Cost in Las Vegas?",
-    metaTitle: "How Much Do Movers Cost in Las Vegas? (2026 Local Prices)",
+    title: "How Much Does a Moving Company Cost in Las Vegas?",
+    metaTitle: "How Much Does a Moving Company Cost in Las Vegas? (2026 Prices)",
     metaDescription:
-      "What local movers cost in Las Vegas in 2026, by home size: studio to 4-bedroom. Hourly rates, crew sizes, what drives the price and how to avoid a surprise bill.",
-    excerpt: "Typical 2026 prices for a local Las Vegas move by home size, plus what makes a move cost more and how to keep it down.",
-    updated: "2026-09-29",
+      "What it costs to hire a local moving company in Las Vegas in 2026, by home size: studio to 4-bedroom. Hourly rates, crew sizes, what drives the price and how to avoid a surprise bill.",
+    excerpt: "Typical 2026 prices to hire a local Las Vegas moving company by home size, plus what makes a move cost more and how to keep it down.",
+    updated: "2026-10-05",
     intro: [
+      `A local moving company in Las Vegas usually costs ${moveRange(HOME_SIZES[0])} for a studio and ${moveRange(HOME_SIZES[4])} for a 4+ bedroom home. Most charge $${HOURLY_PER_MOVER.low}–$${HOURLY_PER_MOVER.high} per mover, per hour, plus a $${TRUCK_FEE.low}–$${TRUCK_FEE.high} truck fee.`,
       "Most local movers in Las Vegas charge by the hour, per mover, plus a truck or travel fee. That means the real question isn't the hourly rate. It's how many hours your move will take and whether the crew actually works the whole time.",
       "Below are typical price ranges for local moves across the valley, from Henderson to Summerlin to North Las Vegas. They're planning numbers, not a quote. We always give you an exact, upfront price before moving day.",
     ],
@@ -533,6 +635,13 @@ export const GUIDES: Guide[] = [
           head: ["Home size", "Typical crew", "Typical hours", "Typical price"],
           rows: HOME_SIZES.map((h) => [h.label, `${h.crew} movers`, `${h.hours[0]}–${h.hours[1]} hrs`, moveRange(h)]),
         },
+      },
+      {
+        h2: "Is it cheaper to hire a moving company by the hour or a flat rate?",
+        paras: [
+          "For a local move, hourly is the norm and usually the better deal if you're packed and ready. You pay for the time the crew actually works. A flat rate protects you from a slow crew, but it's padded to cover the mover's risk.",
+          "Either way, the number that matters is the total. Ask for an upfront price in writing and ask exactly what could change it.",
+        ],
       },
       {
         h2: "What makes a Las Vegas move cost more",
@@ -565,14 +674,16 @@ export const GUIDES: Guide[] = [
       },
     ],
     faqs: [
+      { q: "How much does it cost to hire a moving company?", a: `For a local Las Vegas move, most people pay ${moveRange(HOME_SIZES[1])} for a 1-bedroom and ${moveRange(HOME_SIZES[3])} for a 3-bedroom home. The price depends on crew size, hours, stairs and drive time.` },
+      { q: "How much is a local moving company per hour?", a: `Most local moving companies in Las Vegas charge $${HOURLY_PER_MOVER.low}–$${HOURLY_PER_MOVER.high} per mover, per hour. A 2-person crew runs about $${HOURLY_PER_MOVER.low * 2}–$${HOURLY_PER_MOVER.high * 2} an hour, plus a truck fee.` },
       { q: "How much does it cost to move a 2-bedroom apartment in Las Vegas?", a: `A local 2-bedroom move usually runs ${moveRange(HOME_SIZES[2])} with a 3-person crew, depending on stairs, drive time and how packed you are.` },
       { q: "Do Las Vegas movers charge by the hour?", a: "Most local movers do, per mover, plus a truck or travel fee. Long-distance moves are usually priced by weight or volume instead." },
       { q: "Should I tip movers in Las Vegas?", a: "Tipping is up to you and should never be pressured. Many people tip for a job done well, but a good crew won't ask." },
-      { q: "Is it cheaper to rent a truck and hire labor?", a: "Sometimes. If you're comfortable driving a truck, hiring moving labor for loading and unloading can save money. Our moving cost calculator shows both options." },
+      { q: "What is the cheapest way to hire movers?", a: "Rent your own truck and hire moving labor for loading and unloading. If you'd rather not drive a truck, book a full-service mover mid-month on a weekday morning and be fully packed when they arrive. Our moving cost calculator shows both options." },
     ],
     leadService: "local-move",
     ctaHeading: "Get your exact moving price",
-    related: ["/free-tools/moving-cost-calculator", "/moving/local-moving", "/guides/red-flags-hiring-movers", "/moving/moving-labor"],
+    related: ["/free-tools/moving-cost-calculator", "/guides/how-to-choose-a-moving-company-las-vegas", "/moving/local-moving", "/moving/moving-labor"],
   },
   {
     slug: "las-vegas-bulk-trash-pickup",
