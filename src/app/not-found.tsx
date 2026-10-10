@@ -3,7 +3,7 @@ import { BrandButton, CallButton, Container, LinkCards } from "@/components/ui";
 
 export default function NotFound() {
   return (
-    <SiteShell quoteHref="/quote">
+    <SiteShell>
       <section className="bg-ink py-16 text-white lg:py-24">
         <Container>
           <p className="text-xs font-extrabold uppercase tracking-widest text-sky">404</p>

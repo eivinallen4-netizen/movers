@@ -9,14 +9,13 @@ import { DOMAIN, FOOTER, LEGAL_LINKS, NAV, PHONE, PHONE_HREF } from "@/content/s
 
 /*
  * Page chrome shared by every public page: announcement bar, header with menus, footer.
- * `quoteHref` is where the header's "Free Quote" button goes: the home hero form (#quote)
- * or the quote card every inner page carries (#get-quote).
+ * The header's "Free Quote" button always goes to the /quote wizard, same as the hero form.
  */
-export function SiteShell({ children, quoteHref = "#get-quote" }: { children: ReactNode; quoteHref?: string }) {
+export function SiteShell({ children }: { children: ReactNode }) {
   return (
     <main className="overflow-x-hidden">
       <AnnouncementBar />
-      <Header quoteHref={quoteHref} />
+      <Header />
       {children}
       <Footer />
     </main>
@@ -34,7 +33,7 @@ function AnnouncementBar() {
   );
 }
 
-function Header({ quoteHref }: { quoteHref: string }) {
+function Header() {
   return (
     <header className="relative z-40 bg-ink print:hidden">
       {/* Wider than Container so logo, six links and both CTAs never crowd each other */}
@@ -67,12 +66,12 @@ function Header({ quoteHref }: { quoteHref: string }) {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <a
-            href={quoteHref}
+          <Link
+            href="/quote"
             className="hidden h-12 items-center gap-2 whitespace-nowrap bg-sky px-5 text-[13px] font-bold uppercase text-ink transition hover:bg-sky-600 md:flex"
           >
             Free Quote <ArrowUpRight />
-          </a>
+          </Link>
           <a
             href={PHONE_HREF}
             className="hidden h-12 flex-col justify-center whitespace-nowrap bg-white px-4 text-ink transition hover:bg-sky-100 md:flex"
@@ -82,7 +81,7 @@ function Header({ quoteHref }: { quoteHref: string }) {
             </span>
             <span className="mt-1 text-[10px] font-semibold leading-none text-ink-600">Talk to a real local person</span>
           </a>
-          <MobileMenu links={NAV} phone={PHONE} phoneHref={PHONE_HREF} quoteHref={quoteHref} />
+          <MobileMenu links={NAV} phone={PHONE} phoneHref={PHONE_HREF} quoteHref="/quote" />
         </div>
       </div>
     </header>

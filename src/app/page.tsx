@@ -43,7 +43,7 @@ export const metadata = pageMeta({
 
 export default function Home() {
   return (
-    <SiteShell quoteHref="#quote">
+    <SiteShell>
       <JsonLd data={businessSchema()} />
       <Hero />
       <RatingsBar />

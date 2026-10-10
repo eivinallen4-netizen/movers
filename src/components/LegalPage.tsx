@@ -5,7 +5,7 @@ import { Breadcrumbs, Container } from "./ui";
 /* Plain text page for legal/policy content. Have a lawyer review the copy before launch. */
 export function LegalPage({ title, path, updated, children }: { title: string; path: string; updated: string; children: ReactNode }) {
   return (
-    <SiteShell quoteHref="/quote">
+    <SiteShell>
       <section className="bg-ink pb-10 pt-8 text-white">
         <Container>
           <Breadcrumbs trail={[{ label: title, href: path }]} />
