@@ -1,9 +1,9 @@
 /*
- * Every photo / video slot on the site, in one place.
+ * Every photo slot on the site, in one place.
  *
  * To add media: drop a file into `public/media/` named after the slot key, e.g.
  *   public/media/hero.jpg               -> photo
- *   public/media/area-video.mp4         -> video (add area-video.jpg too for a poster frame)
+ *   public/media/pricing-photo.webp     -> photo
  * Supported: .jpg .jpeg .png .webp .avif (photos), .mp4 .webm (videos).
  * No code changes needed; until a file exists, the gradient/illustration placeholder shows.
  * `alt` is the description screen readers and Google see, so keep it accurate.
@@ -22,21 +22,6 @@ export const MEDIA = {
   },
   "calculator-photo": { alt: "Bedroom stacked with packed moving boxes, a bookcase and a wrapped mattress", tone: "linear-gradient(135deg,#f3e6da,#d9b996)" },
   "junk-photo": { alt: "Bedroom crowded with bins, a wrapped mattress and boxes waiting to be cleared out", tone: "linear-gradient(135deg,#f5f1ec,#cfc6bb)" },
-  "area-video": {
-    alt: "Our crew working across the Las Vegas valley",
-    tone: "linear-gradient(160deg,#a9d7ff 0%,#4b5058 55%,#000000 100%)",
-  },
-  "ontime-video": {
-    alt: "Movers arriving on time",
-    tone: "linear-gradient(180deg,#bfe3ff 0%,#9fd18a 60%,#5f9b4c 100%)",
-  },
-
-  /* Short-video carousel under the hero (captions live in page.tsx) */
-  "reel-1": { alt: "Movers showing up on time", tone: "linear-gradient(160deg,#e3e6ea,#6b737d)" },
-  "reel-2": { alt: "Careful handling of furniture", tone: "linear-gradient(160deg,#7cc4ff,#0b72c6)" },
-  "reel-3": { alt: "Upfront moving quote", tone: "linear-gradient(160deg,#d9dce0,#4b5058)" },
-  "reel-4": { alt: "Crew working fast on the clock", tone: "linear-gradient(160deg,#eeeeee,#9a9a9a)" },
-  "reel-5": { alt: "Garage cleanout", tone: "linear-gradient(160deg,#a9d7ff,#1a8ce8)" },
 
   /* Guide / blog card thumbnails */
   "guide-1": { alt: "Moving cost calculator", tone: "linear-gradient(160deg,#31a2fd,#0b72c6)" },

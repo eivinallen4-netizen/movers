@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import logo from "../../public/logo.png";
+import mark from "../../public/mark.png";
 import { Check, Phone } from "./icons";
 import { QuoteCard } from "./QuoteHeroForm";
 import { PrintButton } from "./PrintButton";
@@ -16,7 +18,7 @@ import {
   ReviewRow,
   SectionTitle,
 } from "./ui";
-import { AREA_LINKS, BUSINESS, PHONE, PHONE_HREF, SITE_URL } from "@/content/site";
+import { AREA_LINKS, BUSINESS, DOMAIN, PHONE, PHONE_HREF, SITE_URL } from "@/content/site";
 import { JUNK_STEPS, MOVING_STEPS, servicesIn, serviceHref, type Service } from "@/content/services";
 import type { Area } from "@/content/areas";
 import type { Guide } from "@/content/guides";
@@ -392,15 +394,26 @@ export function GuideView({ g }: { g: Guide }) {
           publisher: { "@id": BUSINESS_ID, "@type": "Organization", name: BUSINESS },
         }}
       />
-      <section className="relative overflow-hidden bg-ink pb-12 pt-8 text-white lg:pb-16 lg:pt-10 print:bg-white print:pb-4 print:text-ink">
+      <section className="relative overflow-hidden bg-ink pb-12 pt-8 text-white lg:pb-16 lg:pt-10 print:bg-white print:pb-2 print:pt-0 print:text-ink">
         <Image src={editorialImage(g.slug)} alt="" fill priority sizes="100vw" className="object-cover object-center print:hidden" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.91),rgba(0,0,0,.73)_58%,rgba(0,0,0,.56))] print:hidden" />
         <Container className="relative">
+          {/* Printed / saved-as-PDF copies open with the brand letterhead instead of the site header */}
+          <div className="hidden items-end justify-between gap-6 border-b-4 border-sky pb-4 print:flex">
+            <Image src={logo} alt={BUSINESS} loading="eager" className="h-16 w-auto" />
+            <div className="text-right">
+              <p className="text-[11px] font-extrabold uppercase tracking-widest text-sky-700">
+                {g.printable ? "Free printable checklist" : "Free Las Vegas guide"}
+              </p>
+              <p className="mt-1 text-lg font-extrabold text-ink">{PHONE}</p>
+              <p className="text-xs font-semibold text-ink-600">{DOMAIN}</p>
+            </div>
+          </div>
           <div className="print:hidden">
             <Breadcrumbs trail={[{ label: "Guides", href: "/guides" }, { label: g.title, href }]} />
           </div>
-          <h1 className="mt-6 max-w-[860px] text-4xl font-bold leading-[1.1] sm:text-5xl">{g.title}</h1>
-          <p className="mt-5 max-w-[760px] text-lg font-bold leading-snug text-sky print:text-ink">{g.excerpt}</p>
+          <h1 className="mt-6 max-w-[860px] text-4xl font-bold leading-[1.1] sm:text-5xl print:text-[34px]">{g.title}</h1>
+          <p className="mt-5 max-w-[760px] text-lg font-bold leading-snug text-sky print:mt-3 print:text-[15px] print:text-sky-700">{g.excerpt}</p>
           <p className="mt-4 text-xs font-semibold text-white/70 print:hidden">
             Updated {new Date(`${g.updated}T12:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · By the {BUSINESS} crew
           </p>
@@ -412,34 +425,34 @@ export function GuideView({ g }: { g: Guide }) {
         </Container>
       </section>
 
-      <Container className="grid gap-12 py-12 lg:grid-cols-[1fr_380px] lg:py-16">
+      <Container className="grid gap-12 py-12 lg:grid-cols-[1fr_380px] lg:py-16 print:py-6">
         <article className="min-w-0">
           {photo && <PhotoFigure photo={photo} aspect="aspect-[16/9]" className="mb-12 mr-4 print:hidden" sizes="(min-width: 1024px) 760px, 100vw" priority />}
-          <div className="space-y-5 text-[17px] leading-8 text-ink">
+          <div className="space-y-5 text-[17px] leading-8 text-ink print:text-[14px] print:leading-6">
             {g.intro.map((p) => (
               <p key={p}>{p}</p>
             ))}
           </div>
           {g.blocks.map((b) => (
-            <section key={b.h2} className="mt-12 break-inside-avoid">
-              <h2 className="text-2xl font-bold leading-tight text-ink sm:text-[28px]">{b.h2}</h2>
+            <section key={b.h2} className="mt-12 break-inside-avoid print:mt-8">
+              <h2 className="text-2xl font-bold leading-tight text-ink sm:text-[28px] print:border-l-[6px] print:border-sky print:pl-3 print:text-[20px]">{b.h2}</h2>
               {b.paras?.map((p) => (
-                <p key={p} className="mt-4 text-[16px] leading-8 text-ink">
+                <p key={p} className="mt-4 text-[16px] leading-8 text-ink print:mt-2 print:text-[14px] print:leading-6">
                   {p}
                 </p>
               ))}
               {b.list && (
-                <ul className="mt-4 list-disc space-y-2 pl-6 text-[16px] leading-7 text-ink marker:text-sky-700">
+                <ul className="mt-4 list-disc space-y-2 pl-6 text-[16px] leading-7 text-ink marker:text-sky-700 print:text-[14px] print:leading-6">
                   {b.list.map((l) => (
                     <li key={l}>{l}</li>
                   ))}
                 </ul>
               )}
               {b.checklist && (
-                <ul className="mt-5 space-y-3">
+                <ul className="mt-5 space-y-3 print:mt-3 print:space-y-2">
                   {b.checklist.map((l) => (
-                    <li key={l} className="flex gap-3 text-[16px] leading-7 text-ink">
-                      <span aria-hidden className="mt-1 h-5 w-5 shrink-0 border-2 border-ink" />
+                    <li key={l} className="flex gap-3 text-[16px] leading-7 text-ink print:text-[14px] print:leading-6">
+                      <span aria-hidden className="mt-1 h-5 w-5 shrink-0 print:mt-0.5 border-2 border-ink bg-white shadow-[3px_3px_0_0_var(--color-sky)]" />
                       {l}
                     </li>
                   ))}
@@ -496,6 +509,16 @@ export function GuideView({ g }: { g: Guide }) {
               )}
             </section>
           ))}
+          <div className="mt-10 hidden break-inside-avoid items-center gap-5 border-2 border-ink p-5 offset-sky-sm print:flex">
+            <Image src={mark} alt="" loading="eager" className="h-12 w-12" />
+            <div>
+              <p className="text-[11px] font-extrabold uppercase tracking-widest text-sky-700">Want a hand with it?</p>
+              <p className="mt-1 text-lg font-bold leading-snug text-ink">
+                Call {PHONE} or get a free quote at {DOMAIN}
+              </p>
+              <p className="mt-1 text-xs text-ink-600">Local Las Vegas movers &amp; junk removal. Honest pricing, no surprises.</p>
+            </div>
+          </div>
         </article>
         <aside className="print:hidden">
           <div id="get-quote" className="scroll-mt-6 lg:sticky lg:top-6">

@@ -27,8 +27,8 @@ export default async function QuotePage({
   const to = decodeAddressRef(one(sp.toRef));
 
   return (
-    <main className="min-h-screen bg-sky-100/40">
-      <header className="bg-ink">
+    <main className="min-h-screen bg-white">
+      <header className="border-b border-white/10 bg-ink">
         <div className="mx-auto flex w-full max-w-[1164px] items-center justify-between px-4 py-4 sm:px-6">
           <Link href="/" aria-label="Back to home">
             <Image src={logoWhite} alt="Movers and Junk Removal" className="h-12 w-auto sm:h-[60px]" priority />
@@ -42,7 +42,18 @@ export default async function QuotePage({
           </a>
         </div>
       </header>
-      <h1 className="sr-only">Get your free Las Vegas moving quote</h1>
+      <div className="bg-ink pb-24 pt-8 text-white sm:pb-28 sm:pt-12">
+        <div className="mx-auto w-full max-w-[1164px] px-4 sm:px-6">
+          <p className="text-xs font-extrabold uppercase tracking-widest text-sky">Free quote · About 2 minutes</p>
+          <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-[40px]">
+            Get your <span className="text-sky">upfront price</span>
+          </h1>
+          <p className="mt-3 max-w-[560px] text-base font-medium leading-snug text-white/85 sm:text-lg">
+            A few quick questions and a real person from our Las Vegas crew sends your quote. No hidden fees, no
+            obligation.
+          </p>
+        </div>
+      </div>
       <QuoteWizard
         initialFrom={{ text: from?.label ?? one(sp.from).slice(0, 200), selected: from }}
         initialTo={{ text: to?.label ?? one(sp.to).slice(0, 200), selected: to }}

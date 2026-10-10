@@ -2,17 +2,30 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   BoxMark,
-  BoxyMascot,
+  Check,
 } from "@/components/icons";
-import { Accordion, BeforeAfter, PhotoStrip, ReviewPager, VideoCarousel } from "@/components/interactive";
+import { Accordion, BeforeAfter, PhotoStrip, ReviewPager } from "@/components/interactive";
 import { QuoteHeroForm } from "@/components/QuoteHeroForm";
 import { MediaFill, hasMedia } from "@/components/media-fill";
 import { SiteShell } from "@/components/site";
-import { BrandButton, Container, JsonLd, LearnMore, Photo, ReviewCard, ReviewSourceLinks } from "@/components/ui";
+import {
+  Body,
+  BrandButton,
+  Container,
+  Highlight,
+  JsonLd,
+  Lead,
+  LearnMore,
+  Photo,
+  ReviewCard,
+  ReviewSourceLinks,
+  Section,
+  SectionTitle,
+} from "@/components/ui";
 import { BEFORE_AFTER } from "@/content/before-after";
 import { REVIEWS } from "@/content/reviews";
 import { businessSchema } from "@/content/schema";
-import { INSTAGRAM, PHONE, PHONE_HREF } from "@/content/site";
+import { AREA_LINKS, INSTAGRAM, PHONE, PHONE_HREF } from "@/content/site";
 import { media } from "@/lib/media";
 import { pageMeta } from "@/lib/seo";
 
@@ -25,7 +38,7 @@ export const metadata = pageMeta({
 
 /*
  * NOTE: Copy follows the Movers and Junk Removal brand brief.
- * Reviews come from Yelp and Thumbtack (src/content/reviews.ts). Photos/videos: see src/content/media.ts.
+ * Reviews come from Yelp and Thumbtack (src/content/reviews.ts). Photos: see src/content/media.ts.
  */
 
 export default function Home() {
@@ -42,17 +55,7 @@ export default function Home() {
       <PressMarquee />
       {/* Second service + engagement */}
       <JunkRemoval />
-      <section className="py-12 lg:py-16">
-        <VideoCarousel
-          items={[
-            { caption: "POV: your movers actually show up on time", media: media("reel-1") },
-            { caption: "Movers broke your stuff and said nothing? Not here.", media: media("reel-2") },
-            { caption: "The quote said one thing… the bill said another?", media: media("reel-3") },
-            { caption: "Paying by the hour and they're standing around?", media: media("reel-4") },
-            { caption: "Your garage called. It wants to be a garage again.", media: media("reel-5") },
-          ]}
-        />
-      </section>
+      <SoundFamiliar />
       {/* Not ready to book yet? Give them a next step */}
       <CostCalculator />
       <ServiceArea />
@@ -239,12 +242,12 @@ function ServiceGrid({ items }: { items: { icon: string; title: string; href: st
       {items.map((s) => (
         <div key={s.title}>
           <div className="flex h-24 items-end"><Image src={s.icon} alt="" width={140} height={100} /></div>
-          <h3 className="mt-6 text-[26px] font-bold leading-tight text-ink">
+          <h3 className="mt-6 text-2xl font-bold leading-tight text-ink">
             <Link href={s.href} className="hover:text-sky-700">
               {s.title}
             </Link>
           </h3>
-          <p className="mt-4 text-[15px] leading-7 text-ink">{s.body}</p>
+          <Body className="mt-4">{s.body}</Body>
           <LearnMore href={s.href} />
         </div>
       ))}
@@ -254,14 +257,11 @@ function ServiceGrid({ items }: { items: { icon: string; title: string; href: st
 
 function Services() {
   return (
-    <section className="py-12 lg:py-16">
+    <Section>
       <Container>
-        <h2 className="max-w-[600px] text-3xl font-bold leading-tight text-ink sm:text-[40px]">
+        <SectionTitle sub="We carry the weight so you don't have to. On time, fast and careful, every time.">
           Stress-free moves from start to finish
-        </h2>
-        <p className="mt-6 text-lg font-medium text-ink">
-          We carry the weight so you don&apos;t have to. On time, fast and careful, every time.
-        </p>
+        </SectionTitle>
         <div className="mt-12">
           <ServiceGrid items={SERVICES} />
         </div>
@@ -269,18 +269,18 @@ function Services() {
           <LearnMore href="/moving" label="See all moving services" />
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }
 
 function HonestPricing() {
   return (
-    <section className="py-12 lg:py-16">
+    <Section>
       <Container>
         <div className="grid items-start gap-12 lg:grid-cols-2">
-          <h2 className="text-4xl font-bold leading-tight text-ink sm:text-[44px]">
-            <span className="text-sky-600">Honest pricing</span>. No surprises on move day.
-          </h2>
+          <SectionTitle>
+            <Highlight>Honest pricing</Highlight>. No surprises on move day.
+          </SectionTitle>
           <Photo
             media={media("pricing-photo")}
             label="Add public/media/pricing-photo.jpg"
@@ -290,11 +290,11 @@ function HonestPricing() {
           </Photo>
         </div>
         <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_2fr]">
-          <p className="text-xl font-semibold leading-snug text-sky-700">
+          <Lead>
             You&apos;ll know what you&apos;re paying before we lift a thing. No &ldquo;double the
             quote,&rdquo; no fees snuck in at the end. Competitive pricing, and more of your stuff
             moved for it.
-          </p>
+          </Lead>
           <div>
             <h3 className="text-xl font-bold text-ink">What you get with every move:</h3>
             <Accordion
@@ -336,7 +336,7 @@ function HonestPricing() {
           </div>
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }
 
@@ -357,11 +357,10 @@ function TruckArt() {
 
 function CostCalculator() {
   return (
-    <section className="py-12 lg:py-16">
-      <Container className="grid items-center gap-14 lg:grid-cols-2">
+    <Section>
+      <Container className="grid items-center gap-12 lg:grid-cols-2">
         <Photo
           media={media("calculator-photo")}
-          offset="ink"
           label="Add public/media/calculator-photo.jpg"
           className="aspect-[4/3.3] lg:mr-4"
         >
@@ -379,21 +378,20 @@ function CostCalculator() {
           </svg>
         </Photo>
         <div>
-          <h2 className="text-4xl font-bold leading-tight text-ink sm:text-[44px]">
-            How much should your move cost? Try our free{" "}
-            <span className="text-sky-600 underline decoration-2 underline-offset-4">moving cost calculator</span>
-          </h2>
-          <p className="mt-6 text-[15px] leading-7 text-ink">
+          <SectionTitle>
+            How much should your move cost? Try our free <Highlight>moving cost calculator</Highlight>
+          </SectionTitle>
+          <Body className="mt-6">
             Pick your home size, how far you&apos;re going and what&apos;s coming with you, and get a
             ballpark price in under a minute. Want an exact number? Leave your phone number and
             we&apos;ll call you back with a real quote. No pressure, no runaround.
-          </p>
+          </Body>
           <div className="mt-6">
             <BrandButton href="/free-tools/moving-cost-calculator">Try the Calculator</BrandButton>
           </div>
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }
 
@@ -438,16 +436,12 @@ const JUNK = [
 
 function PackedToEmpty() {
   return (
-    <section className="bg-sky-100 py-12 lg:py-16">
+    <Section tone="soft">
       <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[2fr_3fr]">
         <div>
-          <h2 className="text-4xl font-bold leading-tight text-ink sm:text-[44px]">
-            From packed to <span className="text-sky-600">empty</span>. Every room, every box.
-          </h2>
-          <p className="mt-6 text-lg font-semibold leading-snug text-ink">
-            Drag the slider to see move day when the job&apos;s actually finished. Nothing left
-            behind for you to deal with.
-          </p>
+          <SectionTitle sub="Drag the slider to see move day when the job's actually finished. Nothing left behind for you to deal with.">
+            From packed to <Highlight>empty</Highlight>. Every room, every box.
+          </SectionTitle>
           <p className="mt-6 text-xs text-ink-600">
             Real Las Vegas homes. &ldquo;After&rdquo; views are digitally edited from the same photo to
             show the cleared room.
@@ -457,26 +451,21 @@ function PackedToEmpty() {
           <BeforeAfter pairs={BEFORE_AFTER} />
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }
 
 function JunkRemoval() {
   return (
-    <section className="py-12 lg:py-16">
+    <Section>
       <Container>
-        <div className="grid items-center gap-14 lg:grid-cols-2">
-          <div>
-            <h2 className="text-4xl font-bold leading-tight text-ink sm:text-[44px]">
-              <span className="text-sky-600">Junk gone today.</span> We haul it, you relax
-            </h2>
-            <p className="mt-6 text-lg font-semibold leading-snug text-ink">
-              Junk removal across Las Vegas, Henderson and Summerlin. One item or a whole house,
-              honest pricing and no heavy lifting for you.
-            </p>
-          </div>
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <SectionTitle sub="Junk removal across Las Vegas, Henderson and Summerlin. One item or a whole house, honest pricing and no heavy lifting for you.">
+            <Highlight>Junk gone today.</Highlight> We haul it, you relax
+          </SectionTitle>
           <Photo
             media={media("junk-photo")}
+            offset="ink"
             label="Add public/media/junk-photo.jpg"
             className="aspect-[4/3] lg:mr-4"
           >
@@ -497,72 +486,176 @@ function JunkRemoval() {
           <LearnMore href="/junk-removal" label="See all junk removal services" />
         </div>
       </Container>
-    </section>
+    </Section>
+  );
+}
+
+const HEADACHES = [
+  {
+    worry: "The movers showed up two hours late.",
+    fix: "We give you an arrival window, call when we're on the way and show up inside it.",
+  },
+  {
+    worry: "Something broke and nobody said a word.",
+    fix: "Furniture gets padded and wrapped before it moves. If anything happens, we tell you and make it right.",
+  },
+  {
+    worry: "The quote said one thing… the bill said another.",
+    fix: "You get an upfront price before we start. No surprise fees tacked on at the end.",
+  },
+  {
+    worry: "Paying by the hour while the crew stands around.",
+    fix: "Our crews work steady from the first box to the last. Your clock is our clock.",
+  },
+  {
+    worry: "The garage hasn't fit a car in years.",
+    fix: "We load it, haul it and sweep up after. Same-day junk removal in a lot of cases.",
+  },
+  {
+    worry: "Nobody picks up the phone.",
+    fix: `Call ${PHONE} and a real person on our local crew answers or calls you right back.`,
+  },
+];
+
+function SoundFamiliar() {
+  return (
+    <Section tone="soft">
+      <Container>
+        <SectionTitle>
+          Bad mover stories? <Highlight>Not here.</Highlight>
+        </SectionTitle>
+        <Lead className="mt-5 max-w-[760px]">The headaches people tell us about, and how we handle each one</Lead>
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {HEADACHES.map((h) => (
+            <article key={h.worry} className="flex flex-col rounded-lg bg-white p-6 shadow-md">
+              <p className="text-sm font-semibold text-ink/60 line-through decoration-sky-600 decoration-2">
+                {h.worry}
+              </p>
+              <p className="mt-4 flex gap-2 text-[15px] font-semibold leading-snug text-ink">
+                <Check className="mt-0.5 shrink-0" />
+                {h.fix}
+              </p>
+            </article>
+          ))}
+        </div>
+        <div className="mt-10">
+          <BrandButton href="#quote">Get a Free Quote</BrandButton>
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+// Rough valley geography, as % of the map box (x, y).
+const AREA_PINS: Record<string, [number, number]> = {
+  "North Las Vegas": [56, 20],
+  Summerlin: [20, 40],
+  "Las Vegas": [52, 40],
+  "Spring Valley": [30, 62],
+  Paradise: [64, 60],
+  Enterprise: [40, 86],
+  Henderson: [78, 84],
+};
+
+function ValleyMap() {
+  return (
+    <div className="relative aspect-[16/11] overflow-hidden rounded-lg bg-ink offset-sky lg:mr-4">
+      <svg viewBox="0 0 400 275" className="absolute inset-0 h-full w-full" preserveAspectRatio="none" aria-hidden>
+        {/* mountains ringing the valley */}
+        <path d="M0 0h400v40c-30 10-60-8-90 4s-70-6-110 2-80-10-120 0L0 60z" fill="#1c1f24" />
+        <path d="M0 60c14 60 6 140 20 215H0z" fill="#1c1f24" />
+        <path d="M400 40c-16 70-4 150-20 235h20z" fill="#1c1f24" />
+        {/* freeways */}
+        <path d="M70 275C150 200 200 150 250 0" fill="none" stroke="#31a2fd" strokeOpacity=".35" strokeWidth="5" />
+        <path d="M40 120c80 10 220 0 340 30" fill="none" stroke="#31a2fd" strokeOpacity=".35" strokeWidth="5" />
+        <path d="M100 250c80-40 160-50 260-30" fill="none" stroke="#31a2fd" strokeOpacity=".2" strokeWidth="4" strokeDasharray="10 8" />
+      </svg>
+      {AREA_LINKS.map((a) => {
+        const [x, y] = AREA_PINS[a.label] ?? [50, 50];
+        return (
+          <Link
+            key={a.href}
+            href={a.href}
+            className="group absolute flex -translate-x-1/2 -translate-y-full flex-col items-center"
+            style={{ left: `${x}%`, top: `${y}%` }}
+          >
+            <span className="whitespace-nowrap rounded bg-white px-2 py-0.5 text-[11px] font-bold text-ink shadow transition group-hover:bg-sky sm:text-xs">
+              {a.label}
+            </span>
+            <span className="mt-0.5 h-3 w-3 rounded-full border-2 border-white bg-sky" aria-hidden />
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+const MOVING_DAY = [
+  { time: "Day before", title: "Confirmation call", body: "We confirm your arrival window, both addresses and anything special." },
+  { time: "Morning of", title: "On-the-way call", body: "You hear from us when the truck heads out, with a real ETA." },
+  { time: "Arrival", title: "Walkthrough first", body: "A quick look around, then pads and wrap go on before anything moves." },
+  { time: "Load & go", title: "Steady, careful work", body: "No standing around. Floors and doorways stay protected." },
+  { time: "Last box", title: "Final check together", body: "Everything placed where you want it, and the price matches the quote." },
+];
+
+function MovingDayTimeline() {
+  return (
+    <ol className="relative rounded-lg bg-white p-6 shadow-md offset-sky sm:p-8 lg:mr-4">
+      {MOVING_DAY.map((s, i) => (
+        <li key={s.title} className="relative flex gap-4 pb-6 last:pb-0">
+          {i < MOVING_DAY.length - 1 && (
+            <span className="absolute left-[15px] top-8 h-[calc(100%-2rem)] w-0.5 bg-sky-100" aria-hidden />
+          )}
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky text-sm font-bold text-ink">
+            {i + 1}
+          </span>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wide text-sky-700">{s.time}</p>
+            <p className="mt-0.5 font-bold text-ink">{s.title}</p>
+            <p className="mt-1 text-[15px] text-ink/80">{s.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }
 
 function About() {
   return (
-    <section className="bg-ink py-12 lg:py-16 text-white">
-      <Container className="flex flex-col items-center gap-8 text-center lg:flex-row lg:text-left">
-        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-white/60">
-          <BoxMark className="h-14 w-14 text-sky" />
-        </div>
-        <div className="flex-1 text-center">
-          <h2 className="text-3xl font-extrabold uppercase">
-            Local Crew. <span className="text-sky">Real Care.</span>
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm">
+    <Section tone="dark">
+      <Container className="flex flex-col items-start gap-8 lg:flex-row lg:items-center">
+        <BoxMark className="h-16 w-16 shrink-0 text-sky" />
+        <div className="flex-1">
+          <SectionTitle tone="dark" className="max-w-[640px]">
+            Local crew. <Highlight tone="dark">Real care.</Highlight>
+          </SectionTitle>
+          <Body tone="dark" className="mt-3 max-w-[640px]">
             Moving is stressful enough. We&apos;re a local Las Vegas crew that shows up on time,
             treats your things like our own, and keeps it honest from the first call to the last
             box. God First.
-          </p>
+          </Body>
         </div>
         <BrandButton href={PHONE_HREF}>Call {PHONE}</BrandButton>
       </Container>
-    </section>
+    </Section>
   );
 }
 
 function ServiceArea() {
   return (
-    <section className="py-12 lg:py-16">
+    <Section>
       <Container>
-        <h2 className="max-w-[640px] text-4xl font-bold leading-tight text-ink sm:text-[44px]">
-          Proudly serving the <span className="text-sky-600">whole Las Vegas valley</span>
-        </h2>
+        <SectionTitle>
+          Proudly serving the <Highlight>whole Las Vegas valley</Highlight>
+        </SectionTitle>
         <div className="mt-10 grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">
-          <Photo
-            media={media("area-video")}
-            label="Add public/media/area-video.mp4"
-            className="aspect-[16/9] lg:mr-4"
-          >
-            <svg viewBox="0 0 400 225" className="absolute inset-0 h-full w-full" aria-hidden>
-              {[
-                [10, 40, 60],
-                [80, 20, 50],
-                [140, 70, 70],
-                [290, 30, 60],
-                [350, 60, 50],
-              ].map(([x, y, w]) => (
-                <rect key={x} x={x} y={y} width={w} height={225 - y} fill="#000" opacity=".6" />
-              ))}
-              <path d="M235 20v30h-8v140h26V50h-8V20z" fill="#cfd8e3" opacity=".9" />
-              <rect x="60" y="150" width="130" height="50" fill="#31a2fd" />
-              <rect x="190" y="162" width="36" height="38" fill="#000" />
-              <circle cx="90" cy="203" r="10" fill="#111" />
-              <circle cx="205" cy="203" r="10" fill="#111" />
-            </svg>
-            <button aria-label="Play video" className="absolute bottom-4 right-4 text-white">
-              <Image src="/icons/landing/play.svg" alt="" width={56} height={56} />
-            </button>
-          </Photo>
+          <ValleyMap />
           <div>
-            <p className="text-[15px] leading-7 text-ink">
+            <Body>
               We live here too. Las Vegas, Henderson, Summerlin, Paradise, North Las Vegas and
               everywhere in between. We know the valley, so we show up on time and get right to
               work. Moving across town or clearing out the garage, one call gets it handled.
-            </p>
+            </Body>
             <div className="mt-8 flex flex-wrap items-center gap-6">
               <BrandButton href="#quote">Get a Free Quote</BrandButton>
               <LearnMore href="/service-areas" label="See our service areas" />
@@ -570,7 +663,7 @@ function ServiceArea() {
           </div>
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }
 
@@ -579,55 +672,44 @@ function Reviews() {
   const cards = REVIEWS.slice(0, 12).map((r, i) => <ReviewCard key={i} r={r} i={i % 4} />);
   const pages = Array.from({ length: Math.ceil(cards.length / 4) }, (_, p) => cards.slice(p * 4, p * 4 + 4));
   return (
-    <section className="py-12 lg:py-16">
+    <Section>
       <Container>
-        <h2 className="max-w-[780px] text-2xl font-bold leading-tight text-ink sm:text-[28px]">
-          Moving shouldn&apos;t be a headache. Here&apos;s what our customers have to say.
-        </h2>
-        <a href="#quote" className="mt-4 inline-block text-lg font-bold text-sky-700 underline">
-          Ready for a stress-free move? Get your free quote
-        </a>
-        <Link href="/reviews" className="mt-2 block text-sm font-bold text-ink underline">
-          Read all reviews
-        </Link>
-        <ReviewSourceLinks className="mt-4" />
+        <SectionTitle>
+          Here&apos;s what our <Highlight>customers</Highlight> have to say
+        </SectionTitle>
+        <div className="flex flex-wrap gap-x-8">
+          <LearnMore href="/reviews" label="Read all reviews" />
+          <LearnMore href="#quote" label="Get your free quote" />
+        </div>
+        <ReviewSourceLinks className="mt-6" />
         <div className="mt-10">
           <ReviewPager pages={pages} />
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }
 
 function OnTime() {
   return (
-    <section className="py-12 lg:py-16">
+    <Section>
       <Container>
-        <h2 className="max-w-[540px] text-4xl font-bold leading-tight text-ink sm:text-[40px]">
-          <span className="text-sky-600">POV:</span> your movers actually show up on time
-        </h2>
+        <SectionTitle>
+          <Highlight>POV:</Highlight> your movers actually show up on time
+        </SectionTitle>
         <div className="mt-10 grid items-center gap-12 lg:grid-cols-[1fr_1.4fr]">
-          <p className="text-[15px] leading-7 text-ink">
+          <Body>
             Paying by the hour while the crew stands around? Not with us. We show up when we say we
             will, call when we&apos;re on the way and keep moving until the last box is in. Fast,
             friendly and respectful in your home.{" "}
             <a href="#quote" className="font-bold text-sky-700 underline">
               Get a callback in minutes
             </a>
-          </p>
-          <Photo
-            media={media("ontime-video")}
-            label="Add public/media/ontime-video.mp4"
-            className="aspect-[16/9] lg:mr-4"
-          >
-            <BoxyMascot className="absolute inset-x-0 bottom-2 mx-auto h-[88%]" />
-            <button aria-label="Play video" className="absolute bottom-4 right-4">
-              <Image src="/icons/landing/play.svg" alt="" width={56} height={56} />
-            </button>
-          </Photo>
+          </Body>
+          <MovingDayTimeline />
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }
 
@@ -659,10 +741,12 @@ function FreeTools() {
     },
   ];
   return (
-    <section className="py-12 lg:py-16">
+    <Section>
       <Container>
-        <h2 className="text-3xl font-bold text-ink sm:text-[34px]">Free Moving Tools and Guides</h2>
-        <p className="mt-4 max-w-[560px] text-lg font-bold leading-snug text-ink">
+        <SectionTitle>
+          Free moving <Highlight>tools and guides</Highlight>
+        </SectionTitle>
+        <Lead className="mt-5 max-w-[760px]">
           Planning ahead? Use our{" "}
           <Link href="/free-tools/moving-cost-calculator" className="text-sky-700 underline">
             cost calculator
@@ -672,7 +756,7 @@ function FreeTools() {
             checklists
           </Link>{" "}
           to plan your move, then get an exact quote in minutes
-        </p>
+        </Lead>
         <div className="mt-10 grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {posts.map((p) => (
             <article key={p.title}>
@@ -683,24 +767,24 @@ function FreeTools() {
                   <BoxMark className="absolute right-3 top-3 h-14 w-14 text-white/80" />
                 )}
               </div>
-              <h3 className="mt-5 text-base font-bold leading-snug text-ink">
+              <h3 className="mt-5 text-lg font-bold leading-snug text-ink">
                 <Link href={p.href} className="hover:text-sky-700">
                   {p.title}
                 </Link>
               </h3>
-              <p className="mt-4 text-sm leading-6 text-ink">{p.body}</p>
+              <Body className="mt-3">{p.body}</Body>
               <LearnMore href={p.href} />
             </article>
           ))}
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }
 
 function InstagramCta() {
   return (
-    <section className="py-12 lg:py-16">
+    <Section>
       <Container className="flex items-center gap-4">
         <Image src="/icons/landing/instagram.svg" alt="" width={48} height={48} />
         <div>
@@ -713,6 +797,6 @@ function InstagramCta() {
           </p>
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }

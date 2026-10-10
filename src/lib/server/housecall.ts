@@ -13,6 +13,7 @@ import {
   type QuotePayload,
 } from "@/lib/quote";
 import { LEAD_SERVICES, type LeadPayload } from "@/lib/lead";
+import { OFFER_LABELS, splitName, type OfferLeadPayload } from "@/lib/offer";
 
 /*
  * HouseCall Pro public API (requires the MAX plan).
@@ -112,6 +113,38 @@ export async function createLeadCustomer(l: LeadPayload) {
     lead_source: "Website lead form",
     tags: ["web-lead", l.service],
     notes: leadNotes(l),
+  });
+  return customer.id;
+}
+
+/** Summary for an ad-funnel (/offers/*) request. */
+export function offerLeadNotes(l: OfferLeadPayload) {
+  const ad = Object.entries(l.ad ?? {}).map(([k, v]) => `${k}=${v}`).join(", ");
+  return [
+    `AD FUNNEL LEAD: ${OFFER_LABELS[l.offer]}`,
+    "Promised a call or text within 15 minutes.",
+    `Move size: ${l.moveSize || "not given"}`,
+    l.moveDate ? `Move date: ${l.moveDate}` : "Move date: not given",
+    `SMS consent: ${l.smsConsent ? "yes" : "no"}`,
+    l.page ? `Sent from: ${l.page}` : null,
+    ad ? `Ad: ${ad}` : null,
+    l.offer === "second-opinion" ? "Wants a second opinion on another mover's quote. Photo of the quote may follow on the website." : null,
+  ]
+    .filter((x) => x !== null)
+    .join("\n");
+}
+
+export async function createOfferLeadCustomer(l: OfferLeadPayload) {
+  const { first, last } = splitName(l.name);
+  const customer = await hcp<{ id: string }>("/customers", {
+    first_name: first,
+    last_name: last,
+    email: l.email.trim(),
+    mobile_number: formatPhone(normalizePhone(l.phone)!),
+    notifications_enabled: l.smsConsent,
+    lead_source: `Ad funnel: ${OFFER_LABELS[l.offer]}`,
+    tags: ["web-offer", l.offer],
+    notes: offerLeadNotes(l),
   });
   return customer.id;
 }

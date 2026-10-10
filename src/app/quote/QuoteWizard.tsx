@@ -3,7 +3,8 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { AddressInput, type AddressValue } from "@/components/AddressInput";
-import { ArrowUpRight, Camera, Check } from "@/components/icons";
+import { ArrowUpRight, Camera, Check, Phone } from "@/components/icons";
+import { PHONE, PHONE_HREF } from "@/content/site";
 import { uploadPhoto } from "@/lib/image";
 import {
   ACCESS_TYPES,
@@ -27,6 +28,14 @@ import {
 } from "@/lib/quote";
 
 const STEPS = ["Addresses", "Move details", "Contact", "Items & photos", "Review"];
+
+const HEADINGS: [title: string, sub: string][] = [
+  ["Where are you moving?", "Start typing, then pick your address from the list."],
+  ["Tell us about your move", "Tap the options that fit. Stairs and floors help us send the right crew."],
+  ["Where should we send your quote?", "We only use this to send your price and confirm details."],
+  ["What are we moving?", "A photo of each room lets us price it exactly, with no surprises on moving day."],
+  ["Review & send", "Check everything looks right, then send it over."],
+];
 
 type Photo = { id: string; preview: string; url?: string; error?: string };
 type Item = { id: string; name: string; category: string; notes: string; photos: Photo[] };
@@ -129,7 +138,11 @@ export function QuoteWizard({
     const stepErrors = errorsForStep(check(), step);
     setErrors(stepErrors);
     if (Object.keys(stepErrors).length > 0) {
-      requestAnimationFrame(() => cardRef.current?.querySelector<HTMLElement>("[aria-invalid='true']")?.focus());
+      // Tile groups are fieldsets, which can't take focus: land on their first tile instead.
+      requestAnimationFrame(() => {
+        const bad = cardRef.current?.querySelector<HTMLElement>("[aria-invalid='true']");
+        (bad?.tagName === "FIELDSET" ? bad.querySelector<HTMLElement>("button") : bad)?.focus();
+      });
       return;
     }
     // Pre-fill rooms from the move size, unless the customer already edited the list.
@@ -251,25 +264,34 @@ export function QuoteWizard({
   }
 
   const e = errors;
+  const last = step === STEPS.length - 1;
   return (
-    <Shell cardRef={cardRef}>
+    <Shell
+      cardRef={cardRef}
+      aside={
+        <MoveSummary
+          from={from.selected?.label}
+          to={to.selected?.label}
+          date={formatDate(d.moveDate, true)}
+          time={d.pickupWindow && labelOf(PICKUP_WINDOWS, d.pickupWindow)}
+          size={d.moveSize && labelOf(MOVE_SIZES, d.moveSize)}
+          items={step >= 3 ? items.length : 0}
+        />
+      }
+    >
       <Progress step={step} onJump={(n) => n < step && goTo(n)} />
 
-      <h2 tabIndex={-1} className="mt-8 text-2xl font-bold outline-none sm:text-3xl">
-        {
-          [
-            "Where are you moving?",
-            "Tell us about your move",
-            "How do we reach you?",
-            "What are we moving?",
-            "Review & send",
-          ][step]
-        }
+      <p className="mt-8 text-xs font-extrabold uppercase tracking-widest text-sky-700">
+        Step {step + 1} of {STEPS.length}
+      </p>
+      <h2 tabIndex={-1} className="mt-1 text-2xl font-bold leading-tight outline-none sm:text-3xl">
+        {HEADINGS[step][0]}
       </h2>
+      <p className="mt-2 text-[15px] leading-6 text-ink-600">{HEADINGS[step][1]}</p>
 
       <form
         noValidate
-        className="mt-6"
+        className="mt-7"
         onSubmit={(ev) => {
           ev.preventDefault();
           if (step < STEPS.length - 1) next();
@@ -304,12 +326,11 @@ export function QuoteWizard({
               }}
               error={e.to}
             />
-            <p className="text-xs text-ink-600">Start typing, then pick your address from the list.</p>
           </div>
         )}
 
         {step === 1 && (
-          <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
+          <div className="grid gap-6 sm:grid-cols-2 [&>*]:min-w-0">
             <Field label="Move date *" error={e.moveDate}>
               {(p) => (
                 <input
@@ -322,38 +343,41 @@ export function QuoteWizard({
                 />
               )}
             </Field>
-            <Select label="Pickup time *" options={PICKUP_WINDOWS} value={d.pickupWindow} onChange={(v) => set("pickupWindow", v)} error={e.pickupWindow} />
             <OneOf label="Type of move *" options={MOVE_TYPES} value={d.moveType} onChange={(v) => set("moveType", v)} error={e.moveType} />
-            <Select label="Size of move *" options={MOVE_SIZES} value={d.moveSize} onChange={(v) => set("moveSize", v)} error={e.moveSize} />
+            <div className="sm:col-span-2">
+              <OneOf label="Pickup time *" cols={4} options={PICKUP_WINDOWS} value={d.pickupWindow} onChange={(v) => set("pickupWindow", v)} error={e.pickupWindow} />
+            </div>
+            <div className="sm:col-span-2">
+              <OneOf label="Size of move *" cols={3} options={MOVE_SIZES} value={d.moveSize} onChange={(v) => set("moveSize", v)} error={e.moveSize} />
+            </div>
 
-            <fieldset className="grid min-w-0 gap-4 border border-ink-200 bg-white p-4">
-              <legend className="px-1 text-sm font-bold">Pickup location</legend>
-              <Select
-                label="Access *"
-                options={ACCESS_TYPES}
-                value={d.fromAccess}
-                onChange={(v) => {
-                  set("fromAccess", v);
-                  if (v === "ground") set("fromFloor", "ground");
-                }}
-                error={e.fromAccess}
-              />
-              <Select label="Floor *" options={FLOOR_LEVELS} value={d.fromFloor} onChange={(v) => set("fromFloor", v)} error={e.fromFloor} />
-            </fieldset>
-            <fieldset className="grid min-w-0 gap-4 border border-ink-200 bg-white p-4">
-              <legend className="px-1 text-sm font-bold">Drop-off location</legend>
-              <Select
-                label="Access *"
-                options={ACCESS_TYPES}
-                value={d.toAccess}
-                onChange={(v) => {
-                  set("toAccess", v);
-                  if (v === "ground") set("toFloor", "ground");
-                }}
-                error={e.toAccess}
-              />
-              <Select label="Floor *" options={FLOOR_LEVELS} value={d.toFloor} onChange={(v) => set("toFloor", v)} error={e.toFloor} />
-            </fieldset>
+            <Location
+              title="Pickup location"
+              address={from.selected?.label}
+              access={d.fromAccess}
+              floor={d.fromFloor}
+              onAccess={(v) => {
+                set("fromAccess", v);
+                // Ground needs no floor question; stairs/elevator can't be on the ground floor.
+                if (v === "ground") set("fromFloor", "ground");
+                else if (d.fromFloor === "ground") set("fromFloor", "");
+              }}
+              onFloor={(v) => set("fromFloor", v)}
+              errors={{ access: e.fromAccess, floor: e.fromFloor }}
+            />
+            <Location
+              title="Drop-off location"
+              address={to.selected?.label}
+              access={d.toAccess}
+              floor={d.toFloor}
+              onAccess={(v) => {
+                set("toAccess", v);
+                if (v === "ground") set("toFloor", "ground");
+                else if (d.toFloor === "ground") set("toFloor", "");
+              }}
+              onFloor={(v) => set("toFloor", v)}
+              errors={{ access: e.toAccess, floor: e.toFloor }}
+            />
           </div>
         )}
 
@@ -361,8 +385,24 @@ export function QuoteWizard({
           <div className="grid gap-5 sm:grid-cols-2 [&>*]:min-w-0">
             <Text label="First name *" autoComplete="given-name" value={d.firstName} onChange={(v) => set("firstName", v)} error={e.firstName} />
             <Text label="Last name *" autoComplete="family-name" value={d.lastName} onChange={(v) => set("lastName", v)} error={e.lastName} />
-            <Text label="Phone *" type="tel" autoComplete="tel" inputMode="tel" value={d.phone} onChange={(v) => set("phone", v)} error={e.phone} />
-            <Text label="Email *" type="email" autoComplete="email" inputMode="email" value={d.email} onChange={(v) => set("email", v)} error={e.email} />
+            <Text
+              label="Phone *"
+              type="tel"
+              autoComplete="tel"
+              inputMode="tel"
+              placeholder="(702) 555-0123"
+              value={d.phone}
+              onChange={(v) => set("phone", formatPhoneInput(v, d.phone))}
+              error={e.phone}
+            />
+            <Text label="Email *" type="email" autoComplete="email" inputMode="email" placeholder="you@email.com" value={d.email} onChange={(v) => set("email", v)} error={e.email} />
+            <p className="flex items-start gap-2.5 border border-l-4 border-ink-200 border-l-sky px-4 py-3 text-sm leading-6 text-ink sm:col-span-2">
+              <Check className="mt-1 shrink-0" />
+              <span>
+                <strong>No spam, no sales calls.</strong> We never share your info. We just text or call with your
+                price.
+              </span>
+            </p>
             <div className="sm:col-span-2">
               <Select
                 label="How did you hear about us?"
@@ -378,10 +418,10 @@ export function QuoteWizard({
 
         {step === 3 && (
           <div className="grid gap-4">
-            <p className="text-sm text-ink-600">
+            <p className="text-sm leading-6 text-ink-600">
               We filled in rooms for a {labelOf(MOVE_SIZES, d.moveSize).toLowerCase()} move. Remove or add anything, then{" "}
-              <strong className="text-ink">take at least one picture of each</strong> so we can give you an exact price.
-              Pick &ldquo;Other&rdquo; to name something yourself.
+              <strong className="text-ink">take at least one picture of each</strong>. Pick &ldquo;Other&rdquo; to name
+              something yourself.
             </p>
             {e.items && <p className="text-sm font-bold text-red-600">{e.items}</p>}
             {items.length > 0 && <PhotoProgress items={items} />}
@@ -490,9 +530,13 @@ export function QuoteWizard({
           </p>
         )}
 
-        <div className="mt-8 flex items-center justify-between gap-4 border-t border-ink-200 pt-6">
+        <div className="sticky bottom-0 z-10 -mx-4 mt-8 flex items-center justify-between gap-4 border-t border-ink-200 bg-white px-4 py-4 sm:static sm:mx-0 sm:px-0 sm:pb-0 sm:pt-6">
           {step > 0 ? (
-            <button type="button" onClick={() => goTo(step - 1)} className="text-sm font-bold text-sky-700 hover:underline">
+            <button
+              type="button"
+              onClick={() => goTo(step - 1)}
+              className="h-12 px-1 text-sm font-bold uppercase tracking-wider text-sky-700 hover:underline"
+            >
               ← Back
             </button>
           ) : (
@@ -500,19 +544,27 @@ export function QuoteWizard({
           )}
           <button
             type="submit"
-            disabled={status === "sending" || (step === STEPS.length - 1 && uploading)}
-            className="flex h-12 flex-1 items-center justify-center gap-2 bg-sky px-8 text-sm sm:flex-none font-bold uppercase text-ink transition hover:bg-sky-600 disabled:cursor-wait disabled:opacity-60"
+            disabled={status === "sending" || (last && uploading)}
+            className="flex h-12 flex-1 items-center justify-center gap-2 bg-sky px-6 text-sm font-bold uppercase text-ink transition hover:bg-sky-600 disabled:cursor-wait disabled:opacity-60 sm:flex-none sm:px-8"
           >
-            {step < STEPS.length - 1
-              ? "Next"
-              : status === "sending"
-                ? "Sending…"
-                : uploading
-                  ? "Uploading photos…"
-                  : "Get My Quote"}
+            {!last ? (
+              <>
+                <span className="sm:hidden">Next</span>
+                <span className="hidden sm:inline">Next: {STEPS[step + 1]}</span>
+              </>
+            ) : status === "sending" ? (
+              "Sending…"
+            ) : uploading ? (
+              "Uploading photos…"
+            ) : (
+              "Get my free quote"
+            )}
             <ArrowUpRight />
           </button>
         </div>
+        {last && (
+          <p className="mt-3 text-center text-xs text-ink-600 sm:text-right">Free and no obligation. We reply with your price.</p>
+        )}
       </form>
     </Shell>
   );
@@ -520,37 +572,74 @@ export function QuoteWizard({
 
 /* ---------------- pieces ---------------- */
 
-function Shell({ children, cardRef }: { children: ReactNode; cardRef: React.RefObject<HTMLDivElement | null> }) {
+function Shell({
+  children,
+  cardRef,
+  aside,
+}: {
+  children: ReactNode;
+  cardRef: React.RefObject<HTMLDivElement | null>;
+  aside?: ReactNode;
+}) {
   return (
-    <div className="mx-auto w-full max-w-[760px] px-3 py-6 sm:px-6 sm:py-14">
-      <div ref={cardRef} className="scroll-mt-4 min-w-0 border border-ink bg-white p-4 offset-sky-sm sm:p-10">
+    <div
+      className={`mx-auto -mt-16 grid w-full gap-10 px-4 pb-16 sm:-mt-20 sm:px-6 sm:pb-24 ${
+        aside ? "max-w-[1164px] lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start" : "max-w-[760px]"
+      }`}
+    >
+      <div ref={cardRef} className="min-w-0 scroll-mt-4 border border-ink bg-white p-4 offset-sky-sm sm:p-10 lg:mr-2">
         {children}
       </div>
+      {aside && <aside className="grid gap-6 lg:sticky lg:top-6">{aside}</aside>}
     </div>
   );
 }
 
+/** Numbered stepper: done steps show a check and can be clicked to go back. */
 function Progress({ step, onJump }: { step: number; onJump: (n: number) => void }) {
   return (
-    <ol className="flex gap-1.5" aria-label="Quote progress">
-      {STEPS.map((s, i) => (
-        <li key={s} className="flex-1">
-          <button
-            type="button"
-            onClick={() => onJump(i)}
-            disabled={i >= step}
-            aria-current={i === step ? "step" : undefined}
-            className="block w-full text-left disabled:cursor-default"
-          >
-            <span className={`block h-1.5 ${i <= step ? "bg-sky" : "bg-ink-200"}`} />
-            <span
-              className={`mt-2 hidden text-[11px] font-bold uppercase sm:block ${i === step ? "text-ink" : "text-ink-600"}`}
+    <ol className="flex items-start" aria-label="Quote progress">
+      {STEPS.map((s, i) => {
+        const done = i < step;
+        const now = i === step;
+        return (
+          <li key={s} className="relative flex flex-1 flex-col items-center">
+            {i < STEPS.length - 1 && (
+              <span
+                aria-hidden
+                className={`absolute left-1/2 top-4 h-0.5 w-full ${done ? "bg-sky" : "bg-ink-200"}`}
+              />
+            )}
+            <button
+              type="button"
+              onClick={() => onJump(i)}
+              disabled={!done}
+              aria-current={now ? "step" : undefined}
+              aria-label={`${s}${done ? " (done, go back)" : ""}`}
+              className="relative flex flex-col items-center gap-2 disabled:cursor-default"
             >
-              {s}
-            </span>
-          </button>
-        </li>
-      ))}
+              <span
+                className={`flex h-8 w-8 items-center justify-center border-2 text-sm font-extrabold transition ${
+                  done
+                    ? "border-ink bg-ink hover:border-sky"
+                    : now
+                      ? "border-ink bg-sky text-ink"
+                      : "border-ink-200 bg-white text-ink-600"
+                }`}
+              >
+                {done ? <Check width={14} height={14} /> : i + 1}
+              </span>
+              <span
+                className={`hidden whitespace-nowrap text-[11px] font-bold uppercase tracking-wider sm:block ${
+                  now ? "text-ink" : "text-ink-600"
+                }`}
+              >
+                {s}
+              </span>
+            </button>
+          </li>
+        );
+      })}
       <li className="sr-only">
         Step {step + 1} of {STEPS.length}: {STEPS[step]}
       </li>
@@ -656,18 +745,21 @@ function OneOf({
   value,
   onChange,
   error,
+  cols = 2,
 }: {
   label: string;
   options: Option[];
   value: string;
   onChange: (v: string) => void;
   error?: string;
+  cols?: 1 | 2 | 3 | 4;
 }) {
   const id = useId();
+  const grid = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-1 sm:grid-cols-3", 4: "grid-cols-2 sm:grid-cols-4" }[cols];
   return (
     <fieldset className="min-w-0" aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-err` : undefined}>
       <legend className="mb-1.5 text-sm font-bold">{label}</legend>
-      <div className="grid grid-cols-2 gap-2">
+      <div className={`grid gap-2 ${grid}`}>
         {options.map((o) => {
           const on = value === o.value;
           return (
@@ -676,8 +768,12 @@ function OneOf({
               type="button"
               aria-pressed={on}
               onClick={() => onChange(on ? "" : o.value)}
-              className={`flex h-12 min-w-0 touch-manipulation items-center gap-2.5 border px-3 text-left text-sm font-bold outline-none focus-visible:ring-2 focus-visible:ring-sky ${
-                on ? "border-ink bg-sky-100" : error ? "border-red-500 bg-white" : "border-ink-200 bg-white hover:border-sky"
+              className={`flex min-h-12 min-w-0 touch-manipulation items-center gap-2.5 border px-3 py-2 text-left text-sm font-bold leading-tight outline-none transition focus-visible:ring-2 focus-visible:ring-sky ${
+                on
+                  ? "border-ink bg-sky-100 shadow-[3px_3px_0_0_var(--color-sky)]"
+                  : error
+                    ? "border-red-500 bg-white"
+                    : "border-ink-200 bg-white hover:border-ink"
               }`}
             >
               <span
@@ -686,7 +782,7 @@ function OneOf({
               >
                 {on && <Check width={12} height={12} />}
               </span>
-              <span className="truncate">{o.label}</span>
+              <span className="min-w-0">{o.label}</span>
             </button>
           );
         })}
@@ -698,6 +794,121 @@ function OneOf({
       )}
     </fieldset>
   );
+}
+
+/** Shorter floor labels for the tiles; "ground" is implied by the access choice. */
+const UPPER_FLOORS: Option[] = [
+  { value: "2", label: "2nd" },
+  { value: "3", label: "3rd" },
+  { value: "4-plus", label: "4+" },
+];
+
+function Location({
+  title,
+  address,
+  access,
+  floor,
+  onAccess,
+  onFloor,
+  errors,
+}: {
+  title: string;
+  address?: string;
+  access: string;
+  floor: string;
+  onAccess: (v: string) => void;
+  onFloor: (v: string) => void;
+  errors: { access?: string; floor?: string };
+}) {
+  return (
+    <section className="grid min-w-0 content-start gap-4 border border-ink-200 bg-white p-4">
+      <div className="min-w-0">
+        <h3 className="text-xs font-extrabold uppercase tracking-widest text-sky-700">{title}</h3>
+        {address && <p className="mt-1 truncate text-sm text-ink-600">{address}</p>}
+      </div>
+      <OneOf label="How do we get in? *" cols={1} options={ACCESS_TYPES} value={access} onChange={onAccess} error={errors.access} />
+      {access && access !== "ground" && (
+        <OneOf label="Which floor? *" cols={3} options={UPPER_FLOORS} value={floor} onChange={onFloor} error={errors.floor} />
+      )}
+    </section>
+  );
+}
+
+/** Sidebar: the move so far, plus why to trust us. Fills in as the customer goes. */
+function MoveSummary({
+  from,
+  to,
+  date,
+  time,
+  size,
+  items,
+}: {
+  from?: string;
+  to?: string;
+  date: string;
+  time: string;
+  size: string;
+  items: number;
+}) {
+  const rows: [string, string][] = [
+    ["Date", [date, time].filter(Boolean).join(" · ")],
+    ["Size", size],
+    ["Rooms & items", items ? String(items) : ""],
+  ];
+  return (
+    <>
+      <div className="border border-ink bg-ink p-5 text-white offset-sky-sm sm:p-6">
+        <p className="text-xs font-extrabold uppercase tracking-widest text-sky">Your move</p>
+        <ol className="mt-4 grid gap-3 border-l-2 border-sky pl-4 text-sm">
+          <li>
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-white/60">From</span>
+            <span className="font-bold">{from ?? "—"}</span>
+          </li>
+          <li>
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-white/60">To</span>
+            <span className="font-bold">{to ?? "—"}</span>
+          </li>
+        </ol>
+        <dl className="mt-5 grid gap-2 border-t border-white/15 pt-4 text-sm">
+          {rows.map(([k, v]) => (
+            <div key={k} className="flex justify-between gap-4">
+              <dt className="text-white/60">{k}</dt>
+              <dd className="text-right font-bold">{v || "—"}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <div className="hidden border border-ink-200 p-5 sm:block sm:p-6">
+        <ul className="grid gap-3 text-[15px] leading-6">
+          {["Upfront pricing, no hidden fees", "Free quote, no obligation", "Local Las Vegas crew", "Same-day moves available"].map(
+            (t) => (
+              <li key={t} className="flex gap-2.5">
+                <Check className="mt-1 shrink-0" />
+                {t}
+              </li>
+            ),
+          )}
+        </ul>
+        <a
+          href={PHONE_HREF}
+          className="mt-5 flex items-center gap-2 border-t border-ink-200 pt-4 text-sm font-bold text-ink hover:text-sky-700"
+        >
+          <Phone className="text-sky-700" width={18} height={18} /> Rather talk? {PHONE}
+        </a>
+      </div>
+    </>
+  );
+}
+
+/** "(702) 555-0123" as they type. Leaves the text alone when deleting or for anything that isn't a plain 10-digit number. */
+function formatPhoneInput(next: string, prev: string) {
+  if (next.length < prev.length) return next;
+  const digits = next.replace(/\D/g, "");
+  if (digits.length > 10 || digits.startsWith("1")) return next;
+  if (digits.length < 4) return digits;
+  if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
 }
 
 /** "3 of 5 have photos" bar above the item list. */
@@ -875,7 +1086,12 @@ function Summary({ title, onEdit, children }: { title: string; onEdit: () => voi
   );
 }
 
-const formatDate = (iso: string) =>
+const formatDate = (iso: string, short = false) =>
   iso
-    ? new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })
+    ? new Date(`${iso}T12:00:00`).toLocaleDateString(
+        "en-US",
+        short
+          ? { weekday: "short", month: "short", day: "numeric" }
+          : { weekday: "long", month: "long", day: "numeric", year: "numeric" },
+      )
     : "";

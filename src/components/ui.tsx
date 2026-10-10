@@ -132,13 +132,72 @@ export function Breadcrumbs({ trail }: { trail: { label: string; href: string }[
   );
 }
 
-export function SectionTitle({ eyebrow, children, sub }: { eyebrow?: string; children: ReactNode; sub?: ReactNode }) {
+/*
+ * Locked type scale + section kit (see BRAND.md §8). Use these instead of hand-rolled sizes.
+ *   h2 (SectionTitle) 30 → 40px bold · lead text-lg medium · body 15px / leading-7
+ *   Highlight words: sky-600 on light, sky on dark.
+ */
+type Tone = "light" | "soft" | "dark";
+
+export function Section({
+  children,
+  tone = "light",
+  className = "",
+  id,
+}: {
+  children: ReactNode;
+  tone?: Tone;
+  className?: string;
+  id?: string;
+}) {
+  const bg = tone === "dark" ? "bg-ink text-white" : tone === "soft" ? "bg-sky-100" : "";
   return (
-    <div className="max-w-[760px]">
-      {eyebrow && <p className="text-xs font-extrabold uppercase tracking-widest text-sky-700">{eyebrow}</p>}
-      <h2 className="mt-2 text-3xl font-bold leading-tight text-ink sm:text-[40px]">{children}</h2>
-      {sub && <p className="mt-5 text-lg font-medium leading-snug text-ink">{sub}</p>}
+    <section id={id} className={`py-12 lg:py-16 ${bg} ${className}`}>
+      {children}
+    </section>
+  );
+}
+
+export function Highlight({ children, tone = "light" }: { children: ReactNode; tone?: Tone }) {
+  return <span className={tone === "dark" ? "text-sky" : "text-sky-600"}>{children}</span>;
+}
+
+export function SectionTitle({
+  eyebrow,
+  children,
+  sub,
+  tone = "light",
+  className = "max-w-[760px]",
+}: {
+  eyebrow?: string;
+  children: ReactNode;
+  sub?: ReactNode;
+  tone?: Tone;
+  className?: string;
+}) {
+  const dark = tone === "dark";
+  return (
+    <div className={className}>
+      {eyebrow && (
+        <p className={`mb-2 text-xs font-extrabold uppercase tracking-widest ${dark ? "text-sky" : "text-sky-700"}`}>
+          {eyebrow}
+        </p>
+      )}
+      <h2 className={`text-3xl font-bold leading-tight sm:text-[40px] ${dark ? "text-white" : "text-ink"}`}>{children}</h2>
+      {sub && <Lead tone={tone} className="mt-5">{sub}</Lead>}
     </div>
+  );
+}
+
+export function Lead({ children, tone = "light", className = "" }: { children: ReactNode; tone?: Tone; className?: string }) {
+  return (
+    <p className={`text-lg font-medium leading-snug ${tone === "dark" ? "text-white/85" : "text-ink"} ${className}`}>{children}</p>
+  );
+}
+
+export function Body({ children, tone = "light", className = "" }: { children: ReactNode; tone?: Tone; className?: string }) {
+  return (
+    <p className={`text-[15px] leading-7 ${tone === "dark" ? "text-white/85" : "text-ink"} ${className}`}>{children}</p>
   );
 }
 
@@ -245,7 +304,16 @@ export function ReviewSourceLinks({ className = "" }: { className?: string }) {
   );
 }
 
-export function ReviewRow({ reviews, title = "What our customers say" }: { reviews: Review[]; title?: string }) {
+export function ReviewRow({
+  reviews,
+  title = "What our customers say",
+  more = true,
+}: {
+  reviews: Review[];
+  title?: string;
+  /** Off on the ad funnels, which have no links away from the offer. */
+  more?: boolean;
+}) {
   return (
     <section className="py-12 lg:py-16">
       <Container>
@@ -255,7 +323,7 @@ export function ReviewRow({ reviews, title = "What our customers say" }: { revie
             <ReviewCard key={r.text} r={r} i={i} />
           ))}
         </div>
-        <LearnMore href="/reviews" label="Read more reviews" />
+        {more && <LearnMore href="/reviews" label="Read more reviews" />}
       </Container>
     </section>
   );
@@ -266,10 +334,12 @@ export function CtaBand({
   title = "Ready for a stress-free move?",
   sub = "Get an honest, upfront price in minutes. No pressure, no runaround.",
   href = "#get-quote",
+  button = "Get a Free Quote",
 }: {
   title?: ReactNode;
   sub?: ReactNode;
   href?: string;
+  button?: string;
 }) {
   return (
     <section className="bg-ink py-12 text-white lg:py-16">
@@ -279,7 +349,7 @@ export function CtaBand({
           <p className="mt-3 text-base text-white/85">{sub}</p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <BrandButton href={href}>Get a Free Quote</BrandButton>
+          <BrandButton href={href}>{button}</BrandButton>
           <CallButton />
         </div>
       </Container>

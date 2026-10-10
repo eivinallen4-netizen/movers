@@ -155,3 +155,29 @@ Swap for real photography as it arrives; photos need no color treatment.
 | Footer | `ink` | `white` | `sky` on hover |
 
 Avoid two sky bands in a row, and avoid sky next to sky-100.
+
+---
+
+## 8. Type scale & section kit (locked)
+
+Every content section is built from the primitives in `src/components/ui.tsx`. Don't hand-roll
+heading sizes, paragraph styles or section padding. If one of these needs to change, change it in
+`ui.tsx` and the whole site follows. (The hero is the only exception.)
+
+| Role | Component | Style |
+|---|---|---|
+| Section wrapper | `<Section tone="light \| soft \| dark">` | `py-12 lg:py-16`; `soft` = `sky-100`, `dark` = `ink` + white text |
+| Section heading (h2) | `<SectionTitle sub? eyebrow? tone?>` | 30px → 40px, bold, `leading-tight`, sentence case |
+| Highlight words in an h2 | `<Highlight tone?>` | `sky-600` on light, `sky` on dark. No underline |
+| Intro / lead paragraph | `<Lead>` (or `SectionTitle sub`) | `text-lg font-medium leading-snug` |
+| Body copy | `<Body>` | 15px, `leading-7` |
+| Card title (h3) | — | `text-2xl` in service grids, `text-lg` in article cards, bold |
+| Text link CTA | `<LearnMore>` | `sm` bold `sky-700` + arrow |
+| Button CTA | `<BrandButton>` | see §5 |
+
+Layout rules:
+
+- Two-column splits use `gap-12`. Photos sit in `<Photo>` with `lg:mr-4` so the offset block clears the container.
+- Photo offsets alternate `sky` / `ink` down the page.
+- Headings are sentence case. Uppercase is for buttons, nav and eyebrows only.
+- One highlight phrase per heading, at most.

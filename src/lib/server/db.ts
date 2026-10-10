@@ -1,6 +1,7 @@
 import { createClient, type Client } from "@libsql/client/web";
 import { formatPhone, normalizePhone, type Address, type QuotePayload } from "@/lib/quote";
 import type { LeadPayload } from "@/lib/lead";
+import type { OfferLeadPayload } from "@/lib/offer";
 
 /*
  * Turso (hosted SQLite) database: every quote request is saved here, including each item and
@@ -75,8 +76,27 @@ const SCHEMA = [
     housecall_customer_id TEXT,
     housecall_error TEXT
   )`,
+  `CREATE TABLE IF NOT EXISTS offer_leads (
+    id TEXT PRIMARY KEY,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+    status TEXT NOT NULL DEFAULT 'new',
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    email TEXT NOT NULL,
+    move_size TEXT,
+    move_date TEXT,
+    sms_consent INTEGER NOT NULL,
+    offer TEXT NOT NULL,
+    page TEXT,
+    ad_params TEXT,
+    quote_photos TEXT,
+    quote_send_later INTEGER NOT NULL DEFAULT 0,
+    housecall_customer_id TEXT,
+    housecall_error TEXT
+  )`,
   `CREATE INDEX IF NOT EXISTS quotes_created_at ON quotes(created_at)`,
   `CREATE INDEX IF NOT EXISTS leads_created_at ON leads(created_at)`,
+  `CREATE INDEX IF NOT EXISTS offer_leads_created_at ON offer_leads(created_at)`,
   `CREATE INDEX IF NOT EXISTS quote_items_quote ON quote_items(quote_id)`,
   `CREATE INDEX IF NOT EXISTS quote_photos_item ON quote_photos(item_id)`,
 ];
@@ -85,7 +105,8 @@ async function db() {
   if (!dbEnabled()) throw new Error("Turso is not configured.");
   client ??= createClient({ url: process.env.TURSO_DATABASE_URL!, authToken: process.env.TURSO_AUTH_TOKEN });
   ready ??= client.batch(SCHEMA, "write").then(
-    () => undefined,
+    // Tables made before move_size existed. Fails harmlessly once the column is there.
+    () => client!.execute("ALTER TABLE offer_leads ADD COLUMN move_size TEXT").then(() => undefined, () => undefined),
     (err) => {
       ready = null; // try again next request
       throw err;
@@ -173,11 +194,44 @@ export async function saveLead(l: LeadPayload): Promise<string> {
   return id;
 }
 
+/** Saves an ad-funnel form (/offers/*). Returns the new lead id, which the second-opinion step uses. */
+export async function saveOfferLead(l: OfferLeadPayload): Promise<string> {
+  const c = await db();
+  const id = crypto.randomUUID();
+  await c.execute({
+    sql: `INSERT INTO offer_leads (id, name, phone, email, move_size, move_date, sms_consent, offer, page, ad_params)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    args: [
+      id,
+      l.name.trim(),
+      formatPhone(normalizePhone(l.phone)!),
+      l.email.trim(),
+      l.moveSize || null,
+      l.moveDate?.trim() || null,
+      l.smsConsent ? 1 : 0,
+      l.offer,
+      l.page?.trim() || null,
+      l.ad && Object.keys(l.ad).length ? JSON.stringify(l.ad) : null,
+    ],
+  });
+  return id;
+}
+
+/** Second-opinion step: photos of their current quote, or "send it when you contact me". False if no such lead. */
+export async function setOfferQuote(id: string, q: { photos: string[] } | { sendLater: true }): Promise<boolean> {
+  const c = await db();
+  const res = await c.execute({
+    sql: "UPDATE offer_leads SET quote_photos = ?, quote_send_later = ? WHERE id = ? AND offer = 'second-opinion'",
+    args: "photos" in q ? [JSON.stringify(q.photos), 0, id] : [null, 1, id],
+  });
+  return res.rowsAffected > 0;
+}
+
 /** Records how the HouseCall Pro hand-off went, so failed ones can be followed up by hand. */
 export async function markHousecall(
   id: string,
   result: { customerId?: string; error?: string },
-  table: "quotes" | "leads" = "quotes",
+  table: "quotes" | "leads" | "offer_leads" = "quotes",
 ) {
   const c = await db();
   await c.execute({

@@ -3,7 +3,7 @@
 import { useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, Chevron, Phone, Play } from "./icons";
+import { Check, Chevron, Phone } from "./icons";
 import { MediaFill, hasMedia, type ResolvedMedia } from "./media-fill";
 import { beforeAfterSrc, type BeforeAfterPair } from "@/content/before-after";
 
@@ -92,55 +92,6 @@ export function MobileMenu({
           </div>
         </nav>
       )}
-    </div>
-  );
-}
-
-/* ---------- Scrolling video-testimonial carousel ---------- */
-export function VideoCarousel({ items }: { items: { caption: string; media: ResolvedMedia }[] }) {
-  const track = useRef<HTMLDivElement>(null);
-  const scroll = (dir: number) =>
-    track.current?.scrollBy({ left: dir * (track.current.clientWidth / 2), behavior: "smooth" });
-
-  return (
-    <div className="relative mx-auto max-w-[1200px] px-10">
-      <button
-        aria-label="Previous"
-        onClick={() => scroll(-1)}
-        className="absolute left-2 top-1/2 -translate-y-1/2 text-3xl text-sky-700"
-      >
-        ‹
-      </button>
-      <div ref={track} className="no-scrollbar flex snap-x gap-7 overflow-x-auto px-1 py-2">
-        {items.map((v, i) => (
-          <div
-            key={i}
-            className="relative aspect-[9/16] w-[calc(50%-14px)] shrink-0 snap-start overflow-hidden rounded-lg shadow-md sm:w-[calc(33.33%-19px)] lg:w-[calc(25%-21px)] lg:aspect-[4/7]"
-            style={{ background: v.media.tone }}
-          >
-            {hasMedia(v.media) ? (
-              <MediaFill media={v.media} sizes="(min-width: 1024px) 270px, (min-width: 640px) 33vw, 50vw" />
-            ) : (
-              <>
-                <Silhouette />
-                <button aria-label="Play video" className="absolute right-3 top-3 text-sky">
-                  <Play />
-                </button>
-              </>
-            )}
-            <p className="pointer-events-none absolute inset-x-6 bottom-14 bg-sky px-2 py-1 text-center text-xs font-bold leading-tight text-ink">
-              {v.caption}
-            </p>
-          </div>
-        ))}
-      </div>
-      <button
-        aria-label="Next"
-        onClick={() => scroll(1)}
-        className="absolute right-2 top-1/2 -translate-y-1/2 text-3xl text-sky-700"
-      >
-        ›
-      </button>
     </div>
   );
 }
