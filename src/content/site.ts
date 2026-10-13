@@ -3,7 +3,9 @@
  * so a renamed page only needs changing once.
  */
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://moversandjunkremoval.net").replace(/\/$/, "");
+// The www host is the one Vercel serves; the bare domain 308-redirects to it, so every
+// canonical, sitemap and schema URL must use www or Google sees only redirects.
+export const SITE_URL = "https://www.moversandjunkremoval.net";
 export const BUSINESS = "Movers and Junk Removal";
 export const PHONE = "(702) 527-8565";
 export const PHONE_HREF = "tel:+17025278565";
