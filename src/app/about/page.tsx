@@ -39,7 +39,7 @@ export default function AboutPage() {
         eyebrow="Our story"
         title={<>Moving shouldn&apos;t be <span className="text-sky-600">a headache.</span></>}
         paras={[
-          "At Movers and Junk Removal, we're a local Las Vegas crew that shows up on time, treats your things like our own, and keeps it honest from the first call to the last box.",
+          "At [Movers and Junk Removal](/), we're a local Las Vegas crew that shows up on time, treats your things like our own, and keeps it honest from the first call to the last box.",
           "Before we started, we read more than 200 real Google reviews of Las Vegas moving companies. The same stories kept coming up: broken furniture nobody owned up to, final bills double the quote, crews standing around on the clock, offices that never called back, and boxes dumped in the garage. We built our company to be the opposite of every one of those reviews.",
           "We do moving and junk removal because they go together. Nobody should have to pay to move stuff they don't want, or call two companies to get one job done.",
           "Competitive pricing, more of your stuff moved for it, and no headaches. God First.",

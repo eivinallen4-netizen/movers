@@ -15,6 +15,7 @@ import {
   JsonLd,
   LearnMore,
   LinkCards,
+  Linked,
   MiniReview,
   RatingBadge,
   ReviewRow,
@@ -131,7 +132,9 @@ export function ProseSection({ title, paras, eyebrow, photo }: { title: ReactNod
         </div>
         <div className="space-y-5 text-[16px] leading-8 text-ink">
           {paras.map((p) => (
-            <p key={p}>{p}</p>
+            <p key={p}>
+              <Linked text={p} />
+            </p>
           ))}
         </div>
       </Container>
@@ -350,7 +353,9 @@ export function AreaView({ a }: { a: Area }) {
             {a.localTips.map((t) => (
               <div key={t.title} className="border border-ink bg-white p-6">
                 <h3 className="text-lg font-bold text-ink">{t.title}</h3>
-                <p className="mt-3 text-[15px] leading-7 text-ink">{t.body}</p>
+                <p className="mt-3 text-[15px] leading-7 text-ink">
+                  <Linked text={t.body} />
+                </p>
               </div>
             ))}
           </div>
@@ -447,7 +452,7 @@ export function GuideView({ g }: { g: Guide }) {
               <h2 className="text-2xl font-bold leading-tight text-ink sm:text-[28px] print:border-l-[6px] print:border-sky print:pl-3 print:text-[20px]">{b.h2}</h2>
               {b.paras?.map((p) => (
                 <p key={p} className="mt-4 text-[16px] leading-8 text-ink print:mt-2 print:text-[14px] print:leading-6">
-                  {p}
+                  <Linked text={p} />
                 </p>
               ))}
               {b.list && (

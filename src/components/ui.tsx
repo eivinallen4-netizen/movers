@@ -8,6 +8,24 @@ import { REVIEW_SOURCES, type Review } from "@/content/reviews";
 
 /* Shared building blocks for every page. Server components only (no hooks). */
 
+/** Plain copy with optional inline links written as [anchor](/path), so content files can carry internal links. */
+export function Linked({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(\[[^\]]+\]\(\/[^)]*\))/).map((part, i) => {
+        const m = part.match(/^\[([^\]]+)\]\((\/[^)]*)\)$/);
+        return m ? (
+          <Link key={i} href={m[2]} className="font-semibold text-sky-700 underline underline-offset-2 hover:text-ink">
+            {m[1]}
+          </Link>
+        ) : (
+          part
+        );
+      })}
+    </>
+  );
+}
+
 export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <div className={`mx-auto w-full max-w-[1164px] px-4 sm:px-6 ${className}`}>{children}</div>;
 }

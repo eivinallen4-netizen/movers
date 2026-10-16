@@ -73,3 +73,12 @@ export const JUNK_LOAD_PRICES: { load: string; covers: string; range: string }[]
   { load: "Half truck", covers: "Half a garage, a small apartment", range: "$350 – $500" },
   { load: "Full truck", covers: "Full garage, most of a house", range: "$550 – $800" },
 ];
+
+/** Price range for a typical across-town move with no stairs, using the same math as the moving cost calculator. */
+export function moveRange(h: (typeof HOME_SIZES)[number]) {
+  const drive = DISTANCES[0].hours;
+  const round = (n: number) => Math.round(n / 10) * 10;
+  const low = round(h.crew * HOURLY_PER_MOVER.low * Math.max(2, h.hours[0] + drive) + TRUCK_FEE.low);
+  const high = round(h.crew * HOURLY_PER_MOVER.high * Math.max(2, h.hours[1] + drive) + TRUCK_FEE.high);
+  return `$${low.toLocaleString("en-US")} – $${high.toLocaleString("en-US")}`;
+}

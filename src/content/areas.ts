@@ -23,7 +23,7 @@ export const AREAS: Area[] = [
   {
     slug: "las-vegas",
     name: "Las Vegas",
-    metaTitle: "Las Vegas Movers & Junk Removal | Local, Honest, On Time",
+    metaTitle: "Las Vegas, NV Moving & Junk Removal | Areas We Serve",
     metaDescription:
       "Local Las Vegas movers and junk removal. Apartments, houses and high-rises across the city. Upfront pricing, no hidden fees, same-day available. (702) 527-8565.",
     h1: "Movers & Junk Removal in Las Vegas, NV",
@@ -37,7 +37,7 @@ export const AREAS: Area[] = [
     zips: ["89101", "89102", "89103", "89104", "89106", "89107", "89108", "89113", "89117", "89118", "89123", "89128", "89129", "89130", "89131", "89134", "89139", "89141", "89148", "89149"],
     localTips: [
       { title: "Beat the heat", body: "From June to September, book early-morning starts. We keep electronics, candles and anything heat-sensitive out of the back of the truck." },
-      { title: "Plan around the month-end rush", body: "The last and first few days of the month are the busiest for Las Vegas movers because of lease turnovers. Mid-month dates are easier to book." },
+      { title: "Plan around the month-end rush", body: "The last and first few days of the month are the busiest for [Las Vegas movers](/) because of lease turnovers. Mid-month dates are easier to book." },
       { title: "Check your HOA or building rules", body: "Many gated communities and high-rises limit move hours and require elevator reservations or proof of insurance. Tell us and we'll plan around it." },
     ],
     faqs: [

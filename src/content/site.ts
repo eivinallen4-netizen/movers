@@ -18,7 +18,7 @@ export const HOURS: { days: string[]; opens: string; closes: string }[] = [
   { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "07:00", closes: "22:00" },
 ];
 
-export const CITIES = ["Las Vegas", "Henderson", "Summerlin", "Paradise", "North Las Vegas"];
+export const CITIES = ["Las Vegas", "Henderson", "Summerlin", "Paradise", "North Las Vegas", "Spring Valley", "Enterprise"];
 
 export type NavLink = { label: string; href: string };
 

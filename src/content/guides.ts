@@ -1,5 +1,5 @@
 import type { Faq } from "@/components/ui";
-import { DISTANCES, HOME_SIZES, HOURLY_PER_MOVER, JUNK_ITEM_PRICES, JUNK_LOAD_PRICES, TRUCK_FEE } from "./pricing";
+import { HOME_SIZES, HOURLY_PER_MOVER, JUNK_ITEM_PRICES, JUNK_LOAD_PRICES, TRUCK_FEE, moveRange } from "./pricing";
 
 /*
  * Guides / blog posts (/guides/<slug>). Each one answers a real question people search for,
@@ -33,15 +33,6 @@ export type Guide = {
   ctaHeading: string;
   related: string[];
 };
-
-/** Price range for a typical across-town move with no stairs, using the same math as the moving cost calculator. */
-function moveRange(h: (typeof HOME_SIZES)[number]) {
-  const drive = DISTANCES[0].hours;
-  const round = (n: number) => Math.round(n / 10) * 10;
-  const low = round(h.crew * HOURLY_PER_MOVER.low * Math.max(2, h.hours[0] + drive) + TRUCK_FEE.low);
-  const high = round(h.crew * HOURLY_PER_MOVER.high * Math.max(2, h.hours[1] + drive) + TRUCK_FEE.high);
-  return `$${low.toLocaleString("en-US")} – $${high.toLocaleString("en-US")}`;
-}
 
 export const GUIDES: Guide[] = [
   {
@@ -497,7 +488,7 @@ export const GUIDES: Guide[] = [
       {
         h2: "5. Make sure they know the area",
         paras: [
-          "A local Las Vegas moving company knows which HOAs need a guard-gate list, which high-rises need a loading dock reservation and why you don't start a July move at 2pm. That local knowledge saves hours, and on an hourly move, hours are money.",
+          "A [local Las Vegas moving company](/) knows which HOAs need a guard-gate list, which high-rises need a loading dock reservation and why you don't start a July move at 2pm. That local knowledge saves hours, and on an hourly move, hours are money.",
         ],
       },
       {

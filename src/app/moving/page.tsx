@@ -9,7 +9,7 @@ import { AREA_LINKS } from "@/content/site";
 import { pageMeta } from "@/lib/seo";
 import { editorialImage } from "@/content/editorial-images";
 
-const TITLE = "Las Vegas Movers | Honest, On-Time Local Moving Company";
+const TITLE = "Moving Services in Las Vegas | Local, Same-Day & Labor";
 const DESCRIPTION =
   "Local Las Vegas movers for apartments, houses and last-minute moves. On time, careful, upfront pricing with no hidden fees. Henderson, Summerlin & the whole valley.";
 
@@ -22,7 +22,7 @@ export default function MovingHub() {
       <PageHero
         backdrop={editorialImage("moving")}
         trail={[{ label: "Moving", href: "/moving" }]}
-        h1="Las Vegas Movers Who Make Moving Easy"
+        h1="Las Vegas Moving Services That Make It Easy"
         tagline="Stress-free moves from start to finish. We carry the weight so you don't have to."
         points={["Honest, upfront pricing. No surprises", "On time, and we call when we're on the way", "Handled with care, like it's our own"]}
         lead={{ heading: "Get your free moving quote" }}
@@ -51,7 +51,7 @@ export default function MovingHub() {
         eyebrow="Local movers, Las Vegas NV"
         title="A local crew, not a call center"
         paras={[
-          "We're a Las Vegas moving company made up of local people who live here too. When you call, you talk to someone who knows the difference between moving in Anthem and moving near the Strip, and who can actually book your move.",
+          "We're a [Las Vegas moving company](/) made up of local people who live here too. When you call, you talk to someone who knows the difference between moving in Anthem and moving near the Strip, and who can actually book your move.",
           "We move studios, apartments, condos and houses anywhere in the valley, including same-day and last-minute moves when your plans change. We also do junk removal, so you never have to pay to move something you're going to throw away.",
         ]}
       />

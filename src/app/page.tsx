@@ -12,6 +12,7 @@ import {
   Body,
   BrandButton,
   Container,
+  FaqSection,
   Highlight,
   JsonLd,
   Lead,
@@ -26,6 +27,7 @@ import {
   SectionTitle,
 } from "@/components/ui";
 import { BEFORE_AFTER } from "@/content/before-after";
+import { HOME_SIZES, HOURLY_PER_MOVER, TRUCK_FEE, moveRange } from "@/content/pricing";
 import { REVIEWS, shortReviews } from "@/content/reviews";
 import { businessSchema } from "@/content/schema";
 import { AREA_LINKS, INSTAGRAM, PHONE, PHONE_HREF } from "@/content/site";
@@ -35,7 +37,7 @@ import { pageMeta } from "@/lib/seo";
 export const metadata = pageMeta({
   title: "Las Vegas Movers & Junk Removal | Local Moving Company",
   description:
-    "Las Vegas movers and junk removal for apartments, houses and same-day moves. Upfront pricing, no hidden fees. Henderson, Summerlin & the whole valley. (702) 527-8565.",
+    "Local Las Vegas movers and junk removal. Your price upfront before we lift a thing, no hidden fees, same-day help. Call (702) 527-8565.",
   path: "/",
 });
 
@@ -70,6 +72,7 @@ export default function Home() {
       <OnTime />
       <About />
       {/* Long-tail content for researchers */}
+      <HomeFaq />
       <FreeTools />
       <PhotoStrip items={([1, 2, 3, 4, 5, 6, 7, 8] as const).map((n) => media(`gallery-${n}`))} />
       <InstagramCta />
@@ -273,7 +276,7 @@ function Services() {
     <Section>
       <Container>
         <SectionTitle sub="We carry the weight so you don't have to. On time, fast and careful, every time.">
-          Stress-free moves from start to finish
+          Las Vegas moving services, start to finish
         </SectionTitle>
         <div className="mt-12">
           <ServiceGrid items={SERVICES} />
@@ -723,6 +726,47 @@ function OnTime() {
         </div>
       </Container>
     </Section>
+  );
+}
+
+// Answer-first: each answer works on its own, so Google and AI answers can lift it whole.
+// Prices come from src/content/pricing.ts, the same numbers as the calculator and cost guide.
+const HOME_FAQS = [
+  {
+    q: "How much do movers charge in Las Vegas?",
+    a: `Most movers in Las Vegas charge $${HOURLY_PER_MOVER.low}–$${HOURLY_PER_MOVER.high} per mover, per hour, plus a $${TRUCK_FEE.low}–$${TRUCK_FEE.high} truck and travel fee. A local 1-bedroom move usually runs ${moveRange(HOME_SIZES[1])}, and we give you your exact price upfront, before we start.`,
+  },
+  {
+    q: "Can I get same-day movers in Las Vegas?",
+    a: `Yes. Call ${PHONE} as early in the day as you can and we can often move you, or haul away your junk, the same day.`,
+  },
+  {
+    q: "Do you do labor only, without a truck?",
+    a: "Yes. If you already have a rental truck, a pod or a storage unit, our crew does the loading and unloading so you and your family don't have to.",
+  },
+  {
+    q: "Can you haul away junk while you move us?",
+    a: "Yes. We move what you're keeping and haul away what you're not in the same trip, so you never pay to move stuff you don't want.",
+  },
+  {
+    q: "How do I choose a moving company in Las Vegas?",
+    a: "Get the price in writing before moving day, ask exactly what could change it, and pick the company that answers the phone and answers clearly. Be careful with any quote far below the others: the most common complaint about movers here is a final bill double the quote.",
+  },
+];
+
+function HomeFaq() {
+  return (
+    <div className="bg-white">
+      <FaqSection title="Las Vegas movers: common questions" faqs={HOME_FAQS} />
+      <Container className="-mt-6 pb-12 lg:pb-16">
+        <div className="flex flex-wrap gap-x-8 gap-y-2">
+          <LearnMore href="/guides/how-much-do-movers-cost-las-vegas" label="How much movers cost in Las Vegas" />
+          <LearnMore href="/guides/how-to-choose-a-moving-company-las-vegas" label="How to choose a moving company in Las Vegas" />
+          <LearnMore href="/moving/moving-labor" label="Labor-only moving help" />
+          <LearnMore href="/faq" label="More moving questions" />
+        </div>
+      </Container>
+    </div>
   );
 }
 
