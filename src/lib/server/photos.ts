@@ -48,7 +48,11 @@ export async function uploadPhoto(file: Blob): Promise<string> {
   form.append("signature", signature);
   for (const [k, v] of Object.entries(params)) form.append(k, v);
 
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${c.cloud}/image/upload`, { method: "POST", body: form });
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${c.cloud}/image/upload`, {
+    method: "POST",
+    body: form,
+    signal: AbortSignal.timeout(30_000),
+  });
   const data = (await res.json().catch(() => ({}))) as { secure_url?: string; error?: { message?: string } };
   if (!res.ok || !data.secure_url) throw new Error(data.error?.message ?? `Cloudinary upload failed (${res.status})`);
   return data.secure_url;

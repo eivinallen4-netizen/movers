@@ -46,3 +46,7 @@ export const REVIEWS: Review[] = [
 ];
 
 export const reviewsFor = (tag: Review["tags"][number], n = 3) => REVIEWS.filter((r) => r.tags.includes(tag)).slice(0, n);
+
+// Short enough for the compact cards (heroes, sidebars, review strips).
+export const shortReviews = (tag?: Review["tags"][number], n = 3, max = 200) =>
+  REVIEWS.filter((r) => r.text.length <= max && (!tag || r.tags.includes(tag))).slice(0, n);

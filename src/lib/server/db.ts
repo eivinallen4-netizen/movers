@@ -101,12 +101,23 @@ const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS quote_photos_item ON quote_photos(item_id)`,
 ];
 
+const MIGRATIONS = [
+  "ALTER TABLE offer_leads ADD COLUMN move_size TEXT",
+  ...["quotes", "leads", "offer_leads"].flatMap((t) => [
+    // HouseCall Pro lead id, or "estimateId/optionId" for estimates.
+    `ALTER TABLE ${t} ADD COLUMN housecall_record_id TEXT`,
+    `ALTER TABLE ${t} ADD COLUMN housecall_attempts INTEGER NOT NULL DEFAULT 0`,
+  ]),
+  // Second-opinion quote photos: null = nothing to send, then 'pending', 'sent' or the error text.
+  "ALTER TABLE offer_leads ADD COLUMN housecall_quote_status TEXT",
+];
+
 async function db() {
   if (!dbEnabled()) throw new Error("Turso is not configured.");
   client ??= createClient({ url: process.env.TURSO_DATABASE_URL!, authToken: process.env.TURSO_AUTH_TOKEN });
   ready ??= client.batch(SCHEMA, "write").then(
-    // Tables made before move_size existed. Fails harmlessly once the column is there.
-    () => client!.execute("ALTER TABLE offer_leads ADD COLUMN move_size TEXT").then(() => undefined, () => undefined),
+    // Columns added after the tables were first made. Each fails harmlessly once it's there.
+    () => Promise.all(MIGRATIONS.map((sql) => client!.execute(sql).catch(() => undefined))).then(() => undefined),
     (err) => {
       ready = null; // try again next request
       throw err;
@@ -221,21 +232,175 @@ export async function saveOfferLead(l: OfferLeadPayload): Promise<string> {
 export async function setOfferQuote(id: string, q: { photos: string[] } | { sendLater: true }): Promise<boolean> {
   const c = await db();
   const res = await c.execute({
-    sql: "UPDATE offer_leads SET quote_photos = ?, quote_send_later = ? WHERE id = ? AND offer = 'second-opinion'",
-    args: "photos" in q ? [JSON.stringify(q.photos), 0, id] : [null, 1, id],
+    sql: "UPDATE offer_leads SET quote_photos = ?, quote_send_later = ?, housecall_quote_status = ? WHERE id = ? AND offer = 'second-opinion'",
+    args: "photos" in q ? [JSON.stringify(q.photos), 0, "pending", id] : [null, 1, null, id],
   });
   return res.rowsAffected > 0;
 }
 
-/** Records how the HouseCall Pro hand-off went, so failed ones can be followed up by hand. */
+export type HousecallTable = "quotes" | "leads" | "offer_leads";
+
+/** Records how the HouseCall Pro hand-off went, so failed ones are retried and can be followed up by hand. */
 export async function markHousecall(
+  table: HousecallTable,
   id: string,
-  result: { customerId?: string; error?: string },
-  table: "quotes" | "leads" | "offer_leads" = "quotes",
+  result: { customerId: string; recordId: string } | { error: string },
 ) {
   const c = await db();
   await c.execute({
-    sql: `UPDATE ${table} SET housecall_customer_id = ?, housecall_error = ? WHERE id = ?`,
-    args: [result.customerId ?? null, result.error?.slice(0, 1000) ?? null, id],
+    sql: `UPDATE ${table} SET housecall_customer_id = ?, housecall_record_id = ?, housecall_error = ?,
+          housecall_attempts = housecall_attempts + 1 WHERE id = ?`,
+    args: "error" in result ? [null, null, result.error.slice(0, 1000), id] : [result.customerId, result.recordId, null, id],
   });
+}
+
+/** Where a second-opinion lead stands in HouseCall Pro, plus its quote photos. Null if no such lead. */
+export async function getOfferLeadHousecall(id: string) {
+  const c = await db();
+  const { rows } = await c.execute({
+    sql: "SELECT housecall_customer_id, housecall_record_id, quote_photos FROM offer_leads WHERE id = ?",
+    args: [id],
+  });
+  const r = rows[0];
+  if (!r) return null;
+  return {
+    customerId: (r.housecall_customer_id as string | null) ?? null,
+    recordId: (r.housecall_record_id as string | null) ?? null,
+    photos: r.quote_photos ? (JSON.parse(r.quote_photos as string) as string[]) : [],
+  };
+}
+
+export async function markOfferQuoteHousecall(id: string, result: { recordId: string } | { error: string }) {
+  const c = await db();
+  await c.execute(
+    "error" in result
+      ? { sql: "UPDATE offer_leads SET housecall_quote_status = ? WHERE id = ?", args: [result.error.slice(0, 1000), id] }
+      : { sql: "UPDATE offer_leads SET housecall_quote_status = 'sent', housecall_record_id = ? WHERE id = ?", args: [result.recordId, id] },
+  );
+}
+
+/* ---------- retries (see /api/cron/housecall-retry) ---------- */
+
+export const MAX_HOUSECALL_ATTEMPTS = 6;
+
+/**
+ * Rows from the last 14 days that never made it into HouseCall Pro. Rows under 10 minutes old are
+ * skipped so a retry never races the hand-off that runs right after the form is sent.
+ */
+export async function pendingHousecall(table: HousecallTable): Promise<string[]> {
+  const c = await db();
+  const { rows } = await c.execute({
+    sql: `SELECT id FROM ${table}
+          WHERE housecall_record_id IS NULL AND housecall_attempts < ?
+            AND created_at < strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-10 minutes')
+            AND created_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-14 days')
+          ORDER BY created_at LIMIT 20`,
+    args: [MAX_HOUSECALL_ATTEMPTS],
+  });
+  return rows.map((r) => r.id as string);
+}
+
+/** Second-opinion quote photos whose lead is in HouseCall Pro but the photos aren't yet. */
+export async function pendingOfferQuotes(): Promise<string[]> {
+  const c = await db();
+  const { rows } = await c.execute(
+    `SELECT id FROM offer_leads
+     WHERE quote_photos IS NOT NULL AND housecall_record_id IS NOT NULL
+       AND (housecall_quote_status IS NULL OR housecall_quote_status <> 'sent')
+       AND created_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-14 days')
+     ORDER BY created_at LIMIT 20`,
+  );
+  return rows.map((r) => r.id as string);
+}
+
+const str = (v: unknown) => (v === null || v === undefined ? "" : String(v));
+
+const rowAddress = (r: Record<string, unknown>, p: "from" | "to"): Address => ({
+  label: str(r[`${p}_label`]),
+  street: str(r[`${p}_street`]),
+  city: str(r[`${p}_city`]),
+  state: str(r[`${p}_state`]),
+  zip: str(r[`${p}_zip`]),
+  lat: Number(r[`${p}_lat`] ?? 0),
+  lon: Number(r[`${p}_lon`] ?? 0),
+  token: "",
+});
+
+/** Rebuilds a saved quote as the form sent it, for a retry. */
+export async function loadQuote(id: string): Promise<QuotePayload | null> {
+  const c = await db();
+  const [quote, items, photos] = await c.batch(
+    [
+      { sql: "SELECT * FROM quotes WHERE id = ?", args: [id] },
+      { sql: "SELECT * FROM quote_items WHERE quote_id = ? ORDER BY position", args: [id] },
+      {
+        sql: `SELECT p.item_id, p.url FROM quote_photos p JOIN quote_items i ON i.id = p.item_id
+              WHERE i.quote_id = ? ORDER BY p.position`,
+        args: [id],
+      },
+    ],
+    "read",
+  );
+  const r = quote.rows[0] as Record<string, unknown> | undefined;
+  if (!r) return null;
+  return {
+    from: rowAddress(r, "from"),
+    to: rowAddress(r, "to"),
+    moveDate: str(r.move_date),
+    pickupWindow: str(r.pickup_window),
+    moveType: str(r.move_type),
+    moveSize: str(r.move_size),
+    fromAccess: str(r.from_access),
+    fromFloor: str(r.from_floor),
+    toAccess: str(r.to_access),
+    toFloor: str(r.to_floor),
+    firstName: str(r.first_name),
+    lastName: str(r.last_name),
+    phone: str(r.phone),
+    email: str(r.email),
+    hearAboutUs: str(r.hear_about_us),
+    items: items.rows.map((it) => ({
+      id: str(it.id),
+      name: str(it.name),
+      category: str(it.category),
+      notes: str(it.notes),
+      photos: photos.rows.filter((p) => p.item_id === it.id).map((p) => str(p.url)),
+    })),
+    additionalNotes: str(r.additional_notes),
+    company: "",
+  };
+}
+
+export async function loadLead(id: string): Promise<LeadPayload | null> {
+  const c = await db();
+  const r = (await c.execute({ sql: "SELECT * FROM leads WHERE id = ?", args: [id] })).rows[0];
+  if (!r) return null;
+  return {
+    firstName: str(r.first_name),
+    lastName: str(r.last_name),
+    phone: str(r.phone),
+    email: str(r.email),
+    service: str(r.service),
+    details: str(r.details),
+    page: str(r.page),
+    company: "",
+  };
+}
+
+export async function loadOfferLead(id: string): Promise<OfferLeadPayload | null> {
+  const c = await db();
+  const r = (await c.execute({ sql: "SELECT * FROM offer_leads WHERE id = ?", args: [id] })).rows[0];
+  if (!r) return null;
+  return {
+    name: str(r.name),
+    phone: str(r.phone),
+    email: str(r.email),
+    moveSize: str(r.move_size) as OfferLeadPayload["moveSize"],
+    moveDate: str(r.move_date),
+    smsConsent: Number(r.sms_consent) === 1,
+    offer: str(r.offer) as OfferLeadPayload["offer"],
+    page: str(r.page),
+    ad: r.ad_params ? (JSON.parse(str(r.ad_params)) as Record<string, string>) : {},
+    company: "",
+  };
 }

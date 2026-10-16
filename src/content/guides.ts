@@ -36,7 +36,7 @@ export type Guide = {
 
 /** Price range for a typical across-town move with no stairs, using the same math as the moving cost calculator. */
 function moveRange(h: (typeof HOME_SIZES)[number]) {
-  const drive = DISTANCES[1].hours;
+  const drive = DISTANCES[0].hours;
   const round = (n: number) => Math.round(n / 10) * 10;
   const low = round(h.crew * HOURLY_PER_MOVER.low * Math.max(2, h.hours[0] + drive) + TRUCK_FEE.low);
   const high = round(h.crew * HOURLY_PER_MOVER.high * Math.max(2, h.hours[1] + drive) + TRUCK_FEE.high);

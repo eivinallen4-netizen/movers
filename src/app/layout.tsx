@@ -13,11 +13,11 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Movers and Junk Removal | Las Vegas Movers & Junk Removal",
+    default: "Las Vegas Movers & Junk Removal | Local Moving Company",
     template: `%s | ${BUSINESS}`,
   },
   description:
-    "Local Las Vegas movers and junk removal serving Henderson, Summerlin and the whole valley. Honest pricing, no surprises. Free quote: (702) 527-8565.",
+    "Las Vegas movers and junk removal for apartments, houses and same-day moves. Upfront pricing, no hidden fees. Henderson, Summerlin & the whole valley. (702) 527-8565.",
   openGraph: { siteName: BUSINESS, locale: "en_US", type: "website", images: ["/logo.png"] },
 };
 

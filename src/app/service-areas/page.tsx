@@ -1,6 +1,7 @@
 import { SiteShell } from "@/components/site";
 import { PageHero, ProseSection } from "@/components/templates";
-import { Container, CtaBand, JsonLd, LinkCards, SectionTitle } from "@/components/ui";
+import { Container, CtaBand, JsonLd, LinkCards, ReviewStrip, SectionTitle } from "@/components/ui";
+import { shortReviews } from "@/content/reviews";
 import { AREAS } from "@/content/areas";
 import { businessSchema } from "@/content/schema";
 import { pageMeta } from "@/lib/seo";
@@ -43,6 +44,7 @@ export default function AreasHub() {
           "Not sure if we cover your street? If it's in the Las Vegas valley, we almost certainly do. Send the form or call and we'll confirm right away.",
         ]}
       />
+      <ReviewStrip reviews={shortReviews()} />
       <CtaBand />
     </SiteShell>
   );

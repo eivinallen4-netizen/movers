@@ -1,9 +1,14 @@
+import { after } from "next/server";
 import { validateQuote, type QuotePayload } from "@/lib/quote";
 import { verifyAddress } from "@/lib/server/address-token";
-import { dbEnabled, markHousecall, saveQuote } from "@/lib/server/db";
-import { createQuoteCustomer, housecallEnabled, quoteNotes } from "@/lib/server/housecall";
+import { dbEnabled, saveQuote } from "@/lib/server/db";
+import { pushQuote } from "@/lib/server/handoff";
+import { housecallEnabled, quoteNotes, sendQuote } from "@/lib/server/housecall";
 import { photoUrlPrefix } from "@/lib/server/photos";
 import { clientIp, rateLimit, tooMany } from "@/lib/server/rate-limit";
+
+// Attaching every item photo in HouseCall Pro can take a while; it runs after the response.
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   if (!rateLimit(`quote:${clientIp(req)}`, 5, 10 * 60_000)) return tooMany();
@@ -47,19 +52,22 @@ export async function POST(req: Request) {
     }
   }
 
-  // 2. Hand off to HouseCall Pro. If it fails but the quote is saved, the customer still succeeds.
-  let sentToHousecall = false;
+  // 2. Hand off to HouseCall Pro (customer + estimate + photo attachments).
   if (housecallEnabled()) {
+    if (quoteId) {
+      // Saved, so the customer doesn't wait on the photo uploads. Failures are retried by the cron job.
+      const id = quoteId;
+      after(() => pushQuote(id, q));
+      return Response.json({ ok: true });
+    }
     try {
-      const customerId = await createQuoteCustomer(q);
-      sentToHousecall = true;
-      if (quoteId) await markHousecall(quoteId, { customerId }).catch((e) => console.error("[quotes]", e));
+      await sendQuote(q);
+      return Response.json({ ok: true });
     } catch (err) {
-      console.error("[quotes] HouseCall Pro failed", err);
-      if (quoteId) await markHousecall(quoteId, { error: String(err) }).catch((e) => console.error("[quotes]", e));
+      console.error("[quotes] HouseCall Pro failed and the quote isn't saved anywhere:\n" + quoteNotes(q), err);
     }
   }
 
-  if (quoteId || sentToHousecall) return Response.json({ ok: true });
+  if (quoteId) return Response.json({ ok: true });
   return Response.json({ error: "We couldn't send your quote. Please try again or call us." }, { status: 502 });
 }

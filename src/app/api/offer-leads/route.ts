@@ -1,6 +1,8 @@
+import { after } from "next/server";
 import { validateOfferLead, type OfferLeadPayload } from "@/lib/offer";
-import { dbEnabled, markHousecall, saveOfferLead } from "@/lib/server/db";
-import { createOfferLeadCustomer, housecallEnabled, offerLeadNotes } from "@/lib/server/housecall";
+import { dbEnabled, saveOfferLead } from "@/lib/server/db";
+import { pushOfferLead } from "@/lib/server/handoff";
+import { housecallEnabled, offerLeadNotes, sendOfferLead } from "@/lib/server/housecall";
 import { clientIp, rateLimit, tooMany } from "@/lib/server/rate-limit";
 
 /* Short form on the /offers/* ad pages. Same flow as /api/leads: save first, then hand off. */
@@ -26,7 +28,7 @@ export async function POST(req: Request) {
 
   if (!dbEnabled() && !housecallEnabled()) {
     if (process.env.NODE_ENV !== "production") {
-      console.info(`[offer-leads] Turso and HouseCall Pro not set. Lead that would have been sent:\n${l.name} · ${l.phone} · ${l.email}\n${offerLeadNotes(l)}`);
+      console.info(`[offer-leads] Turso and HouseCall Pro not set. Lead that would have been sent:\n${l.name}\n${offerLeadNotes(l)}`);
       return Response.json({ ok: true, id: crypto.randomUUID(), dryRun: true });
     }
     console.error("[offer-leads] Neither TURSO_* nor HOUSECALL_PRO_API_KEY is set; lead dropped.");
@@ -42,18 +44,21 @@ export async function POST(req: Request) {
     }
   }
 
-  let sentToHousecall = false;
   if (housecallEnabled()) {
+    if (leadId) {
+      // These leads were promised a reply within 15 minutes, so it goes straight to the Job inbox.
+      const id = leadId;
+      after(() => pushOfferLead(id, l));
+      return Response.json({ ok: true, id });
+    }
     try {
-      const customerId = await createOfferLeadCustomer(l);
-      sentToHousecall = true;
-      if (leadId) await markHousecall(leadId, { customerId }, "offer_leads").catch((e) => console.error("[offer-leads]", e));
+      await sendOfferLead(l);
+      return Response.json({ ok: true, id: null });
     } catch (err) {
-      console.error("[offer-leads] HouseCall Pro failed", err);
-      if (leadId) await markHousecall(leadId, { error: String(err) }, "offer_leads").catch((e) => console.error("[offer-leads]", e));
+      console.error(`[offer-leads] HouseCall Pro failed and the lead isn't saved anywhere:\n${l.name}\n${offerLeadNotes(l)}`, err);
     }
   }
 
-  if (leadId || sentToHousecall) return Response.json({ ok: true, id: leadId });
+  if (leadId) return Response.json({ ok: true, id: leadId });
   return Response.json({ error: "We couldn't send your request. Please try again or call us." }, { status: 502 });
 }

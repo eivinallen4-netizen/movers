@@ -1,6 +1,7 @@
 import { SiteShell } from "@/components/site";
 import { PageHero } from "@/components/templates";
-import { CtaBand, FaqSection, JsonLd, faqSchema, type Faq } from "@/components/ui";
+import { CtaBand, FaqSection, JsonLd, ReviewStrip, faqSchema, type Faq } from "@/components/ui";
+import { shortReviews } from "@/content/reviews";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -46,6 +47,7 @@ export default function FaqPage() {
       <FaqSection title="Pricing" faqs={PRICING} schema={false} />
       <FaqSection title="Booking & scheduling" faqs={BOOKING} schema={false} />
       <FaqSection title="On moving day" faqs={MOVING_DAY} schema={false} />
+      <ReviewStrip reviews={shortReviews()} />
       <CtaBand />
     </SiteShell>
   );

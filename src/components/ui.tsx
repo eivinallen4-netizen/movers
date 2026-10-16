@@ -292,6 +292,116 @@ export function SourceLogo({ src, height }: { src: Review["src"]; height: number
   );
 }
 
+export function Stars({ size = 20, className = "" }: { size?: number; className?: string }) {
+  return (
+    <span className={`flex shrink-0 gap-0.5 ${className}`} role="img" aria-label="5 out of 5 stars">
+      {[0, 1, 2, 3, 4].map((s) => (
+        <Star key={s} width={size} height={size} />
+      ))}
+    </span>
+  );
+}
+
+/** The 5-star banner: stars + "5-star rated on" + the review-site logos. */
+export function RatingBadge({ tone = "dark", className = "" }: { tone?: "dark" | "light"; className?: string }) {
+  const dark = tone === "dark";
+  return (
+    <div
+      className={`inline-flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border px-4 py-2.5 ${
+        dark ? "border-white/20 bg-white/10 text-white" : "border-ink bg-white text-ink offset-sky-sm"
+      } ${className}`}
+    >
+      <Stars size={20} />
+      <span className="text-sm font-extrabold uppercase tracking-wide">5-star rated on</span>
+      <span className="flex items-center gap-2">
+        {(Object.keys(REVIEW_SOURCES) as Review["src"][]).map((src) => (
+          <span key={src} className={`rounded px-1.5 py-1 ${dark ? "bg-white" : ""}`}>
+            <SourceLogo src={src} height={20} />
+          </span>
+        ))}
+      </span>
+    </div>
+  );
+}
+
+/** One-line rating for tight spots: under forms, in the closing band. */
+export function RatingLine({
+  tone = "light",
+  link = true,
+  className = "",
+}: {
+  tone?: "dark" | "light";
+  /** Off on the ad funnels, which have no links away from the offer. */
+  link?: boolean;
+  className?: string;
+}) {
+  const cls = `flex flex-wrap items-center gap-2 text-sm font-bold ${tone === "dark" ? "text-white" : "text-ink"} ${className}`;
+  const body = (
+    <>
+      <Stars size={16} /> 5-star rated on Yelp &amp; Thumbtack
+    </>
+  );
+  return link ? (
+    <Link href="/reviews" className={`${cls} hover:underline`}>
+      {body}
+    </Link>
+  ) : (
+    <p className={cls}>{body}</p>
+  );
+}
+
+/** Compact review quote; pick short ones with shortReviews(). */
+export function MiniReview({ r, tone = "light", className = "" }: { r: Review; tone?: "dark" | "light"; className?: string }) {
+  const dark = tone === "dark";
+  return (
+    <figure
+      className={`flex flex-col rounded-lg border p-4 ${
+        dark ? "border-white/15 bg-white/5 text-white" : "border-ink bg-white text-ink"
+      } ${className}`}
+    >
+      <Stars size={16} />
+      <blockquote className="mt-2 flex-1 text-sm leading-snug">&ldquo;{r.text}&rdquo;</blockquote>
+      <figcaption className={`mt-3 text-xs font-bold ${dark ? "text-sky" : "text-sky-700"}`}>
+        {r.who}, via {REVIEW_SOURCES[r.src].label}
+      </figcaption>
+    </figure>
+  );
+}
+
+/** Slim band of three short reviews under the 5-star banner, to drop between sections. */
+export function ReviewStrip({
+  reviews,
+  title,
+  more = true,
+}: {
+  reviews: Review[];
+  title?: ReactNode;
+  more?: boolean;
+}) {
+  return (
+    <section className="bg-sky-100 py-10 lg:py-12">
+      <Container>
+        <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+          <div>
+            {title && <p className="mb-3 text-2xl font-bold leading-tight text-ink sm:text-[28px]">{title}</p>}
+            <RatingBadge tone="light" />
+          </div>
+          {more && (
+            <Link href="/reviews" className="inline-flex items-center gap-2 text-sm font-bold text-sky-700 hover:underline">
+              Read all reviews <ArrowUpRight />
+            </Link>
+          )}
+        </div>
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {reviews.map((r) => (
+            <MiniReview key={r.text} r={r} />
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
 /** "Read our reviews on" row of review-site logos. */
 export function ReviewSourceLinks({ className = "" }: { className?: string }) {
   return (
@@ -335,11 +445,14 @@ export function CtaBand({
   sub = "Get an honest, upfront price in minutes. No pressure, no runaround.",
   href = "#get-quote",
   button = "Get a Free Quote",
+  more = true,
 }: {
   title?: ReactNode;
   sub?: ReactNode;
   href?: string;
   button?: string;
+  /** Off on the ad funnels, which have no links away from the offer. */
+  more?: boolean;
 }) {
   return (
     <section className="bg-ink py-12 text-white lg:py-16">
@@ -347,6 +460,7 @@ export function CtaBand({
         <div className="max-w-[640px]">
           <h2 className="text-3xl font-bold leading-tight sm:text-[36px]">{title}</h2>
           <p className="mt-3 text-base text-white/85">{sub}</p>
+          <RatingLine tone="dark" link={more} className="mt-4" />
         </div>
         <div className="flex flex-wrap gap-4">
           <BrandButton href={href}>{button}</BrandButton>

@@ -76,8 +76,11 @@ async function photonSearch(q: string, bbox: string): Promise<PhotonFeature[]> {
 }
 
 async function photon(q: string): Promise<Raw[]> {
-  let features = await photonSearch(q, SO_NV_BBOX);
-  if (features.length === 0) features = await photonSearch(q, US_BBOX);
+  // Run both searches at once so a miss in Southern Nevada doesn't cost a second round trip.
+  const [local, us] = await Promise.allSettled([photonSearch(q, SO_NV_BBOX), photonSearch(q, US_BBOX)]);
+  if (local.status === "rejected" && us.status === "rejected") throw local.reason;
+  const localFeatures = local.status === "fulfilled" ? local.value : [];
+  const features = localFeatures.length > 0 ? localFeatures : us.status === "fulfilled" ? us.value : [];
 
   // OpenStreetMap is missing house numbers for many homes. If the customer typed one ("6000 w char…")
   // and we only matched the street, carry their number onto it so they can still pick their address.
@@ -111,6 +114,23 @@ async function photon(q: string): Promise<Raw[]> {
     });
 }
 
+// Recent lookups per server instance, so retyping or backspacing doesn't hit the provider again.
+const CACHE_TTL = 10 * 60_000;
+const CACHE_MAX = 500;
+const cache = new Map<string, { at: number; raw: Raw[] }>();
+
+async function lookup(q: string): Promise<Raw[]> {
+  const cacheKey = q.toLowerCase().replace(/\s+/g, " ");
+  const hit = cache.get(cacheKey);
+  if (hit && Date.now() - hit.at < CACHE_TTL) return hit.raw;
+
+  const key = process.env.GEOAPIFY_API_KEY;
+  const raw = key ? await geoapify(q, key) : await photon(q);
+  if (cache.size >= CACHE_MAX) cache.delete(cache.keys().next().value!);
+  cache.set(cacheKey, { at: Date.now(), raw });
+  return raw;
+}
+
 export async function GET(req: Request) {
   if (!rateLimit(`ac:${clientIp(req)}`, 60, 60_000)) return tooMany();
 
@@ -118,8 +138,7 @@ export async function GET(req: Request) {
   if (q.length < 3 || q.length > 200) return Response.json({ results: [] });
 
   try {
-    const key = process.env.GEOAPIFY_API_KEY;
-    const raw = key ? await geoapify(q, key) : await photon(q);
+    const raw = await lookup(q);
     const seen = new Set<string>();
     const results = raw
       .filter((r) => r.label && Number.isFinite(r.lat) && Number.isFinite(r.lon))

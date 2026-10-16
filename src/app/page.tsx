@@ -16,23 +16,26 @@ import {
   JsonLd,
   Lead,
   LearnMore,
+  MiniReview,
   Photo,
+  RatingBadge,
   ReviewCard,
   ReviewSourceLinks,
+  ReviewStrip,
   Section,
   SectionTitle,
 } from "@/components/ui";
 import { BEFORE_AFTER } from "@/content/before-after";
-import { REVIEWS } from "@/content/reviews";
+import { REVIEWS, shortReviews } from "@/content/reviews";
 import { businessSchema } from "@/content/schema";
 import { AREA_LINKS, INSTAGRAM, PHONE, PHONE_HREF } from "@/content/site";
 import { media } from "@/lib/media";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Movers and Junk Removal | Las Vegas Movers & Junk Removal",
+  title: "Las Vegas Movers & Junk Removal | Local Moving Company",
   description:
-    "Local Las Vegas movers and junk removal serving Henderson, Summerlin and the whole valley. Honest pricing, no surprises. Free quote: (702) 527-8565.",
+    "Las Vegas movers and junk removal for apartments, houses and same-day moves. Upfront pricing, no hidden fees. Henderson, Summerlin & the whole valley. (702) 527-8565.",
   path: "/",
 });
 
@@ -50,6 +53,10 @@ export default function Home() {
       {/* Confirm we do what they need, answer the #1 worry (price), then prove it */}
       <Services />
       <HonestPricing />
+      <ReviewStrip
+        title="Don't just take our word for it"
+        reviews={REVIEWS.filter((r) => r.text.length <= 200 && /pric/i.test(r.text)).slice(0, 3)}
+      />
       <PackedToEmpty />
       <Reviews />
       <PressMarquee />
@@ -126,14 +133,20 @@ function Hero() {
           )}
         </div>
         <div className="order-1 lg:order-2">
-          <h1 className="text-4xl font-bold leading-[1.1] text-white sm:text-5xl lg:text-[54px]">
-            Moving shouldn&apos;t be a headache.
+          <RatingBadge className="mb-6" />
+          {/* The H1 carries the search phrase; the big headline below is the brand line. */}
+          <h1 className="text-sm font-bold uppercase tracking-wider text-sky sm:text-base">
+            Las Vegas Movers &amp; Junk Removal
           </h1>
+          <p className="mt-3 text-4xl font-bold leading-[1.1] text-white sm:text-5xl lg:text-[54px]">
+            Moving shouldn&apos;t be a headache.
+          </p>
           <p className="mt-5 text-lg font-bold leading-snug text-sky sm:text-xl">
-            Local Las Vegas movers &amp; junk removal. Honest pricing, no surprises.
+            Local movers serving the whole valley. Honest pricing, no surprises.
             <span className="block text-white">Tell us where you&apos;re moving and get a free quote in minutes.</span>
           </p>
           <QuoteHeroForm />
+          <MiniReview r={shortReviews("same-day", 1)[0]} tone="dark" className="mt-8 max-w-[460px]" />
         </div>
       </Container>
     </section>

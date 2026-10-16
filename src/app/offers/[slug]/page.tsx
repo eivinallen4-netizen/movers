@@ -34,7 +34,7 @@ export default async function Page({ params }: PageProps<"/offers/[slug]">) {
       <ClaimCta offer={o} className="-mt-4 pb-12 lg:-mt-6 lg:pb-16" />
       <FaqSection faqs={OFFER_FAQS} title="Questions we get a lot" />
       <div id="claim-end">
-        <CtaBand title={o.headline} sub={o.urgency ?? "We'll call or text you within 15 minutes."} href="#claim" button={o.button} />
+        <CtaBand title={o.headline} sub={o.urgency ?? "We'll call or text you within 15 minutes."} href="#claim" button={o.button} more={false} />
       </div>
       <StickyClaimBar button={o.button} />
     </FunnelShell>

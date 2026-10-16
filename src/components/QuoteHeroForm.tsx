@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AddressInput, emptyAddress, type AddressValue } from "./AddressInput";
 import { ArrowUpRight, Phone } from "./icons";
+import { RatingLine } from "./ui";
 import type { Address } from "@/lib/quote";
 
 const toRef = (a: Address) =>
@@ -96,6 +97,7 @@ export function QuoteCard({
       <p className="text-2xl font-bold leading-tight">{heading}</p>
       <p className="mt-2 text-sm leading-6 text-white/80">{sub}</p>
       <QuoteHeroForm id="quote-form" className="mt-6" />
+      <RatingLine tone="dark" className="mt-5 border-t border-white/15 pt-4" />
     </div>
   );
 }

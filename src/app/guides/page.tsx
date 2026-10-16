@@ -2,7 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { SiteShell } from "@/components/site";
 import { QuoteCard } from "@/components/QuoteHeroForm";
-import { Breadcrumbs, Container, CtaBand, LearnMore } from "@/components/ui";
+import { Breadcrumbs, Container, CtaBand, LearnMore, ReviewStrip } from "@/components/ui";
+import { shortReviews } from "@/content/reviews";
 import { GUIDES } from "@/content/guides";
 import { pageMeta } from "@/lib/seo";
 import { editorialImage } from "@/content/editorial-images";
@@ -69,6 +70,7 @@ export default function GuidesHub() {
           </div>
         </aside>
       </Container>
+      <ReviewStrip reviews={shortReviews()} />
       <CtaBand />
     </SiteShell>
   );

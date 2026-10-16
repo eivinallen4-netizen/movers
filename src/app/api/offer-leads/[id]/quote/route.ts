@@ -1,5 +1,8 @@
+import { after } from "next/server";
 import { MAX_QUOTE_PHOTOS } from "@/lib/offer";
 import { dbEnabled, setOfferQuote } from "@/lib/server/db";
+import { pushOfferQuote } from "@/lib/server/handoff";
+import { housecallEnabled } from "@/lib/server/housecall";
 import { photoUrlPrefix } from "@/lib/server/photos";
 import { clientIp, rateLimit, tooMany } from "@/lib/server/rate-limit";
 
@@ -8,6 +11,8 @@ import { clientIp, rateLimit, tooMany } from "@/lib/server/rate-limit";
  * { sendLater: true } when they'd rather send it when we contact them.
  * The lead id is a random UUID only the browser that sent the form knows.
  */
+
+export const maxDuration = 60;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
@@ -50,5 +55,7 @@ export async function POST(req: Request, ctx: RouteContext<"/api/offer-leads/[id
     console.error("[offer-leads] Turso quote update failed", err);
     return Response.json({ error: "We couldn't save that. Please try again or call us." }, { status: 502 });
   }
+  // Converts their HouseCall Pro lead into an estimate with these photos attached.
+  if ("photos" in update && housecallEnabled()) after(() => pushOfferQuote(id, { wait: true }));
   return Response.json({ ok: true });
 }

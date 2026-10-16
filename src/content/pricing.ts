@@ -12,34 +12,39 @@ export const HOURLY_PER_MOVER = { low: 55, high: 70 };
 /** Flat truck + travel fee added to every move (low / high). */
 export const TRUCK_FEE = { low: 99, high: 149 };
 
-/** Typical crew size and on-site hours (load + unload) by home size. */
+/**
+ * Typical crew size and on-site hours (load + unload) by home size.
+ * `base` is the calculator's flat price: no stairs, under 25 miles, no packing.
+ */
 export const HOME_SIZES = [
-  { value: "studio", label: "Studio", crew: 2, hours: [2, 3] },
-  { value: "1br", label: "1 bedroom", crew: 2, hours: [3, 4] },
-  { value: "2br", label: "2 bedrooms", crew: 3, hours: [3.5, 5] },
-  { value: "3br", label: "3 bedrooms", crew: 3, hours: [5, 7] },
-  { value: "4br", label: "4+ bedrooms", crew: 4, hours: [6, 9] },
+  { value: "studio", label: "Studio", crew: 2, hours: [2, 3], base: 300 },
+  { value: "1br", label: "1 bedroom", crew: 2, hours: [3, 4], base: 400 },
+  { value: "2br", label: "2 bedrooms", crew: 3, hours: [3.5, 5], base: 600 },
+  { value: "3br", label: "3 bedrooms", crew: 3, hours: [5, 7], base: 850 },
+  { value: "4br", label: "4+ bedrooms", crew: 4, hours: [6, 9], base: 1200 },
 ] as const;
 
-/** Drive time between the two addresses, one way. */
+/** Distance between the two addresses: flat fee added on top of the base price. */
 export const DISTANCES = [
-  { value: "same-area", label: "Same neighborhood (under 5 mi)", hours: 0.25 },
-  { value: "across-town", label: "Across town (5–15 mi)", hours: 0.5 },
-  { value: "across-valley", label: "Across the valley (15–30 mi)", hours: 0.75 },
+  { value: "under-25", label: "Under 25 miles", hours: 0.5, fee: 0 },
+  { value: "over-25", label: "Over 25 miles", hours: 1, fee: 50 },
 ] as const;
 
-/** Extra time for stairs, as a share of on-site hours. */
+/** Flat fee per staircase (flight of stairs), counted across both homes. */
+export const STAIRS_FEE = 50;
 export const STAIRS = [
-  { value: "none", label: "No stairs / elevator", factor: 0 },
-  { value: "one", label: "Stairs at one place", factor: 0.15 },
-  { value: "both", label: "Stairs at both places", factor: 0.3 },
+  { value: "0", label: "No stairs / elevator", count: 0 },
+  { value: "1", label: "1 staircase", count: 1 },
+  { value: "2", label: "2 staircases", count: 2 },
+  { value: "3", label: "3 staircases", count: 3 },
+  { value: "4", label: "4+ staircases", count: 4 },
 ] as const;
 
-/** Extra on-site hours for packing help. */
+/** Packing help, as a share of the base price. */
 export const PACKING = [
-  { value: "none", label: "I'll pack everything", hours: 0 },
-  { value: "some", label: "Help with the kitchen / fragile stuff", hours: 1.5 },
-  { value: "full", label: "Pack the whole home", hours: 4 },
+  { value: "none", label: "I'll pack everything", share: 0 },
+  { value: "some", label: "Help with the kitchen / fragile stuff", share: 0.25 },
+  { value: "full", label: "Pack the whole home", share: 0.6 },
 ] as const;
 
 /** Junk haul-away add-on, by how much truck space it takes. */

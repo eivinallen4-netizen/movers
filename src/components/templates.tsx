@@ -15,6 +15,8 @@ import {
   JsonLd,
   LearnMore,
   LinkCards,
+  MiniReview,
+  RatingBadge,
   ReviewRow,
   SectionTitle,
 } from "./ui";
@@ -23,7 +25,7 @@ import { JUNK_STEPS, MOVING_STEPS, servicesIn, serviceHref, type Service } from 
 import type { Area } from "@/content/areas";
 import type { Guide } from "@/content/guides";
 import { linkCard } from "@/content/links";
-import { reviewsFor } from "@/content/reviews";
+import { reviewsFor, shortReviews, type Review } from "@/content/reviews";
 import { businessSchema, serviceSchema, BUSINESS_ID } from "@/content/schema";
 import { pagePhoto, type PagePhoto } from "@/content/photos";
 import { editorialImage } from "@/content/editorial-images";
@@ -38,6 +40,7 @@ export function PageHero({
   lead,
   children,
   backdrop,
+  review,
 }: {
   trail: { label: string; href: string }[];
   h1: ReactNode;
@@ -46,6 +49,8 @@ export function PageHero({
   lead: { heading?: string; sub?: string };
   children?: ReactNode;
   backdrop?: string;
+  /** Short quote under the selling points; use shortReviews(). */
+  review?: Review;
 }) {
   return (
     <section className="relative overflow-hidden bg-ink pb-16 pt-8 text-white lg:pb-20 lg:pt-10">
@@ -53,6 +58,7 @@ export function PageHero({
       <Container className="relative grid items-start gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
         <div className="lg:pt-6">
           <Breadcrumbs trail={trail} />
+          <RatingBadge className="mt-6" />
           <h1 className="mt-6 text-4xl font-bold leading-[1.1] sm:text-5xl lg:text-[52px]">{h1}</h1>
           <p className="mt-5 text-lg font-bold leading-snug text-sky sm:text-xl">{tagline}</p>
           {points.length > 0 && (
@@ -64,6 +70,7 @@ export function PageHero({
               ))}
             </ul>
           )}
+          {review && <MiniReview r={review} tone="dark" className="mt-8 max-w-[520px]" />}
           {children}
           <a href={PHONE_HREF} className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-white hover:text-sky">
             <Phone className="text-sky" width={22} height={22} /> Rather talk? Call {PHONE}
@@ -237,6 +244,7 @@ export function ServiceView({ s }: { s: Service }) {
         tagline={s.tagline}
         points={s.heroPoints}
         lead={{ heading: isMove ? "Get your free moving quote" : "Get your free junk removal quote" }}
+        review={shortReviews(isMove ? "moving" : "junk", 2)[1]}
       />
       <ProseSection eyebrow={s.name} title={isMove ? "Moving shouldn't be a headache." : "Junk gone. No heavy lifting for you."} paras={s.intro} photo={pagePhoto(`${s.category}-${s.slug}`)} />
       <ProblemsSection problems={s.problems} title={<>What goes wrong with other companies, <span className="text-sky-600">and what we do instead</span></>} />
@@ -318,6 +326,7 @@ export function AreaView({ a }: { a: Area }) {
         tagline={a.tagline}
         points={["Local crew that knows the area", "Upfront pricing, no hidden fees", "Same-day moves & junk pickup available"]}
         lead={{ heading: `Get your free ${a.name} quote` }}
+        review={shortReviews("moving", 3)[2]}
       />
       <ProseSection eyebrow={`${a.name}, Nevada`} title={<>Your local crew in <span className="text-sky-600">{a.name}</span></>} paras={a.intro} photo={pagePhoto(`area-${a.slug}`)} />
       <section className="py-12 lg:py-16">
@@ -523,6 +532,7 @@ export function GuideView({ g }: { g: Guide }) {
         <aside className="print:hidden">
           <div id="get-quote" className="scroll-mt-6 lg:sticky lg:top-6">
             <QuoteCard heading={g.ctaHeading} />
+            <MiniReview r={shortReviews(undefined, 1)[0]} className="mt-8" />
           </div>
         </aside>
       </Container>

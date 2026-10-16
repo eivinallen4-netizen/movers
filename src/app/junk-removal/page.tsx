@@ -2,7 +2,7 @@ import { SiteShell } from "@/components/site";
 import { PageHero, ProblemsSection, ProseSection, ServiceCards, StepsSection } from "@/components/templates";
 import { BrandButton, CheckList, Container, CtaBand, FaqSection, JsonLd, ReviewRow, SectionTitle } from "@/components/ui";
 import { JUNK_STEPS, servicesIn } from "@/content/services";
-import { reviewsFor } from "@/content/reviews";
+import { reviewsFor, shortReviews } from "@/content/reviews";
 import { serviceSchema } from "@/content/schema";
 import { pageMeta } from "@/lib/seo";
 import { editorialImage } from "@/content/editorial-images";
@@ -24,6 +24,7 @@ export default function JunkHub() {
         tagline="One item or a whole house. Honest pricing and no heavy lifting for you."
         points={["Upfront price before we load a thing", "We carry it from any room", "Same-day pickup available"]}
         lead={{ heading: "Get your free junk removal quote" }}
+        review={shortReviews("junk", 1)[0]}
       />
       <section className="py-12 lg:py-16">
         <Container>

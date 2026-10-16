@@ -8,6 +8,9 @@ export type AddressValue = { text: string; selected: Address | null };
 
 export const emptyAddress: AddressValue = { text: "", selected: null };
 
+// Suggestions already fetched this page view, so backspacing or retyping shows them instantly.
+const resultCache = new Map<string, Address[]>();
+
 /**
  * Autocomplete address box. Only a picked suggestion counts: typing after picking
  * clears the selection, so the value can't drift away from the verified address.
@@ -40,13 +43,22 @@ export function AddressInput({
   const query = value.selected ? "" : value.text.trim();
   useEffect(() => {
     if (query.length < 3) return;
+    const cached = resultCache.get(query.toLowerCase());
     const ctrl = new AbortController();
+    // Cached results are applied on the next tick rather than synchronously in the effect.
     const t = setTimeout(async () => {
+      if (cached) {
+        setResults(cached);
+        setLookupError("");
+        setActive(-1);
+        return;
+      }
       setLoading(true);
       try {
         const res = await fetch(`/api/autocomplete?q=${encodeURIComponent(query)}`, { signal: ctrl.signal });
         const data = (await res.json()) as { results?: Address[]; error?: string };
         setResults(data.results ?? []);
+        if (res.ok && data.results) resultCache.set(query.toLowerCase(), data.results);
         setLookupError(data.error ?? "");
         setActive(-1);
       } catch (err) {
@@ -54,7 +66,7 @@ export function AddressInput({
       } finally {
         if (!ctrl.signal.aborted) setLoading(false);
       }
-    }, 250);
+    }, cached ? 0 : 150);
     return () => {
       clearTimeout(t);
       ctrl.abort();

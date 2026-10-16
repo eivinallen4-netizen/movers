@@ -3,7 +3,7 @@ import { SiteShell } from "@/components/site";
 import { PageHero, ProblemsSection, ProseSection, ServiceCards, StepsSection } from "@/components/templates";
 import { BrandButton, Container, CtaBand, FaqSection, JsonLd, ReviewRow, SectionTitle } from "@/components/ui";
 import { MOVING_STEPS, servicesIn } from "@/content/services";
-import { reviewsFor } from "@/content/reviews";
+import { reviewsFor, shortReviews } from "@/content/reviews";
 import { serviceSchema } from "@/content/schema";
 import { AREA_LINKS } from "@/content/site";
 import { pageMeta } from "@/lib/seo";
@@ -26,6 +26,7 @@ export default function MovingHub() {
         tagline="Stress-free moves from start to finish. We carry the weight so you don't have to."
         points={["Honest, upfront pricing. No surprises", "On time, and we call when we're on the way", "Handled with care, like it's our own"]}
         lead={{ heading: "Get your free moving quote" }}
+        review={shortReviews("moving", 1)[0]}
       />
       <section className="py-12 lg:py-16">
         <Container>

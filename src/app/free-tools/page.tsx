@@ -1,7 +1,8 @@
 import { SiteShell } from "@/components/site";
 import Image from "next/image";
 import { PageHero } from "@/components/templates";
-import { BrandButton, Container, CtaBand, LinkCards, SectionTitle } from "@/components/ui";
+import { BrandButton, Container, CtaBand, LinkCards, ReviewStrip, SectionTitle } from "@/components/ui";
+import { shortReviews } from "@/content/reviews";
 import { GUIDES } from "@/content/guides";
 import { pageMeta } from "@/lib/seo";
 import { editorialImage } from "@/content/editorial-images";
@@ -50,6 +51,7 @@ export default function ToolsHub() {
           </div>
         </Container>
       </section>
+      <ReviewStrip reviews={shortReviews()} />
       <CtaBand />
     </SiteShell>
   );

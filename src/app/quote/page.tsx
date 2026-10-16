@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import logoWhite from "../../../public/logo white.png";
 import { Phone } from "@/components/icons";
+import { RatingBadge } from "@/components/ui";
 import { decodeAddressRef } from "@/lib/server/address-token";
 import { pageMeta } from "@/lib/seo";
 import { QuoteWizard } from "./QuoteWizard";
@@ -52,6 +53,7 @@ export default async function QuotePage({
             A few quick questions and a real person from our Las Vegas crew sends your quote. No hidden fees, no
             obligation.
           </p>
+          <RatingBadge className="mt-6" />
         </div>
       </div>
       <QuoteWizard

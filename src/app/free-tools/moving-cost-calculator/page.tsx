@@ -1,5 +1,6 @@
 import { SiteShell } from "@/components/site";
-import { Breadcrumbs, CheckList, Container, CtaBand, FaqSection, JsonLd, LinkCards, SectionTitle } from "@/components/ui";
+import { Breadcrumbs, CheckList, Container, CtaBand, FaqSection, JsonLd, LinkCards, ReviewStrip, SectionTitle } from "@/components/ui";
+import { shortReviews } from "@/content/reviews";
 import { linkCard } from "@/content/links";
 import { SITE_URL } from "@/content/site";
 import { pageMeta } from "@/lib/seo";
@@ -95,6 +96,7 @@ export default function CalculatorPage() {
           </div>
         </Container>
       </section>
+      <ReviewStrip reviews={shortReviews()} />
       <CtaBand />
     </SiteShell>
   );
