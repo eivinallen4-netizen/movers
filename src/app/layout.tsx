@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { BUSINESS, SITE_URL } from "@/content/site";
 import "./globals.css";
@@ -27,6 +28,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full">
         {children}
         <Analytics />
+        <Script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="Kl3dGi6e8AlgspesLbbErw"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
