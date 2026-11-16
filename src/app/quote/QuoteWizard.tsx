@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { AddressInput, type AddressValue } from "@/components/AddressInput";
 import { ArrowUpRight, Camera, Check, Phone } from "@/components/icons";
+import { FormAgreement, SmsConsent } from "@/components/SmsConsent";
 import { PHONE, PHONE_HREF } from "@/content/site";
 import { uploadPhoto } from "@/lib/image";
 import {
@@ -74,6 +75,7 @@ export function QuoteWizard({
     phone: "",
     email: "",
     hearAboutUs: "",
+    smsConsent: false,
     additionalNotes: "",
     company: "",
   });
@@ -399,8 +401,8 @@ export function QuoteWizard({
             <p className="flex items-start gap-2.5 border border-l-4 border-ink-200 border-l-sky px-4 py-3 text-sm leading-6 text-ink sm:col-span-2">
               <Check className="mt-1 shrink-0" />
               <span>
-                <strong>No spam, no sales calls.</strong> We never share your info. We just text or call with your
-                price.
+                <strong>No spam, no sales calls.</strong> We never sell your info. We just call or email with your
+                price, or text if you say yes below.
               </span>
             </p>
             <div className="sm:col-span-2">
@@ -412,6 +414,9 @@ export function QuoteWizard({
                 onChange={(v) => set("hearAboutUs", v)}
                 error={e.hearAboutUs}
               />
+            </div>
+            <div className="sm:col-span-2">
+              <SmsConsent checked={d.smsConsent} onChange={(v) => set("smsConsent", v)} />
             </div>
           </div>
         )}
@@ -563,7 +568,10 @@ export function QuoteWizard({
           </button>
         </div>
         {last && (
-          <p className="mt-3 text-center text-xs text-ink-600 sm:text-right">Free and no obligation. We reply with your price.</p>
+          <>
+            <p className="mt-3 text-center text-xs text-ink-600 sm:text-right">Free and no obligation. We reply with your price.</p>
+            <FormAgreement className="mt-2 text-center sm:text-right" />
+          </>
         )}
       </form>
     </Shell>

@@ -7,6 +7,13 @@
 // canonical, sitemap and schema URL must use www or Google sees only redirects.
 export const SITE_URL = "https://www.moversandjunkremoval.net";
 export const BUSINESS = "Movers and Junk Removal";
+/** Registered name, used on the legal pages. */
+export const LEGAL_NAME = "Movers and Junk Removal LLC";
+/**
+ * Inbox for privacy and opt-out requests. Nevada law (NRS 603A.340) needs an email, toll-free
+ * number or web page for these, and the (702) line isn't toll-free. Fill this in before ads run.
+ */
+export const PRIVACY_EMAIL = "";
 export const PHONE = "(702) 527-8565";
 export const PHONE_HREF = "tel:+17025278565";
 export const PHONE_E164 = "+17025278565";

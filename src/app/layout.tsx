@@ -33,8 +33,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           data-key="Kl3dGi6e8AlgspesLbbErw"
           strategy="afterInteractive"
         />
+        {/* Skipped for visitors whose browser sends a Global Privacy Control opt-out (the privacy policy promises this). */}
         <Script id="meta-pixel" strategy="afterInteractive">
-          {`!function(f,b,e,v,n,t,s)
+          {`if(!navigator.globalPrivacyControl){!function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
@@ -43,7 +44,7 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '1700787861671112');
-fbq('track', 'PageView');`}
+fbq('track', 'PageView');}`}
         </Script>
         <noscript>
           {/* eslint-disable-next-line @next/next/no-img-element */}

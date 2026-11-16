@@ -1,16 +1,69 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import Link from "next/link";
+import { useEffect, useId, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import { ArrowUpRight, Camera, Check, Lock, Phone } from "./icons";
-import { BUSINESS, PHONE, PHONE_HREF } from "@/content/site";
+import { FormAgreement, SmsConsent } from "./SmsConsent";
+import { PHONE, PHONE_HREF } from "@/content/site";
 import { uploadPhoto } from "@/lib/image";
-import { AD_PARAMS, MAX_QUOTE_PHOTOS, MOVE_SIZES, type MoveSize, type OfferSlug } from "@/lib/offer";
-import { EMAIL, normalizePhone, todayInVegas, type Errors } from "@/lib/quote";
+import { AD_PARAMS, MOVE_SIZES, PHOTO_STEPS, type MoveSize, type OfferPhoto, type OfferSlug, type PhotoKind } from "@/lib/offer";
+import { trackLead } from "@/lib/pixel";
+import { normalizePhone, type Errors } from "@/lib/quote";
 
-type Photo = { id: string; name: string; preview: string; url?: string; error?: string };
+/** Wording for the photo step after the form, by what we're asking for. */
+const PHOTO_COPY: Record<
+  PhotoKind,
+  {
+    title: string;
+    body: string;
+    /** Shown in a callout above the camera buttons. */
+    warning?: { title: string; body: string };
+    camera: string;
+    library: string;
+    label: string;
+    needLabels: string;
+    send: string;
+    later: string;
+    off: string;
+    sent: string;
+    notSent: string;
+  }
+> = {
+  quote: {
+    title: "Snap a photo of your quote",
+    body: "A clear photo or screenshot of every page lets us check it before we call. We'll still call or text within 15 minutes.",
+    camera: "Take a photo",
+    library: "Upload",
+    label: "",
+    needLabels: "",
+    send: "Send my quote",
+    later: "I'll send it when you contact me",
+    off: "Photo upload isn't available right now. No problem: send it to us when we contact you.",
+    sent: "We have your quote. We'll look it over and call or text you within 15 minutes with what we find.",
+    notSent: "We'll call or text you within 15 minutes. Have your quote handy and you can send it to us then.",
+  },
+  home: {
+    title: "Photograph everything you're moving",
+    body: "Take photos of every room and tell us which room each one is. This is how we lock in your flat price. We'll still call or text within 15 minutes.",
+    warning: {
+      title: "Miss something and the flat rate won't apply.",
+      body: "If it's not in your photos, we can't give you an accurate quote. Include closets, the garage, the patio and any storage.",
+    },
+    camera: "Open camera",
+    library: "Upload",
+    label: "Which room?",
+    needLabels: "Pick a room for each photo.",
+    send: "Send my photos",
+    later: "I'll text them when you contact me",
+    off: "Photo upload isn't available right now. No problem: text them to us when we contact you.",
+    sent: "We have your photos. We'll call or text you within 15 minutes to lock in your price in writing.",
+    notSent:
+      "We'll call or text you within 15 minutes. Keep your phone handy and text us photos of everything you're moving then. Anything missing from your photos isn't covered by the flat rate.",
+  },
+};
+
+type Photo = { id: string; name: string; preview: string; label: string; url?: string; error?: string };
 type Stage = "size" | "form" | "photo" | "done";
-type Contact = "name" | "phone" | "email";
+type Contact = "name" | "phone";
 
 const inputCls = (invalid?: boolean) =>
   `h-12 w-full min-w-0 border bg-white px-3 pr-10 text-base text-ink outline-none focus:ring-2 focus:ring-sky sm:text-sm ${
@@ -27,36 +80,36 @@ function formatPhoneInput(raw: string) {
 
 function contactError(k: Contact, v: string) {
   if (k === "name") return v.trim() ? "" : "Enter your name.";
-  if (k === "phone") return normalizePhone(v) ? "" : "Enter a 10-digit US phone number.";
-  return EMAIL.test(v.trim()) ? "" : "Enter a valid email address.";
+  return normalizePhone(v) ? "" : "Enter a 10-digit US phone number.";
 }
 
 /**
  * The short form on the /offers/* ad pages. Step 1 is one tap (move size) to get them started;
- * step 2 is name, phone, email, an optional move date and SMS consent.
- * The second-opinion offer then asks for a photo of their current quote, or lets them send it later.
+ * step 2 is just name, phone and SMS consent (we call or text, so nothing else is needed).
+ * Offers in PHOTO_STEPS then ask for photos (of their current quote, or of their home), or let them send them later.
  */
 export function OfferForm({
   offer,
   title,
   button,
-  askForQuotePhoto = false,
+  sizePrompt = "How big is your move?",
   checklist,
 }: {
   offer: OfferSlug;
   /** Heading on the form card. */
   title: string;
   button: string;
-  askForQuotePhoto?: boolean;
+  /** Step-1 question above the move-size buttons. */
+  sizePrompt?: string;
   /** Shown on the thank-you screen (the red-flags checklist on the second-opinion page). */
   checklist?: ReactNode;
 }) {
+  const photoStep = PHOTO_STEPS[offer];
+  const totalSteps = photoStep ? 3 : 2;
   const [d, setD] = useState({
     moveSize: "" as MoveSize | "",
     name: "",
     phone: "",
-    email: "",
-    moveDate: "",
     smsConsent: false,
     company: "",
   });
@@ -95,10 +148,10 @@ export function OfferForm({
   }
 
   async function submit() {
-    const keys: Contact[] = ["name", "phone", "email"];
+    const keys: Contact[] = ["name", "phone"];
     const e: Errors = Object.fromEntries(keys.map((k) => [k, contactError(k, d[k])]));
     setErrors(e);
-    setTouched({ name: true, phone: true, email: true });
+    setTouched({ name: true, phone: true });
     if (Object.values(e).some(Boolean)) return;
 
     setStatus("sending");
@@ -118,18 +171,22 @@ export function OfferForm({
         setStatus("idle");
         return;
       }
+      trackLead({ content_name: offer });
       setLeadId(data.id ?? null);
-      setStage(askForQuotePhoto && data.id ? "photo" : "done");
+      setStage(photoStep && data.id ? "photo" : "done");
     } catch {
       setSubmitError("We couldn't reach the server. Check your connection, or call us.");
       setStatus("idle");
     }
   }
 
-  if (stage === "photo" && leadId) {
+  if (stage === "photo" && leadId && photoStep) {
     return (
       <QuotePhotoStep
         leadId={leadId}
+        kind={photoStep.kind}
+        max={photoStep.max}
+        labels={photoStep.labels}
         onDone={(sent) => {
           setSentPhotos(sent);
           setStage("done");
@@ -148,10 +205,8 @@ export function OfferForm({
           Got it, {d.name.trim().split(/\s+/)[0]}!
         </p>
         <p className="mt-3 text-base leading-7 text-white/85">
-          {askForQuotePhoto
-            ? sentPhotos
-              ? "We have your quote. We'll look it over and call or text you within 15 minutes with what we find."
-              : "We'll call or text you within 15 minutes. Have your quote handy and you can send it to us then."
+          {photoStep
+            ? PHOTO_COPY[photoStep.kind][sentPhotos ? "sent" : "notSent"]
             : "We'll call or text you within 15 minutes to lock in your price and date."}
         </p>
         <a href={PHONE_HREF} className="mt-5 inline-flex h-12 items-center gap-2 bg-white px-6 text-sm font-bold text-ink transition hover:bg-sky-100">
@@ -164,14 +219,7 @@ export function OfferForm({
 
   const header = (
     <div>
-      <div className="flex items-center justify-between gap-4 text-xs">
-        <span className="font-extrabold uppercase tracking-widest text-sky">Step {stage === "size" ? 1 : 2} of 2</span>
-        <span className="font-semibold text-white/70">Takes about 30 seconds</span>
-      </div>
-      <div className="mt-2 grid grid-cols-2 gap-1.5" aria-hidden>
-        <span className="h-1.5 bg-sky" />
-        <span className={`h-1.5 transition-colors ${stage === "size" ? "bg-white/20" : "bg-sky"}`} />
-      </div>
+      <StepProgress step={stage === "size" ? 1 : 2} total={totalSteps} note="Takes about 30 seconds" />
       <h2 className="mt-4 text-[22px] font-bold leading-tight sm:mt-5 sm:text-[28px]">{title}</h2>
       <p className="mt-3 flex items-center gap-2 bg-sky px-3 py-2.5 text-[13px] font-bold text-ink sm:mt-4 sm:px-4 sm:py-3 sm:text-sm">
         <Phone width={18} height={18} className="shrink-0" /> We&apos;ll call or text you within 15 minutes.
@@ -184,7 +232,7 @@ export function OfferForm({
       <div>
         {header}
         <fieldset className="mt-5 sm:mt-6">
-          <legend className="text-lg font-bold">How big is your move?</legend>
+          <legend className="text-lg font-bold">{sizePrompt}</legend>
           <div className="mt-3 grid grid-cols-2 gap-3">
             {MOVE_SIZES.map((s) => (
               <button
@@ -260,48 +308,11 @@ export function OfferForm({
             />
           )}
         </Field>
-        <Field label="Email" error={errors.email} valid={valid("email")}>
-          {(p) => (
-            <input
-              {...p}
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              maxLength={254}
-              value={d.email}
-              onChange={(ev) => set("email", ev.target.value)}
-              onBlur={() => blur("email")}
-              className={inputCls(p["aria-invalid"])}
-            />
-          )}
-        </Field>
-        <Field label="Move date (optional)" error={errors.moveDate}>
-          {(p) => (
-            <input {...p} type="date" min={todayInVegas()} suppressHydrationWarning value={d.moveDate} onChange={(ev) => set("moveDate", ev.target.value)} className={inputCls(p["aria-invalid"])} />
-          )}
-        </Field>
       </div>
 
-      <label className="mt-5 flex cursor-pointer items-start gap-2.5 text-[11px] leading-4 text-white/75">
-        <input
-          type="checkbox"
-          checked={d.smsConsent}
-          onChange={(ev) => set("smsConsent", ev.target.checked)}
-          className="mt-0.5 h-4 w-4 shrink-0 accent-sky"
-        />
-        <span>
-          Optional: {BUSINESS} can text me about my move at this number. Msg &amp; data rates may apply. Msg frequency varies.
-          Reply STOP to opt out, HELP for help. Consent isn&apos;t required to get a quote.{" "}
-          <Link href="/privacy" className="underline hover:text-sky">
-            Privacy
-          </Link>{" "}
-          &amp;{" "}
-          <Link href="/terms" className="underline hover:text-sky">
-            Terms
-          </Link>
-          .
-        </span>
-      </label>
+      <div className="mt-5">
+        <SmsConsent tone="dark" checked={d.smsConsent} onChange={(v) => set("smsConsent", v)} />
+      </div>
 
       {submitError && (
         <p role="alert" className="mt-5 border-l-4 border-red-600 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">
@@ -323,6 +334,7 @@ export function OfferForm({
       <p className="mt-3 flex items-center justify-center gap-1.5 text-xs font-semibold text-white/70">
         <Lock /> No spam. No obligation. We never sell your info.
       </p>
+      <FormAgreement tone="dark" className="mt-2 text-center" />
     </form>
   );
 }
@@ -371,23 +383,52 @@ export function StickyClaimBar({ button }: { button: string }) {
   );
 }
 
-/** Second-opinion step 2: a photo of the quote they already have, or "send it when you contact me". */
-function QuotePhotoStep({ leadId, onDone }: { leadId: string; onDone: (sentPhotos: boolean) => void }) {
+/**
+ * After the form: photos of their current quote or of their home, or "send them when you contact me".
+ * "Open camera" goes straight to the phone's rear camera; "Upload" picks from the library. When the
+ * offer has `labels` (rooms), each photo needs one so the office knows what it's looking at.
+ */
+function QuotePhotoStep({
+  leadId,
+  kind,
+  max,
+  labels,
+  onDone,
+}: {
+  leadId: string;
+  kind: PhotoKind;
+  max: number;
+  labels?: readonly string[];
+  onDone: (sentPhotos: boolean) => void;
+}) {
+  const copy = PHOTO_COPY[kind];
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [uploadsOff, setUploadsOff] = useState(false);
   const uploading = photos.some((p) => !p.url && !p.error);
   const ready = photos.filter((p) => p.url);
+  const unlabelled = labels ? ready.filter((p) => !p.label).length : 0;
+  const top = useRef<HTMLDivElement>(null);
+
+  // This card is shorter than the contact form, so after sending they'd be left below its heading.
+  // Checked a frame later, once the browser's scroll anchoring has settled after the form shrank.
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      const el = top.current;
+      if (el && el.getBoundingClientRect().top < 0) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   function addFiles(files: FileList | null) {
     if (!files) return;
     setError("");
-    const room = MAX_QUOTE_PHOTOS - photos.length;
+    const room = max - photos.length;
     const picked = Array.from(files).slice(0, Math.max(0, room));
     for (const file of picked) {
       const id = crypto.randomUUID();
-      setPhotos((xs) => [...xs, { id, name: file.name, preview: URL.createObjectURL(file) }]);
+      setPhotos((xs) => [...xs, { id, name: file.name, preview: URL.createObjectURL(file), label: "" }]);
       uploadPhoto(file)
         .then((url) => setPhotos((xs) => xs.map((p) => (p.id === id ? { ...p, url } : p))))
         .catch((err: Error) => {
@@ -397,7 +438,9 @@ function QuotePhotoStep({ leadId, onDone }: { leadId: string; onDone: (sentPhoto
     }
   }
 
-  async function send(body: { photos: string[] } | { sendLater: true }) {
+  const setLabel = (id: string, label: string) => setPhotos((xs) => xs.map((p) => (p.id === id ? { ...p, label } : p)));
+
+  async function send(body: { photos: OfferPhoto[] } | { sendLater: true }) {
     setSending(true);
     setError("");
     try {
@@ -419,37 +462,73 @@ function QuotePhotoStep({ leadId, onDone }: { leadId: string; onDone: (sentPhoto
     }
   }
 
+  const pickerCls =
+    "flex h-14 min-w-0 cursor-pointer items-center justify-center gap-2 px-3 text-sm font-bold uppercase transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-sky";
+  const onPick = (ev: ChangeEvent<HTMLInputElement>) => {
+    addFiles(ev.target.files);
+    ev.target.value = "";
+  };
+
   return (
-    <div>
-      <p className="text-xs font-extrabold uppercase tracking-widest text-sky">Last step · You&apos;re in!</p>
-      <p className="mt-2 text-2xl font-bold leading-tight">Snap a photo of your quote</p>
-      <p className="mt-2 text-sm leading-6 text-white/80">
-        A clear photo or screenshot of every page lets us check it before we call. We&apos;ll still call or text within 15 minutes.
-      </p>
+    <div ref={top} className="scroll-mt-24">
+      <StepProgress step={3} total={3} note="You're in! Last step" />
+      <p className="mt-4 text-2xl font-bold leading-tight">{copy.title}</p>
+      <p className="mt-2 text-sm leading-6 text-white/80">{copy.body}</p>
+      {copy.warning && (
+        <div className="mt-4 border-l-4 border-sky bg-sky/15 px-3 py-2.5">
+          <p className="text-sm font-bold leading-snug">{copy.warning.title}</p>
+          <p className="mt-1 text-[13px] leading-5 text-white/85">{copy.warning.body}</p>
+        </div>
+      )}
 
       {uploadsOff ? (
-        <p className="mt-5 border-l-4 border-sky bg-white/10 px-3 py-2 text-sm">
-          Photo upload isn&apos;t available right now. No problem: send it to us when we contact you.
-        </p>
+        <p className="mt-5 border-l-4 border-sky bg-white/10 px-3 py-2 text-sm">{copy.off}</p>
       ) : (
         <>
           {photos.length > 0 && (
-            <ul className="mt-5 flex flex-wrap gap-3">
-              {photos.map((p) => (
-                <li key={p.id} className="relative h-20 w-20 overflow-hidden border border-white/30 bg-white/10">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
-                  <img src={p.preview} alt={p.name} className="h-full w-full object-cover" />
-                  {!p.url && !p.error && (
-                    <span className="absolute inset-0 flex items-center justify-center bg-ink/70 text-[10px] font-bold uppercase">Uploading…</span>
-                  )}
-                  {p.error && (
-                    <span className="absolute inset-0 flex items-center justify-center bg-red-700/85 p-1 text-center text-[10px] font-bold">Failed</span>
+            <ul className="mt-5 grid gap-2">
+              {photos.map((p, n) => (
+                <li key={p.id} className="flex items-center gap-3 border border-white/20 bg-white/5 p-2">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden bg-white/10">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
+                    <img src={p.preview} alt={p.label || `Photo ${n + 1}`} className="h-full w-full object-cover" />
+                    {!p.url && !p.error && (
+                      <span className="absolute inset-0 flex items-center justify-center bg-ink/70 text-[10px] font-bold uppercase">Uploading…</span>
+                    )}
+                    {p.error && (
+                      <span className="absolute inset-0 flex items-center justify-center bg-red-700/85 p-1 text-center text-[10px] font-bold">Failed</span>
+                    )}
+                  </div>
+                  {labels ? (
+                    <label className="min-w-0 flex-1">
+                      <span className="sr-only">
+                        {copy.label} (photo {n + 1})
+                      </span>
+                      <select
+                        value={p.label}
+                        onChange={(ev) => setLabel(p.id, ev.target.value)}
+                        className={`h-12 w-full min-w-0 border bg-white px-3 text-base font-semibold text-ink outline-none focus:ring-2 focus:ring-sky sm:text-sm ${
+                          p.label ? "border-white" : "border-sky ring-1 ring-sky"
+                        }`}
+                      >
+                        <option value="" disabled>
+                          {copy.label}
+                        </option>
+                        {labels.map((l) => (
+                          <option key={l} value={l}>
+                            {l}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ) : (
+                    <span className="min-w-0 flex-1 truncate text-sm font-semibold">Page {n + 1}</span>
                   )}
                   <button
                     type="button"
-                    aria-label={`Remove ${p.name}`}
+                    aria-label={`Remove photo ${n + 1}`}
                     onClick={() => setPhotos((xs) => xs.filter((x) => x.id !== p.id))}
-                    className="absolute right-0 top-0 flex h-6 w-6 items-center justify-center bg-ink text-sm font-bold"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center text-xl font-bold text-white/70 transition hover:text-white"
                   >
                     ×
                   </button>
@@ -460,30 +539,34 @@ function QuotePhotoStep({ leadId, onDone }: { leadId: string; onDone: (sentPhoto
           {photos.some((p) => p.error) && (
             <p className="mt-2 text-xs font-bold text-red-300">{photos.find((p) => p.error)?.error}</p>
           )}
-          {photos.length < MAX_QUOTE_PHOTOS && (
-            <label className="mt-5 flex h-14 cursor-pointer items-center justify-center gap-2 border-2 border-dashed border-white/40 text-sm font-bold uppercase transition hover:border-sky has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-sky">
-              <Camera width={20} height={20} /> {photos.length ? "Add another page" : "Take or upload a photo"}
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                className="sr-only"
-                onChange={(ev) => {
-                  addFiles(ev.target.files);
-                  ev.target.value = "";
-                }}
-              />
-            </label>
+          {photos.length < max && (
+            <div className="mt-4 grid grid-cols-[3fr_2fr] gap-2">
+              <label className={`${pickerCls} bg-white text-ink hover:bg-sky-100`}>
+                <Camera width={20} height={20} className="shrink-0" /> {copy.camera}
+                {/* capture opens the rear camera directly on phones; desktops fall back to a file picker. */}
+                <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={onPick} />
+              </label>
+              <label className={`${pickerCls} border-2 border-dashed border-white/40 hover:border-sky`}>
+                {copy.library}
+                <input type="file" accept="image/*" multiple className="sr-only" onChange={onPick} />
+              </label>
+            </div>
           )}
+          {photos.length > 0 && photos.length < max && (
+            <p className="mt-2 text-center text-xs text-white/60">
+              {photos.length} of {max} photos
+            </p>
+          )}
+          {unlabelled > 0 && <p className="mt-3 text-sm font-bold text-sky">{copy.needLabels}</p>}
           <button
             type="button"
-            disabled={sending || uploading || ready.length === 0}
-            onClick={() => void send({ photos: ready.map((p) => p.url!) })}
+            disabled={sending || uploading || ready.length === 0 || unlabelled > 0}
+            onClick={() => void send({ photos: ready.map((p) => ({ url: p.url!, label: p.label })) })}
             className="mt-4 flex h-14 w-full items-center justify-center gap-2 bg-sky px-6 text-sm font-bold uppercase text-ink transition hover:bg-sky-600 disabled:opacity-50"
           >
             {sending ? "Sending…" : uploading ? "Uploading…" : (
               <>
-                Send my quote <ArrowUpRight />
+                {copy.send} <ArrowUpRight />
               </>
             )}
           </button>
@@ -506,9 +589,28 @@ function QuotePhotoStep({ leadId, onDone }: { leadId: string; onDone: (sentPhoto
             : "mt-4 w-full py-2 text-sm font-bold text-white underline underline-offset-4 hover:text-sky disabled:opacity-50"
         }
       >
-        I&apos;ll send it when you contact me
+        {copy.later}
       </button>
     </div>
+  );
+}
+
+/** "Step 2 of 3" plus a segmented bar, shared by every step of the form card. */
+function StepProgress({ step, total, note }: { step: number; total: number; note: string }) {
+  return (
+    <>
+      <div className="flex items-center justify-between gap-4 text-xs">
+        <span className="font-extrabold uppercase tracking-widest text-sky">
+          Step {step} of {total}
+        </span>
+        <span className="font-semibold text-white/70">{note}</span>
+      </div>
+      <div className="mt-2 grid gap-1.5" style={{ gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))` }} aria-hidden>
+        {Array.from({ length: total }, (_, i) => (
+          <span key={i} className={`h-1.5 transition-colors ${i < step ? "bg-sky" : "bg-white/20"}`} />
+        ))}
+      </div>
+    </>
   );
 }
 

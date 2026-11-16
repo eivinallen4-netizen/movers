@@ -145,6 +145,8 @@ export type QuotePayload = {
   phone: string;
   email: string;
   hearAboutUs: string;
+  /** Ticked the optional SMS opt-in box. Gates HouseCall Pro text notifications. */
+  smsConsent: boolean;
   items: QuoteItem[];
   additionalNotes: string;
   /** Honeypot: hidden from people, bots fill it in. Must stay empty. */
@@ -185,7 +187,7 @@ export const STEP_FIELDS: string[][] = [
     "toAccess",
     "toFloor",
   ],
-  ["firstName", "lastName", "phone", "email", "hearAboutUs"],
+  ["firstName", "lastName", "phone", "email", "hearAboutUs", "smsConsent"],
   ["items"],
   ["additionalNotes"],
 ];
@@ -247,6 +249,7 @@ export function validateQuote(
   if (!normalizePhone(str("phone"))) e.phone = "Enter a 10-digit US phone number.";
   const email = str("email");
   if (!EMAIL.test(email) || email.length > 254) e.email = "Enter a valid email address.";
+  if (typeof q.smsConsent !== "boolean") e.smsConsent = "Invalid consent value.";
 
   const items = q.items;
   if (!Array.isArray(items) || items.length === 0) e.items = "Add at least one room or item.";

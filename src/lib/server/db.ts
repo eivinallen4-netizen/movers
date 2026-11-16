@@ -1,7 +1,7 @@
 import { createClient, type Client } from "@libsql/client/web";
 import { formatPhone, normalizePhone, type Address, type QuotePayload } from "@/lib/quote";
 import type { LeadPayload } from "@/lib/lead";
-import type { OfferLeadPayload } from "@/lib/offer";
+import { PHOTO_STEPS, type OfferLeadPayload, type OfferPhoto, type OfferSlug } from "@/lib/offer";
 
 /*
  * Turso (hosted SQLite) database: every quote request is saved here, including each item and
@@ -110,6 +110,10 @@ const MIGRATIONS = [
   ]),
   // Second-opinion quote photos: null = nothing to send, then 'pending', 'sent' or the error text.
   "ALTER TABLE offer_leads ADD COLUMN housecall_quote_status TEXT",
+  // SMS opt-in on the quote form. Rows from before it was asked stay 0 (no texts).
+  "ALTER TABLE quotes ADD COLUMN sms_consent INTEGER NOT NULL DEFAULT 0",
+  // Where the visitor's offer hold timer stood when they sent the form (clocked offers only).
+  "ALTER TABLE offer_leads ADD COLUMN hold_note TEXT",
 ];
 
 async function db() {
@@ -137,12 +141,12 @@ export async function saveQuote(q: QuotePayload): Promise<string> {
     [
       {
         sql: `INSERT INTO quotes (
-          id, first_name, last_name, phone, email, hear_about_us,
+          id, first_name, last_name, phone, email, hear_about_us, sms_consent,
           move_date, pickup_window, move_type, move_size, in_person_estimate, storage_needed,
           from_label, from_street, from_city, from_state, from_zip, from_lat, from_lon, from_access, from_floor,
           to_label, to_street, to_city, to_state, to_zip, to_lat, to_lon, to_access, to_floor,
           additional_notes
-        ) VALUES (${Array(31).fill("?").join(", ")})`,
+        ) VALUES (${Array(32).fill("?").join(", ")})`,
         args: [
           quoteId,
           q.firstName.trim(),
@@ -150,6 +154,7 @@ export async function saveQuote(q: QuotePayload): Promise<string> {
           formatPhone(normalizePhone(q.phone)!),
           q.email.trim(),
           q.hearAboutUs || null,
+          q.smsConsent ? 1 : 0,
           q.moveDate,
           q.pickupWindow,
           q.moveType,
@@ -210,30 +215,38 @@ export async function saveOfferLead(l: OfferLeadPayload): Promise<string> {
   const c = await db();
   const id = crypto.randomUUID();
   await c.execute({
-    sql: `INSERT INTO offer_leads (id, name, phone, email, move_size, move_date, sms_consent, offer, page, ad_params)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    sql: `INSERT INTO offer_leads (id, name, phone, email, move_size, move_date, sms_consent, offer, page, ad_params, hold_note)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     args: [
       id,
       l.name.trim(),
       formatPhone(normalizePhone(l.phone)!),
-      l.email.trim(),
+      l.email?.trim() ?? "",
       l.moveSize || null,
       l.moveDate?.trim() || null,
       l.smsConsent ? 1 : 0,
       l.offer,
       l.page?.trim() || null,
       l.ad && Object.keys(l.ad).length ? JSON.stringify(l.ad) : null,
+      l.holdNote || null,
     ],
   });
   return id;
 }
 
-/** Second-opinion step: photos of their current quote, or "send it when you contact me". False if no such lead. */
-export async function setOfferQuote(id: string, q: { photos: string[] } | { sendLater: true }): Promise<boolean> {
+/**
+ * The photo step (offers in PHOTO_STEPS): their photos, or "send them when you contact me".
+ * False if there's no such lead, or its offer has no photo step or allows fewer photos.
+ */
+export async function setOfferQuote(id: string, q: { photos: OfferPhoto[] } | { sendLater: true }): Promise<boolean> {
   const c = await db();
+  const count = "photos" in q ? q.photos.length : 0;
+  const allowed = (Object.entries(PHOTO_STEPS) as [string, { max: number }][]).filter(([, s]) => s.max >= count).map(([slug]) => slug);
+  if (allowed.length === 0) return false;
   const res = await c.execute({
-    sql: "UPDATE offer_leads SET quote_photos = ?, quote_send_later = ?, housecall_quote_status = ? WHERE id = ? AND offer = 'second-opinion'",
-    args: "photos" in q ? [JSON.stringify(q.photos), 0, "pending", id] : [null, 1, null, id],
+    sql: `UPDATE offer_leads SET quote_photos = ?, quote_send_later = ?, housecall_quote_status = ?
+          WHERE id = ? AND offer IN (${allowed.map(() => "?").join(", ")})`,
+    args: [...("photos" in q ? [JSON.stringify(q.photos), 0, "pending"] : [null, 1, null]), id, ...allowed],
   });
   return res.rowsAffected > 0;
 }
@@ -254,19 +267,20 @@ export async function markHousecall(
   });
 }
 
-/** Where a second-opinion lead stands in HouseCall Pro, plus its quote photos. Null if no such lead. */
+/** Where a photo-step lead stands in HouseCall Pro, plus its photos. Null if no such lead. */
 export async function getOfferLeadHousecall(id: string) {
   const c = await db();
   const { rows } = await c.execute({
-    sql: "SELECT housecall_customer_id, housecall_record_id, quote_photos FROM offer_leads WHERE id = ?",
+    sql: "SELECT offer, housecall_customer_id, housecall_record_id, quote_photos FROM offer_leads WHERE id = ?",
     args: [id],
   });
   const r = rows[0];
   if (!r) return null;
   return {
+    offer: str(r.offer) as OfferSlug,
     customerId: (r.housecall_customer_id as string | null) ?? null,
     recordId: (r.housecall_record_id as string | null) ?? null,
-    photos: r.quote_photos ? (JSON.parse(r.quote_photos as string) as string[]) : [],
+    photos: parsePhotos(r.quote_photos),
   };
 }
 
@@ -311,6 +325,12 @@ export async function pendingOfferQuotes(): Promise<string[]> {
      ORDER BY created_at LIMIT 20`,
   );
   return rows.map((r) => r.id as string);
+}
+
+/** Saved photo-step photos. Older rows hold plain URLs, from before photos had labels. */
+function parsePhotos(v: unknown): OfferPhoto[] {
+  if (!v) return [];
+  return (JSON.parse(v as string) as (string | OfferPhoto)[]).map((p) => (typeof p === "string" ? { url: p, label: "" } : p));
 }
 
 const str = (v: unknown) => (v === null || v === undefined ? "" : String(v));
@@ -359,6 +379,7 @@ export async function loadQuote(id: string): Promise<QuotePayload | null> {
     phone: str(r.phone),
     email: str(r.email),
     hearAboutUs: str(r.hear_about_us),
+    smsConsent: Number(r.sms_consent) === 1,
     items: items.rows.map((it) => ({
       id: str(it.id),
       name: str(it.name),
@@ -402,5 +423,6 @@ export async function loadOfferLead(id: string): Promise<OfferLeadPayload | null
     page: str(r.page),
     ad: r.ad_params ? (JSON.parse(str(r.ad_params)) as Record<string, string>) : {},
     company: "",
+    holdNote: str(r.hold_note) || undefined,
   };
 }

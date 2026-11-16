@@ -1,5 +1,7 @@
+import { cookies } from "next/headers";
 import { after } from "next/server";
-import { validateOfferLead, type OfferLeadPayload } from "@/lib/offer";
+import { CLOCKED_OFFERS, validateOfferLead, type OfferLeadPayload } from "@/lib/offer";
+import { HOLD_COOKIE, holdNote, parseHoldStart } from "@/lib/offer-clock";
 import { dbEnabled, saveOfferLead } from "@/lib/server/db";
 import { pushOfferLead } from "@/lib/server/handoff";
 import { housecallEnabled, offerLeadNotes, sendOfferLead } from "@/lib/server/housecall";
@@ -21,7 +23,12 @@ export async function POST(req: Request) {
   if (Object.keys(errors).length > 0) {
     return Response.json({ error: "Please fix the highlighted fields.", errors }, { status: 422 });
   }
-  const l = body as OfferLeadPayload;
+  const l = { ...(body as OfferLeadPayload), holdNote: undefined } as OfferLeadPayload;
+  // Where their offer hold stood, from our own cookie (see /api/offer-clock), never from the request body.
+  if (CLOCKED_OFFERS.includes(l.offer)) {
+    const now = Date.now();
+    l.holdNote = holdNote(parseHoldStart((await cookies()).get(HOLD_COOKIE)?.value, now), now);
+  }
 
   // Honeypot filled in → almost certainly a bot. Pretend it worked so it doesn't retry.
   if (typeof l.company === "string" && l.company.trim()) return Response.json({ ok: true, id: crypto.randomUUID() });

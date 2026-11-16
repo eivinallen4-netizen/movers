@@ -4,14 +4,19 @@ import Link from "next/link";
 import logoWhite from "../../public/logo white.png";
 import { Phone, Star } from "./icons";
 import { OfferForm } from "./OfferForm";
-import { BrandButton, Container, SectionTitle, SourceLogo } from "./ui";
+import { BrandButton, Container, MiniReview, SectionTitle, SourceLogo } from "./ui";
 import { LEGAL_LINKS, PHONE, PHONE_HREF } from "@/content/site";
 import { RED_FLAGS, type Offer } from "@/content/offers";
-import { REVIEW_SOURCES, type Review } from "@/content/reviews";
+import { REVIEWS, REVIEW_SOURCES, type Review } from "@/content/reviews";
+import { PHOTO_STEPS } from "@/lib/offer";
+
+/** Reviews by reviewer name, in the order given. */
+const reviewsNamed = (names: string[] = []) =>
+  names.flatMap((n) => REVIEWS.filter((r) => r.who === n).slice(0, 1));
 
 /*
- * Ad landing pages (/offers/*). No site menu and no links off the page (the logo isn't one either),
- * so visitors from an ad stay on the offer: the logo, a call button, the form, and a slim legal footer.
+ * Ad landing pages (/offers/*). No site menu, so visitors from an ad stay on the offer: the logo
+ * (which goes to the home page), a call button, the form, and a slim legal footer.
  */
 
 export function FunnelShell({ children }: { children: ReactNode }) {
@@ -19,7 +24,9 @@ export function FunnelShell({ children }: { children: ReactNode }) {
     <main className="overflow-x-hidden">
       <header className="bg-ink print:hidden">
         <div className="mx-auto flex h-16 w-full max-w-[1164px] items-center justify-between gap-4 px-4 sm:h-20 sm:px-6">
-          <Image src={logoWhite} alt="Movers and Junk Removal" preload className="h-10 w-auto sm:h-12" />
+          <Link href="/" className="flex items-center" aria-label="Movers and Junk Removal home">
+            <Image src={logoWhite} alt="Movers and Junk Removal" preload className="h-10 w-auto sm:h-12" />
+          </Link>
           <a
             href={PHONE_HREF}
             className="flex h-11 items-center gap-2 whitespace-nowrap bg-white px-4 text-sm font-bold text-ink transition hover:bg-sky-100"
@@ -51,20 +58,43 @@ export function FunnelShell({ children }: { children: ReactNode }) {
 
 /** Headline on the left; the form card, urgency line and trust strip on the right (first on mobile after the headline). */
 export function OfferHero({ offer }: { offer: Offer }) {
+  const photo = offer.heroPhoto;
+  const review = reviewsNamed(offer.heroReview ? [offer.heroReview] : [])[0];
   return (
-    <section className="bg-ink pb-14 pt-5 text-white sm:pt-8 lg:pb-20 lg:pt-14">
-      <Container className="grid items-start gap-6 sm:gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
+    <section className={`bg-ink pb-14 text-white lg:pb-20 lg:pt-14 ${photo ? "pt-4 sm:pt-8" : "pt-5 sm:pt-8"}`}>
+      <Container className={`grid items-start lg:grid-cols-[1.1fr_1fr] lg:gap-14 ${photo ? "gap-4 sm:gap-8" : "gap-6 sm:gap-8"}`}>
         <div className="lg:pt-4">
           <p className="text-xs font-extrabold uppercase tracking-widest text-sky">{offer.eyebrow}</p>
-          <h1 className="mt-3 text-[28px] font-bold leading-[1.1] sm:text-5xl lg:text-[52px]">{offer.headline}</h1>
-          <p className="mt-3 text-[15px] font-semibold leading-snug text-white/90 sm:mt-5 sm:text-xl">{offer.subheadline}</p>
-          <ul className="mt-8 hidden gap-4 lg:grid">
-            {offer.points.slice(0, 4).map((p) => (
-              <li key={p.title} className="flex items-center gap-4 text-base font-semibold">
-                <IconTile name={p.icon} size={36} className="h-14 w-14 bg-white" /> {p.title}
-              </li>
-            ))}
-          </ul>
+          <h1 className={`font-bold leading-[1.1] sm:text-5xl lg:text-[52px] ${photo ? "mt-2 text-[27px]" : "mt-3 text-[28px]"}`}>
+            {offer.headline}
+          </h1>
+          {photo ? (
+            // On phones the photo sits beside the subheadline so the form's first tap stays on the first screen.
+            <div className="mt-3 flex items-start gap-3 sm:mt-5 lg:flex-col lg:items-stretch lg:gap-0">
+              <div className="relative h-[104px] w-[92px] shrink-0 overflow-hidden rounded-lg offset-sky-sm sm:h-40 sm:w-40 lg:order-last lg:mt-8 lg:aspect-[3/2] lg:h-auto lg:w-full">
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  preload
+                  sizes="(min-width: 1024px) 560px, 160px"
+                  className="object-cover"
+                />
+              </div>
+              <p className="text-[14px] font-semibold leading-snug text-white/90 sm:text-xl lg:mt-0">{offer.subheadline}</p>
+            </div>
+          ) : (
+            <p className="mt-3 text-[15px] font-semibold leading-snug text-white/90 sm:mt-5 sm:text-xl">{offer.subheadline}</p>
+          )}
+          {!photo && (
+            <ul className="mt-8 hidden gap-4 lg:grid">
+              {offer.points.slice(0, 4).map((p) => (
+                <li key={p.title} className="flex items-center gap-4 text-base font-semibold">
+                  <IconTile name={p.icon} size={36} className="h-14 w-14 bg-white" /> {p.title}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div id="claim" className="scroll-mt-4">
           <div className="border border-ink-800 bg-ink-800 p-4 offset-sky-sm sm:p-7">
@@ -72,15 +102,132 @@ export function OfferHero({ offer }: { offer: Offer }) {
               offer={offer.slug}
               title={offer.formTitle}
               button={offer.button}
-              askForQuotePhoto={offer.askForQuotePhoto}
-              checklist={offer.askForQuotePhoto ? <RedFlagsChecklist /> : undefined}
+              sizePrompt={offer.sizePrompt}
+              checklist={PHOTO_STEPS[offer.slug]?.kind === "quote" ? <RedFlagsChecklist /> : undefined}
             />
           </div>
           {offer.urgency && (
             <p className="mt-5 border-l-4 border-sky pl-3 text-sm font-bold text-white">{offer.urgency}</p>
           )}
+          {offer.rating && <RatingCount rating={offer.rating} className="mt-5 text-white" />}
+          {review && <MiniReview r={review} tone="dark" className="mt-3" />}
           <TrustStrip />
         </div>
+      </Container>
+    </section>
+  );
+}
+
+/** The three biggest worries (price, trust, timing) answered right under the hero. */
+export function ObjectionStrip({ offer }: { offer: Offer }) {
+  if (!offer.objections) return null;
+  return (
+    <section className="border-b border-ink-200 py-10 lg:py-12">
+      <Container>
+        <ul className="grid gap-5 md:grid-cols-3">
+          {offer.objections.map((o) => {
+            const r = reviewsNamed(o.review ? [o.review] : [])[0];
+            return (
+              <li key={o.q} className="flex flex-col border border-ink bg-white p-5 offset-sky-sm">
+                <span className="flex items-center gap-3">
+                  <IconTile name={o.icon} size={32} className="h-12 w-12 bg-sky-100" />
+                  <span className="text-lg font-bold leading-snug text-ink">{o.q}</span>
+                </span>
+                <span className="mt-3 block text-[15px] leading-6 text-ink">{o.a}</span>
+                {r && (
+                  <span className="mt-3 block border-l-4 border-sky pl-3 text-sm leading-6 text-ink-600">
+                    &ldquo;{r.text}&rdquo; <span className="font-bold text-sky-700">{r.who}, via {REVIEW_SOURCES[r.src].label}</span>
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </Container>
+    </section>
+  );
+}
+
+/** The bonus and the named guarantee, side by side under the selling points. */
+export function OfferExtras({ offer }: { offer: Offer }) {
+  if (!offer.bonus && !offer.promise) return null;
+  return (
+    <div className="mt-10 grid gap-5 lg:grid-cols-2">
+      {offer.bonus && (
+        <div className="border-2 border-ink bg-sky-100 p-6">
+          <p className="text-xs font-extrabold uppercase tracking-widest text-sky-700">Bonus</p>
+          <p className="mt-2 text-xl font-bold leading-snug text-ink">{offer.bonus.title}</p>
+          <p className="mt-2 text-[15px] leading-6 text-ink">{offer.bonus.body}</p>
+        </div>
+      )}
+      {offer.promise && (
+        <div className="bg-ink p-6 text-white offset-sky-sm">
+          <p className="text-xs font-extrabold uppercase tracking-widest text-sky">Our guarantee</p>
+          <p className="mt-2 text-xl font-bold leading-snug">{offer.promise.title}</p>
+          <p className="mt-2 text-[15px] leading-6 text-white/90">{offer.promise.body}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** "★★★★★ 4.9 from 33 reviews on Thumbtack · Top Pro". The real score and count, no links off the page. */
+function RatingCount({ rating, className = "" }: { rating: NonNullable<Offer["rating"]>; className?: string }) {
+  return (
+    <p className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-bold ${className}`}>
+      <span className="flex gap-0.5" aria-hidden>
+        {[0, 1, 2, 3, 4].map((s) => (
+          <Star key={s} />
+        ))}
+      </span>
+      <span>
+        {rating.score} from {rating.count} reviews on {rating.source}
+        {rating.extra && <span className="font-semibold opacity-80"> · {rating.extra}</span>}
+      </span>
+    </p>
+  );
+}
+
+/** The owner in his own words (matching the ad video), next to real customer reviews. */
+export function OwnerNote({ offer }: { offer: Offer }) {
+  const n = offer.ownerNote;
+  if (!n) return null;
+  const reviews = reviewsNamed(offer.reviewNames);
+  return (
+    <section className="bg-sky-100 py-12 lg:py-16">
+      <Container>
+        <div className="grid items-center gap-8 md:grid-cols-[220px_1fr] lg:gap-12">
+          <div className="relative mx-auto aspect-[3/4] w-40 overflow-hidden rounded-lg offset-ink-sm md:w-full">
+            <Image src={n.photo.src} alt={n.photo.alt} fill sizes="(min-width: 768px) 220px, 160px" className="object-cover" />
+          </div>
+          <figure>
+            <SectionTitle>{n.title}</SectionTitle>
+            <blockquote className="mt-5 space-y-3 text-lg font-semibold leading-relaxed text-ink sm:text-xl">
+              {n.quote.map((line) => (
+                <p key={line}>&ldquo;{line}&rdquo;</p>
+              ))}
+            </blockquote>
+            <figcaption className="mt-4 text-sm font-bold text-sky-700">{n.sign}</figcaption>
+          </figure>
+        </div>
+        {offer.crewPhotos && (
+          <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-4">
+            {offer.crewPhotos.map((p) => (
+              <li key={p.src} className="relative aspect-[3/4] overflow-hidden rounded-lg">
+                <Image src={p.src} alt={p.alt} fill sizes="(min-width: 768px) 270px, 50vw" className="object-cover" />
+              </li>
+            ))}
+          </ul>
+        )}
+        {offer.rating && <RatingCount rating={offer.rating} className="mt-10 text-ink" />}
+        {reviews.length > 0 && (
+          <div className={`grid gap-5 md:grid-cols-3 ${offer.rating ? "mt-4" : "mt-10"}`}>
+            {reviews.map((r) => (
+              <MiniReview key={r.who} r={r} />
+            ))}
+          </div>
+        )}
+        <ClaimCta offer={offer} className="mt-10" />
       </Container>
     </section>
   );
@@ -112,7 +259,7 @@ export function TrustStrip() {
 
 /** Takes the mystery out of sending the form: what happens, and how fast. */
 export function NextSteps({ offer }: { offer: Offer }) {
-  const steps = [
+  const steps = offer.steps ?? [
     { title: "Send the form.", body: "About 30 seconds: your move size and how to reach you.", icon: "send-form" },
     {
       title: "We call or text within 15 minutes.",
@@ -156,22 +303,42 @@ export function ClaimCta({ offer, className = "" }: { offer: Offer; className?: 
   );
 }
 
-export function SellingPoints({ offer }: { offer: Offer }) {
+export function SellingPoints({
+  offer,
+  compact = false,
+  children,
+}: {
+  offer: Offer;
+  /** Two small tiles per row on phones, to keep a long proof page short. */
+  compact?: boolean;
+  children?: ReactNode;
+}) {
   return (
     <section className="py-12 lg:py-16">
       <Container>
         <SectionTitle>{offer.pointsTitle}</SectionTitle>
-        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {offer.points.map((p) => (
-            <li key={p.title} className="flex gap-4 border border-ink bg-white p-5 offset-sky-sm">
-              <IconTile name={p.icon} size={40} className="h-16 w-16 bg-sky-100" />
-              <span>
-                <span className="block text-lg font-bold leading-snug text-ink">{p.title}</span>
-                <span className="mt-1.5 block text-[15px] leading-6 text-ink">{p.body}</span>
-              </span>
-            </li>
-          ))}
+        <ul className={`grid lg:grid-cols-3 ${compact ? "mt-8 grid-cols-2 gap-3 sm:gap-5 lg:mt-10" : "mt-10 gap-5 sm:grid-cols-2"}`}>
+          {offer.points.map((p) =>
+            compact ? (
+              <li key={p.title} className="flex flex-col gap-2 border border-ink bg-white p-3 offset-sky-sm sm:flex-row sm:gap-4 sm:p-5">
+                <IconTile name={p.icon} size={28} className="h-10 w-10 bg-sky-100 sm:h-16 sm:w-16" />
+                <span>
+                  <span className="block text-[15px] font-bold leading-snug text-ink sm:text-lg">{p.title}</span>
+                  <span className="mt-1 block text-[13px] leading-5 text-ink sm:mt-1.5 sm:text-[15px] sm:leading-6">{p.body}</span>
+                </span>
+              </li>
+            ) : (
+              <li key={p.title} className="flex gap-4 border border-ink bg-white p-5 offset-sky-sm">
+                <IconTile name={p.icon} size={40} className="h-16 w-16 bg-sky-100" />
+                <span>
+                  <span className="block text-lg font-bold leading-snug text-ink">{p.title}</span>
+                  <span className="mt-1.5 block text-[15px] leading-6 text-ink">{p.body}</span>
+                </span>
+              </li>
+            ),
+          )}
         </ul>
+        {children}
         <ClaimCta offer={offer} className="mt-10" />
       </Container>
     </section>

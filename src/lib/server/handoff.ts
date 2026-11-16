@@ -1,6 +1,6 @@
 import type { QuotePayload } from "@/lib/quote";
 import type { LeadPayload } from "@/lib/lead";
-import type { OfferLeadPayload } from "@/lib/offer";
+import { PHOTO_STEPS, type OfferLeadPayload } from "@/lib/offer";
 import {
   getOfferLeadHousecall,
   markHousecall,
@@ -38,7 +38,7 @@ export const pushLead = (id: string, l: LeadPayload) => push("leads", id, l, sen
 export const pushOfferLead = (id: string, l: OfferLeadPayload) => push("offer_leads", id, l, sendOfferLead);
 
 /**
- * Second-opinion quote photos → the lead's estimate in HouseCall Pro. If the lead itself is still
+ * Photo-step photos (their current quote, or their home) → the lead's estimate in HouseCall Pro. If the lead itself is still
  * being sent (the customer was quick), waits briefly; otherwise the retry job picks it up.
  */
 export async function pushOfferQuote(id: string, { wait = false } = {}) {
@@ -49,7 +49,8 @@ export async function pushOfferQuote(id: string, { wait = false } = {}) {
       row = await getOfferLeadHousecall(id);
     }
     if (!row?.recordId || !row.customerId || row.photos.length === 0) return false;
-    const recordId = await sendOfferQuotePhotos(row.customerId, row.recordId, row.photos);
+    const kind = PHOTO_STEPS[row.offer]?.kind ?? "quote";
+    const recordId = await sendOfferQuotePhotos(row.customerId, row.recordId, row.photos, kind);
     await markOfferQuoteHousecall(id, { recordId });
     return true;
   } catch (err) {

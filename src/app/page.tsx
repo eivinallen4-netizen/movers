@@ -134,6 +134,7 @@ function Hero() {
           ) : (
             <HeroArt />
           )}
+          <MiniReview r={shortReviews("same-day", 1)[0]} tone="dark" className="mt-8 max-w-[460px]" />
         </div>
         <div className="order-1 lg:order-2">
           <RatingBadge className="mb-6" />
@@ -141,15 +142,14 @@ function Hero() {
           <h1 className="text-sm font-bold uppercase tracking-wider text-sky sm:text-base">
             Las Vegas Movers &amp; Junk Removal
           </h1>
-          <p className="mt-3 text-4xl font-bold leading-[1.1] text-white sm:text-5xl lg:text-[54px]">
-            Moving shouldn&apos;t be a headache.
+          <p className="mt-3 text-4xl font-bold leading-[1.1] text-white sm:text-5xl lg:text-[56px]">
+            Moving shouldn&apos;t be a headache
           </p>
-          <p className="mt-5 text-lg font-bold leading-snug text-sky sm:text-xl">
-            Local movers serving the whole valley. Honest pricing, no surprises.
-            <span className="block text-white">Tell us where you&apos;re moving and get a free quote in minutes.</span>
+          <p className="mt-5 max-w-[520px] text-lg font-medium leading-snug text-white/80">
+            Local movers serving the whole valley, with honest pricing and no surprises. Tell us where
+            you&apos;re moving and get a free quote in minutes.
           </p>
           <QuoteHeroForm />
-          <MiniReview r={shortReviews("same-day", 1)[0]} tone="dark" className="mt-8 max-w-[460px]" />
         </div>
       </Container>
     </section>
@@ -159,9 +159,9 @@ function Hero() {
 function RatingsBar() {
   const sites = [
     { name: "Upfront pricing", score: "Upfront", count: "No hidden fees", icon: "/icons/landing/upfront-pricing.svg" },
-    { name: "On time", score: "On Time", count: "We call when we're on the way", icon: "/icons/landing/on-time.svg" },
+    { name: "On time", score: "On time", count: "We call when we're on the way", icon: "/icons/landing/on-time.svg" },
     { name: "Careful", score: "Careful", count: "Handled like it's our own", icon: "/icons/landing/careful.svg" },
-    { name: "Same day", score: "Same Day", count: "Last-minute moves & pickups", icon: "/icons/landing/same-day.svg" },
+    { name: "Same day", score: "Same day", count: "Last-minute moves & pickups", icon: "/icons/landing/same-day.svg" },
   ];
   return (
     <section className="bg-white py-8">
@@ -174,12 +174,12 @@ function RatingsBar() {
         <div className="grid grid-cols-2 gap-x-6 gap-y-6 md:grid-cols-4 lg:gap-x-10">
           {sites.map((s) => (
             <div key={s.name} className="flex items-center gap-3" title={s.name}>
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-sky-100">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-sky-100">
                 <Image src={s.icon} alt="" width={44} height={44} />
               </span>
               <span>
                 <span className="block text-xl font-semibold leading-none text-ink">{s.score}</span>
-                <span className="mt-1 block text-[11px] leading-snug text-ink-600">{s.count}</span>
+                <span className="mt-1 block text-xs leading-snug text-ink-600">{s.count}</span>
               </span>
             </div>
           ))}
@@ -216,37 +216,37 @@ function PressMarquee() {
 const SERVICES = [
   {
     icon: "/icons/landing/local-moving.svg",
-    title: "Local Las Vegas Moves",
+    title: "Local Las Vegas moves",
     href: "/moving/local-moving",
     body: "Houses, apartments and condos anywhere in the valley. We show up on time, get right to work and finish the job, not leave it in your garage.",
   },
   {
     icon: "/icons/landing/same-day-moving.svg",
-    title: "Same-Day & Last-Minute Moves",
+    title: "Same-day & last-minute moves",
     href: "/moving/same-day-moving",
     body: "Other movers canceled? Lease ending sooner than planned? Call us. We've saved plenty of moving days on short notice.",
   },
   {
     icon: "/icons/landing/apartment-condo-moving.svg",
-    title: "Apartment & Condo Moves",
+    title: "Apartment & condo moves",
     href: "/moving/apartment-condo-moving",
     body: "Stairs, elevators and tight hallways don't slow us down. We protect the walls and floors on the way out and on the way in.",
   },
   {
     icon: "/icons/landing/moving-labor.svg",
-    title: "Moving Labor",
+    title: "Moving labor",
     href: "/moving/moving-labor",
     body: "Already have a truck? Our crew does the heavy lifting, loading and unloading so you and your family don't have to.",
   },
   {
     icon: "/icons/landing/furniture-wrapping-setup.svg",
-    title: "Furniture Wrapping & Setup",
+    title: "Furniture wrapping & setup",
     href: "/moving/furniture-wrapping-setup",
     body: "Every piece is wrapped and protected. Beds and tables go back together and every box lands in the right room.",
   },
   {
     icon: "/icons/landing/move-junk-haul-away.svg",
-    title: "Move + Junk Haul-Away",
+    title: "Move + junk haul-away",
     href: "/moving/move-and-junk-haul-away",
     body: "Don't pay to move stuff you don't want. We move what you keep and haul away the rest in the same trip.",
   },
@@ -312,7 +312,7 @@ function HonestPricing() {
             moved for it.
           </Lead>
           <div>
-            <h3 className="text-xl font-bold text-ink">What you get with every move:</h3>
+            <h3 className="text-xl font-bold text-ink">What you get with every move</h3>
             <Accordion
               items={[
                 {
@@ -395,7 +395,7 @@ function CostCalculator() {
         </Photo>
         <div>
           <SectionTitle>
-            How much should your move cost? Try our free <Highlight>moving cost calculator</Highlight>
+            How much should your move cost? Try our free moving cost calculator
           </SectionTitle>
           <Body className="mt-6">
             Pick your home size, how far you&apos;re going and what&apos;s coming with you, and get a
@@ -414,37 +414,37 @@ function CostCalculator() {
 const JUNK = [
   {
     icon: "/icons/junk-removal/furniture-removal.svg",
-    title: "Furniture Removal",
+    title: "Furniture removal",
     href: "/junk-removal/furniture-removal",
     body: "Old couches, mattresses, dressers and tables. Point to it and it's gone. We do all the lifting and carrying.",
   },
   {
     icon: "/icons/junk-removal/appliance-removal.svg",
-    title: "Appliance Removal",
+    title: "Appliance removal",
     href: "/junk-removal/appliance-removal",
     body: "Fridges, washers, dryers and water heaters hauled out without scratching your floors or walls.",
   },
   {
     icon: "/icons/junk-removal/garage-cleanouts.svg",
-    title: "Garage Cleanouts",
+    title: "Garage cleanouts",
     href: "/junk-removal/garage-cleanouts",
     body: "Your garage called. It wants to be a garage again. We clear it out top to bottom so you can park in it.",
   },
   {
     icon: "/icons/junk-removal/estate-cleanouts.svg",
-    title: "Estate Cleanouts",
+    title: "Estate cleanouts",
     href: "/junk-removal/estate-cleanouts",
     body: "A respectful, patient crew for a hard time. We clear the whole home and treat every room with care.",
   },
   {
     icon: "/icons/junk-removal/move-out-junk-haul.svg",
-    title: "Move-Out Junk Haul",
+    title: "Move-out junk haul",
     href: "/junk-removal/move-out-junk-haul",
     body: "Leaving stuff behind? We haul away everything that isn't coming to the new place.",
   },
   {
     icon: "/icons/junk-removal/same-day-junk-pickup.svg",
-    title: "Same-Day Junk Pickup",
+    title: "Same-day junk pickup",
     href: "/junk-removal/same-day-junk-pickup",
     body: "Call in the morning, junk gone today. Upfront pricing before we load a single thing.",
   },
@@ -538,12 +538,12 @@ function SoundFamiliar() {
     <Section tone="soft">
       <Container>
         <SectionTitle>
-          Bad mover stories? <Highlight>Not here.</Highlight>
+          Bad mover stories? Not here.
         </SectionTitle>
         <Lead className="mt-5 max-w-[760px]">The headaches people tell us about, and how we handle each one</Lead>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {HEADACHES.map((h) => (
-            <article key={h.worry} className="flex flex-col rounded-lg bg-white p-6 shadow-md">
+            <article key={h.worry} className="flex flex-col rounded-lg bg-white p-6">
               <p className="text-sm font-semibold text-ink/60 line-through decoration-sky-600 decoration-2">
                 {h.worry}
               </p>
@@ -595,7 +595,7 @@ function ValleyMap() {
             className="group absolute flex -translate-x-1/2 -translate-y-full flex-col items-center"
             style={{ left: `${x}%`, top: `${y}%` }}
           >
-            <span className="whitespace-nowrap rounded bg-white px-2 py-0.5 text-[11px] font-bold text-ink shadow transition group-hover:bg-sky sm:text-xs">
+            <span className="whitespace-nowrap rounded bg-white px-2 py-0.5 text-xs font-bold text-ink transition-colors group-hover:bg-sky sm:text-xs">
               {a.label}
             </span>
             <span className="mt-0.5 h-3 w-3 rounded-full border-2 border-white bg-sky" aria-hidden />
@@ -616,7 +616,7 @@ const MOVING_DAY = [
 
 function MovingDayTimeline() {
   return (
-    <ol className="relative rounded-lg bg-white p-6 shadow-md offset-sky sm:p-8 lg:mr-4">
+    <ol className="relative rounded-lg bg-white p-6 offset-sky sm:p-8 lg:mr-4">
       {MOVING_DAY.map((s, i) => (
         <li key={s.title} className="relative flex gap-4 pb-6 last:pb-0">
           {i < MOVING_DAY.length - 1 && (
@@ -691,7 +691,7 @@ function Reviews() {
     <Section>
       <Container>
         <SectionTitle>
-          Here&apos;s what our <Highlight>customers</Highlight> have to say
+          Here&apos;s what our customers have to say
         </SectionTitle>
         <div className="flex flex-wrap gap-x-8">
           <LearnMore href="/reviews" label="Read all reviews" />
@@ -711,7 +711,7 @@ function OnTime() {
     <Section>
       <Container>
         <SectionTitle>
-          <Highlight>POV:</Highlight> your movers actually show up on time
+          Your movers actually show up on time
         </SectionTitle>
         <div className="mt-10 grid items-center gap-12 lg:grid-cols-[1fr_1.4fr]">
           <Body>
@@ -773,25 +773,25 @@ function HomeFaq() {
 function FreeTools() {
   const posts = [
     {
-      title: "Las Vegas Moving Cost Calculator [2026]",
+      title: "2026 Las Vegas moving cost calculator",
       body: "Answer a few quick questions and see what your local move should cost before you call anyone.",
       href: "/free-tools/moving-cost-calculator",
       media: media("guide-1"),
     },
     {
-      title: "Moving Day Checklist (Free Printable)",
+      title: "Moving day checklist (free printable)",
       body: "Everything to do eight weeks out, one week out and on moving day so nothing gets missed.",
       href: "/guides/moving-day-checklist",
       media: media("guide-2"),
     },
     {
-      title: "How Much Does Junk Removal Cost in Las Vegas?",
+      title: "How much does junk removal cost in Las Vegas?",
       body: "Typical prices for furniture, appliances and full garage cleanouts, and what drives the cost.",
       href: "/guides/junk-removal-cost-las-vegas",
       media: media("guide-3"),
     },
     {
-      title: "7 Red Flags When Hiring Las Vegas Movers",
+      title: "7 red flags when hiring Las Vegas movers",
       body: "Hidden fees, no-shows and slow crews on the clock. How to spot a bad mover before you book.",
       href: "/guides/red-flags-hiring-movers",
       media: media("guide-4"),
@@ -801,7 +801,7 @@ function FreeTools() {
     <Section>
       <Container>
         <SectionTitle>
-          Free moving <Highlight>tools and guides</Highlight>
+          Free moving tools and guides
         </SectionTitle>
         <Lead className="mt-5 max-w-[760px]">
           Planning ahead? Use our{" "}
@@ -845,7 +845,7 @@ function InstagramCta() {
       <Container className="flex items-center gap-4">
         <Image src="/icons/landing/instagram.svg" alt="" width={48} height={48} />
         <div>
-          <p className="text-lg font-bold text-ink">Moving Shouldn&apos;t Be a Headache.</p>
+          <p className="text-lg font-bold text-ink">Moving shouldn&apos;t be a headache</p>
           <p className="text-sm font-semibold text-ink">
             <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">
               Follow us

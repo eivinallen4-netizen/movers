@@ -13,7 +13,7 @@ import {
   type QuotePayload,
 } from "@/lib/quote";
 import { LEAD_SERVICES, type LeadPayload } from "@/lib/lead";
-import { OFFER_LABELS, splitName, type OfferLeadPayload } from "@/lib/offer";
+import { OFFER_LABELS, PHOTO_STEPS, splitName, type OfferLeadPayload, type OfferPhoto, type PhotoKind } from "@/lib/offer";
 
 /*
  * HouseCall Pro public API (requires the MAX plan).
@@ -64,6 +64,7 @@ export function quoteNotes(q: QuotePayload) {
     `To: ${q.to!.label} [${floor(q.toAccess, q.toFloor)}]`,
     `Phone: ${formatPhone(normalizePhone(q.phone)!)} · Email: ${q.email.trim()}`,
     q.hearAboutUs ? `Heard about us: ${labelOf(HEAR_ABOUT_US, q.hearAboutUs)}` : null,
+    `SMS consent: ${q.smsConsent ? "yes" : "no (call or email only)"}`,
     "",
     `ITEMS / ROOMS (${q.items.length}) · ${photoCount} photo${photoCount === 1 ? "" : "s"} attached:`,
     ...q.items.map(
@@ -94,13 +95,18 @@ export function offerLeadNotes(l: OfferLeadPayload) {
   return [
     `AD FUNNEL LEAD: ${OFFER_LABELS[l.offer]}`,
     "Promised a call or text within 15 minutes.",
-    `Phone: ${formatPhone(normalizePhone(l.phone)!)} · Email: ${l.email.trim()}`,
+    `Phone: ${formatPhone(normalizePhone(l.phone)!)}${l.email?.trim() ? ` · Email: ${l.email.trim()}` : ""}`,
     `Move size: ${l.moveSize || "not given"}`,
     l.moveDate ? `Move date: ${prettyDate(l.moveDate)}` : "Move date: not given",
     `SMS consent: ${l.smsConsent ? "yes" : "no"}`,
     l.page ? `Sent from: ${l.page}` : null,
     ad ? `Ad: ${ad}` : null,
-    l.offer === "second-opinion" ? "Wants a second opinion on another mover's quote. Photo of the quote may follow on the website." : null,
+    l.holdNote ?? null,
+    PHOTO_STEPS[l.offer]?.kind === "quote"
+      ? "Wants a second opinion on another mover's quote. Photo of the quote may follow on the website."
+      : PHOTO_STEPS[l.offer]?.kind === "home"
+        ? "Sending photos of their home for the flat rate. Photos may follow on the website."
+        : null,
   ]
     .filter((x) => x !== null)
     .join("\n");
@@ -204,7 +210,7 @@ const normStreet = (s: string) =>
   s
     .toLowerCase()
     .replace(/[.,#]/g, " ")
-    .split(/s+/)
+    .split(/\s+/)
     .filter(Boolean)
     .map((w) => ABBR[w] ?? w)
     .join(" ");
@@ -226,8 +232,10 @@ async function findCustomer(email: string, phone: string): Promise<HcpCustomer |
   const search = (q: string) =>
     hcp<{ customers: HcpCustomer[] }>("GET", `/customers?q=${encodeURIComponent(q)}&page_size=25`).then((r) => r.customers);
   const e = email.trim().toLowerCase();
-  const byEmail = (await search(e)).find((c) => c.email?.trim().toLowerCase() === e);
-  if (byEmail) return byEmail;
+  if (e) {
+    const byEmail = (await search(e)).find((c) => c.email?.trim().toLowerCase() === e);
+    if (byEmail) return byEmail;
+  }
   return (await search(phone)).find((c) => [c.mobile_number, c.home_number, c.work_number].some((n) => digits(n) === phone)) ?? null;
 }
 
@@ -265,7 +273,7 @@ async function upsertCustomer(c: CustomerInput): Promise<{ customerId: string; a
   const created = await hcp<HcpCustomer>("POST", "/customers", {
     first_name: c.first,
     last_name: c.last,
-    email: c.email.trim(),
+    email: c.email.trim() || undefined,
     mobile_number: formatPhone(c.phone),
     notifications_enabled: c.notificationsEnabled,
     lead_source: c.leadSource,
@@ -337,7 +345,8 @@ export async function sendQuote(q: QuotePayload): Promise<HousecallResult> {
     last: q.lastName.trim(),
     email: q.email,
     phone: normalizePhone(q.phone)!,
-    notificationsEnabled: true,
+    // HouseCall Pro texts customers automatically, so only with the opt-in box ticked.
+    notificationsEnabled: q.smsConsent,
     leadSource: source,
     tags,
     addresses: [q.from!, q.to!],
@@ -383,7 +392,8 @@ export async function sendLead(l: LeadPayload): Promise<HousecallResult> {
       last: l.lastName.trim(),
       email: l.email,
       phone: normalizePhone(l.phone)!,
-      notificationsEnabled: true,
+      // This form never asks for SMS consent, so no automatic texts.
+      notificationsEnabled: false,
       leadSource: await leadSource(LEAD_SOURCES.lead),
       tags: ["web-lead", l.service],
     },
@@ -398,7 +408,7 @@ export async function sendOfferLead(l: OfferLeadPayload): Promise<HousecallResul
     {
       first,
       last,
-      email: l.email,
+      email: l.email ?? "",
       phone: normalizePhone(l.phone)!,
       notificationsEnabled: l.smsConsent,
       leadSource: await leadSource(offerLeadSource(l)),
@@ -409,11 +419,16 @@ export async function sendOfferLead(l: OfferLeadPayload): Promise<HousecallResul
 }
 
 /**
- * Second-opinion photos: the Lead becomes an Estimate (keeping its note) and the photos of the other
- * mover's quote are attached. `recordId` is the lead id, or "estimateId/optionId" if already converted.
- * Returns the estimate's recordId to store.
+ * Photo-step photos: the Lead becomes an Estimate (keeping its note) and the photos are attached:
+ * the other mover's quote (`quote`) or the customer's home (`home`). `recordId` is the lead id, or
+ * "estimateId/optionId" if already converted. Returns the estimate's recordId to store.
  */
-export async function sendOfferQuotePhotos(customerId: string, recordId: string, photos: string[]): Promise<string> {
+export async function sendOfferQuotePhotos(
+  customerId: string,
+  recordId: string,
+  photos: OfferPhoto[],
+  kind: PhotoKind = "quote",
+): Promise<string> {
   let [estimateId, optionId] = recordId.split("/");
   if (!optionId) {
     // Converting twice makes a second estimate, so reuse an earlier conversion (e.g. on a retry).
@@ -430,13 +445,20 @@ export async function sendOfferQuotePhotos(customerId: string, recordId: string,
     if (!parent) throw new Error(`Converted lead ${recordId} but couldn't find estimate option ${estimate_id}`);
     [estimateId, optionId] = [parent.id, estimate_id];
   }
+  const fallback = kind === "home" ? "home-photo" : "competitor-quote";
+  const labelled = photos.filter((p) => p.label);
   await hcp("POST", `/estimates/${estimateId}/options/${optionId}/notes`, {
-    content: `Customer uploaded ${photos.length} photo(s) of the other mover's quote (attached).`,
+    content: [
+      kind === "home"
+        ? `Customer uploaded ${photos.length} photo(s) of their home for the flat rate (attached).`
+        : `Customer uploaded ${photos.length} photo(s) of the other mover's quote (attached).`,
+      ...(labelled.length ? ["", "Photos, as the customer labelled them:", ...photos.map((p, n) => `${n + 1}. ${p.label || "No label"}`)] : []),
+    ].join("\n"),
   });
   const failed = await attachPhotos(
     estimateId,
     optionId,
-    photos.map((url, n) => ({ url, name: `competitor-quote-${n + 1}` })),
+    photos.map((p, n) => ({ url: p.url, name: `${String(n + 1).padStart(2, "0")}-${p.label ? slug(p.label) : fallback}` })),
   );
   await noteFailedPhotos(estimateId, optionId, failed);
   return `${estimateId}/${optionId}`;
