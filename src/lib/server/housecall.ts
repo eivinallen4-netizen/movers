@@ -401,21 +401,56 @@ export async function sendLead(l: LeadPayload): Promise<HousecallResult> {
   );
 }
 
-/** Ad-funnel form → customer + Lead in the Job inbox, credited to the ad network when known. */
+/**
+ * Offers that go straight in as an Estimate with a fixed price, instead of a Lead. The option is named
+ * `option`, with a `service` line item at `priceCents` plus a no-price line item for the move size.
+ */
+const PRICED_OFFERS: Partial<Record<OfferLeadPayload["offer"], { option: string; service: string; priceCents: number }>> = {
+  "1499-flat-rate": { option: "1499", service: "1499 offer", priceCents: 149_900 },
+};
+
+/**
+ * Ad-funnel form → customer + Lead in the Job inbox, credited to the ad network when known.
+ * Priced offers become an Estimate instead (recordId "estimateId/optionId"), so photos attach to it directly.
+ */
 export async function sendOfferLead(l: OfferLeadPayload): Promise<HousecallResult> {
   const { first, last } = splitName(l.name);
-  return sendInboxLead(
-    {
-      first,
-      last,
-      email: l.email ?? "",
-      phone: normalizePhone(l.phone)!,
-      notificationsEnabled: l.smsConsent,
-      leadSource: await leadSource(offerLeadSource(l)),
-      tags: ["web-offer", l.offer],
-    },
-    offerLeadNotes(l),
-  );
+  const customer: CustomerInput = {
+    first,
+    last,
+    email: l.email ?? "",
+    phone: normalizePhone(l.phone)!,
+    notificationsEnabled: l.smsConsent,
+    leadSource: await leadSource(offerLeadSource(l)),
+    tags: ["web-offer", l.offer],
+  };
+  const priced = PRICED_OFFERS[l.offer];
+  if (!priced) return sendInboxLead(customer, offerLeadNotes(l));
+
+  const { customerId } = await upsertCustomer(customer);
+  try {
+    const estimate = await hcp<Estimate>("POST", "/estimates", {
+      customer_id: customerId,
+      lead_source: customer.leadSource,
+      note: offerLeadNotes(l),
+      options: [
+        {
+          name: priced.option,
+          tags: customer.tags,
+          line_items: [
+            { name: priced.service, unit_price: priced.priceCents, quantity: 1, kind: "labor" },
+            { name: l.moveSize || "Bedrooms: not given", unit_price: 0, quantity: 1, kind: "labor" },
+          ],
+        },
+      ],
+    });
+    return { customerId, recordId: `${estimate.id}/${estimate.options[0].id}` };
+  } catch (err) {
+    // HouseCall Pro rejected the estimate itself (not an outage): don't lose the lead, send it to the inbox.
+    if (!(err instanceof HousecallError) || err.status >= 500) throw err;
+    console.error(`[HouseCall Pro] ${l.offer} estimate rejected, sending as a lead instead`, err);
+    return sendInboxLead(customer, offerLeadNotes(l));
+  }
 }
 
 /**
