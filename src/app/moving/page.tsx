@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SiteShell } from "@/components/site";
+import { TrackViewContent } from "@/components/MetaPixelEvents";
 import { PageHero, ProblemsSection, ProseSection, ServiceCards, StepsSection } from "@/components/templates";
 import { BrandButton, Container, CtaBand, FaqSection, JsonLd, ReviewRow, SectionTitle } from "@/components/ui";
 import { MOVING_STEPS, servicesIn } from "@/content/services";
@@ -18,6 +19,7 @@ export const metadata = pageMeta({ title: TITLE, description: DESCRIPTION, path:
 export default function MovingHub() {
   return (
     <SiteShell>
+      <TrackViewContent name="Local moving" category="moving" />
       <JsonLd data={serviceSchema({ name: "Local moving", description: DESCRIPTION, url: "/moving" })} />
       <PageHero
         backdrop={editorialImage("moving")}

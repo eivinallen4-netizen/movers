@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import Script from "next/script";
+import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/next";
+import { MetaPixelEvents } from "@/components/MetaPixelEvents";
 import { BUSINESS, SITE_URL } from "@/content/site";
 import "./globals.css";
 
@@ -28,6 +30,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full">
         {children}
         <Analytics />
+        <Suspense fallback={null}>
+          <MetaPixelEvents />
+        </Suspense>
         <Script
           src="https://analytics.ahrefs.com/analytics.js"
           data-key="Kl3dGi6e8AlgspesLbbErw"

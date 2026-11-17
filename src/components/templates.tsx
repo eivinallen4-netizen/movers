@@ -6,6 +6,7 @@ import mark from "../../public/mark.png";
 import { Check, Phone } from "./icons";
 import { QuoteCard } from "./QuoteHeroForm";
 import { PrintButton } from "./PrintButton";
+import { TrackViewContent } from "./MetaPixelEvents";
 import {
   Breadcrumbs,
   CheckList,
@@ -239,6 +240,7 @@ export function ServiceView({ s }: { s: Service }) {
   const hub = isMove ? { label: "Moving", href: "/moving" } : { label: "Junk Removal", href: "/junk-removal" };
   return (
     <>
+      <TrackViewContent name={s.name} category={s.category} />
       <JsonLd data={serviceSchema({ name: s.name, description: s.metaDescription, url: serviceHref(s) })} />
       <PageHero
         backdrop={pagePhoto(`${s.category}-${s.slug}`)?.src}

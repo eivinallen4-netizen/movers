@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { ClaimCta, FunnelShell, NextSteps, ObjectionStrip, OfferExtras, OfferHero, OwnerNote, SellingPoints } from "@/components/funnel";
 import { OfferClock } from "@/components/OfferClock";
+import { TrackViewContent } from "@/components/MetaPixelEvents";
 import { StickyClaimBar } from "@/components/OfferForm";
 import { CtaBand, FaqSection, ReviewRow } from "@/components/ui";
 import { OFFERS, OFFER_FAQS, findOffer } from "@/content/offers";
@@ -31,6 +32,7 @@ export default async function Page({ params }: PageProps<"/offers/[slug]">) {
   const owner = Boolean(o.ownerNote);
   return (
     <FunnelShell>
+      <TrackViewContent name={o.slug} category="offer" />
       {o.clock && <OfferClock lead={o.clock.lead} label={o.clock.label} />}
       <OfferHero offer={o} />
       <ObjectionStrip offer={o} />

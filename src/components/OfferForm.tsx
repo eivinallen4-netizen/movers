@@ -6,7 +6,7 @@ import { FormAgreement, SmsConsent } from "./SmsConsent";
 import { PHONE, PHONE_HREF } from "@/content/site";
 import { uploadPhoto } from "@/lib/image";
 import { AD_PARAMS, MOVE_SIZES, PHOTO_STEPS, type MoveSize, type OfferPhoto, type OfferSlug, type PhotoKind } from "@/lib/offer";
-import { trackLead } from "@/lib/pixel";
+import { trackLead, trackQuoteStart } from "@/lib/pixel";
 import { normalizePhone, type Errors } from "@/lib/quote";
 
 /** Wording for the photo step after the form, by what we're asking for. */
@@ -143,6 +143,7 @@ export function OfferForm({
 
   function pickSize(size: MoveSize) {
     set("moveSize", size);
+    if (!picked.current) trackQuoteStart({ content_name: offer, content_category: size });
     picked.current = true;
     setStage("form");
   }

@@ -7,6 +7,7 @@ import { ArrowUpRight, Camera, Check, Phone } from "@/components/icons";
 import { FormAgreement, SmsConsent } from "@/components/SmsConsent";
 import { PHONE, PHONE_HREF } from "@/content/site";
 import { uploadPhoto } from "@/lib/image";
+import { trackLead, trackQuoteStart } from "@/lib/pixel";
 import {
   ACCESS_TYPES,
   DEFAULT_ROOMS,
@@ -86,6 +87,7 @@ export function QuoteWizard({
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [submitError, setSubmitError] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
 
   // Free the in-memory photo previews when leaving the page.
   const itemsRef = useRef(items);
@@ -153,6 +155,10 @@ export function QuoteWizard({
       setSeededFor(d.moveSize);
       setItemsEdited(false);
     }
+    if (step === 0 && !started.current) {
+      started.current = true;
+      trackQuoteStart({ content_name: "quote" });
+    }
     goTo(step + 1);
   };
 
@@ -173,6 +179,7 @@ export function QuoteWizard({
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string; errors?: Errors };
       if (res.ok) {
+        trackLead({ content_name: "quote", content_category: d.moveSize });
         setStatus("sent");
         requestAnimationFrame(() => cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
         return;

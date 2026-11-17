@@ -1,4 +1,5 @@
 import { SiteShell } from "@/components/site";
+import { TrackViewContent } from "@/components/MetaPixelEvents";
 import { PageHero, ProblemsSection, ProseSection, ServiceCards, StepsSection } from "@/components/templates";
 import { BrandButton, CheckList, Container, CtaBand, FaqSection, JsonLd, ReviewRow, SectionTitle } from "@/components/ui";
 import { JUNK_STEPS, servicesIn } from "@/content/services";
@@ -16,6 +17,7 @@ export const metadata = pageMeta({ title: TITLE, description: DESCRIPTION, path:
 export default function JunkHub() {
   return (
     <SiteShell>
+      <TrackViewContent name="Junk removal" category="junk-removal" />
       <JsonLd data={serviceSchema({ name: "Junk removal", description: DESCRIPTION, url: "/junk-removal" })} />
       <PageHero
         backdrop={editorialImage("junk-removal")}
