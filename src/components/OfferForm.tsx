@@ -5,7 +5,7 @@ import { ArrowUpRight, Camera, Check, Lock, Phone } from "./icons";
 import { FormAgreement, SmsConsent } from "./SmsConsent";
 import { PHONE, PHONE_HREF } from "@/content/site";
 import { uploadPhoto } from "@/lib/image";
-import { AD_PARAMS, MOVE_SIZES, PHOTO_STEPS, type MoveSize, type OfferPhoto, type OfferSlug, type PhotoKind } from "@/lib/offer";
+import { AD_PARAMS, CONFIRMED_SEGMENT, CONFIRMED_URL_OFFERS, MOVE_SIZES, PHOTO_STEPS, type MoveSize, type OfferPhoto, type OfferSlug, type PhotoKind } from "@/lib/offer";
 import { trackLead, trackQuoteStart } from "@/lib/pixel";
 import { normalizePhone, type Errors } from "@/lib/quote";
 
@@ -127,6 +127,17 @@ export function OfferForm({
   useEffect(() => {
     if (stage === "form" && picked.current) nameRef.current?.focus();
   }, [stage]);
+
+  // Form sent: the address bar becomes /offers/<slug>/confirmed (query string kept). replaceState, so
+  // Back leaves the page instead of landing on the old URL with the photo step still showing.
+  const sent = stage === "photo" || stage === "done";
+  useEffect(() => {
+    if (!sent || !CONFIRMED_URL_OFFERS.includes(offer)) return;
+    const { pathname, search } = window.location;
+    const base = pathname.replace(/\/+$/, "");
+    if (base.endsWith(`/${CONFIRMED_SEGMENT}`)) return;
+    window.history.replaceState(null, "", `${base}/${CONFIRMED_SEGMENT}${search}`);
+  }, [sent, offer]);
 
   const set = <K extends keyof typeof d>(k: K, v: (typeof d)[K]) => {
     setD((x) => ({ ...x, [k]: v }));

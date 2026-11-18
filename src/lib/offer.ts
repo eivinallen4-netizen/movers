@@ -49,6 +49,13 @@ export const MAX_OFFER_PHOTOS = Math.max(...Object.values(PHOTO_STEPS).map((s) =
 /** Offers with a per-visitor hold timer (see lib/offer-clock.ts). */
 export const CLOCKED_OFFERS: readonly OfferSlug[] = ["1499-flat-rate"];
 
+/**
+ * Offers whose URL gains /confirmed once the form is sent (the photo step), so ad platforms can count
+ * the lead by URL. Loading that URL directly sends the visitor back to the offer page.
+ */
+export const CONFIRMED_URL_OFFERS: readonly OfferSlug[] = ["1499-flat-rate"];
+export const CONFIRMED_SEGMENT = "confirmed";
+
 /** Step 1 of the form: one easy tap before we ask for contact details. */
 export const MOVE_SIZES = ["Studio or 1 bedroom", "2 bedrooms", "3 bedrooms", "4+ bedrooms"] as const;
 export type MoveSize = (typeof MOVE_SIZES)[number];
