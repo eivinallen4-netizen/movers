@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/next";
@@ -7,10 +7,14 @@ import { MetaPixelEvents } from "@/components/MetaPixelEvents";
 import { BUSINESS, SITE_URL } from "@/content/site";
 import "./globals.css";
 
-const montserrat = Montserrat({
+// Self-hosted (Montserrat, Latin, variable weight, OFL, from @fontsource-variable/montserrat 5.3.0) so a
+// build never has to reach Google Fonts; a failed fetch there broke a production deploy on Nov 18, 2026.
+const montserrat = localFont({
+  src: "./fonts/montserrat-latin-wght-normal.woff2",
   variable: "--font-montserrat",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: "100 900",
+  display: "swap",
+  fallback: ["system-ui", "Arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
