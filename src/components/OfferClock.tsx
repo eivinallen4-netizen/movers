@@ -57,7 +57,7 @@ export function OfferClock({ lead, label }: { lead: string; label: string }) {
   if (!p || p.phase === "hold") {
     text = (
       <>
-        {lead} Your {label} is held for{" "}
+        <span className="hidden sm:inline">{lead} </span>Your {label} is held for{" "}
         <span className="whitespace-nowrap tabular-nums font-extrabold">{left ?? `${HOLD_DAYS} days`}</span>
       </>
     );

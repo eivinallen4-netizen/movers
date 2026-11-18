@@ -31,8 +31,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
             href={PHONE_HREF}
             className="flex h-11 items-center gap-2 whitespace-nowrap bg-white px-4 text-sm font-bold text-ink transition hover:bg-sky-100"
           >
-            <Phone width={15} height={15} /> <span className="hidden sm:inline">{PHONE}</span>
-            <span className="sm:hidden">Call now</span>
+            <Phone width={15} height={15} /> {PHONE}
           </a>
         </div>
       </header>
@@ -68,10 +67,12 @@ export function OfferHero({ offer }: { offer: Offer }) {
           <h1 className={`font-bold leading-[1.1] sm:text-5xl lg:text-[52px] ${photo ? "mt-2 text-[27px]" : "mt-3 text-[28px]"}`}>
             {offer.headline}
           </h1>
+          {/* The rating sits above the form so it's on the first screen of a phone, where ad visitors decide. */}
+          {offer.rating && <RatingCount rating={offer.rating} short className="mt-2 text-white sm:mt-4" />}
           {photo ? (
-            // On phones the photo sits beside the subheadline so the form's first tap stays on the first screen.
-            <div className="mt-3 flex items-start gap-3 sm:mt-5 lg:flex-col lg:items-stretch lg:gap-0">
-              <div className="relative h-[104px] w-[92px] shrink-0 overflow-hidden rounded-lg offset-sky-sm sm:h-40 sm:w-40 lg:order-last lg:mt-8 lg:aspect-[3/2] lg:h-auto lg:w-full">
+            // No photo on phones: the form's first tap has to fit on the first screen of an in-app browser.
+            <div className="mt-2 flex items-start gap-3 sm:mt-5 lg:flex-col lg:items-stretch lg:gap-0">
+              <div className="relative hidden h-40 w-40 shrink-0 overflow-hidden rounded-lg offset-sky-sm sm:block lg:order-last lg:mt-8 lg:aspect-[3/2] lg:h-auto lg:w-full">
                 <Image
                   src={photo.src}
                   alt={photo.alt}
@@ -109,8 +110,7 @@ export function OfferHero({ offer }: { offer: Offer }) {
           {offer.urgency && (
             <p className="mt-5 border-l-4 border-sky pl-3 text-sm font-bold text-white">{offer.urgency}</p>
           )}
-          {offer.rating && <RatingCount rating={offer.rating} className="mt-5 text-white" />}
-          {review && <MiniReview r={review} tone="dark" className="mt-3" />}
+          {review && <MiniReview r={review} tone="dark" className="mt-5" />}
           <TrustStrip />
         </div>
       </Container>
@@ -172,9 +172,18 @@ export function OfferExtras({ offer }: { offer: Offer }) {
 }
 
 /** "★★★★★ 4.9 from 33 reviews on Thumbtack · Top Pro". The real score and count, no links off the page. */
-function RatingCount({ rating, className = "" }: { rating: NonNullable<Offer["rating"]>; className?: string }) {
+function RatingCount({
+  rating,
+  short = false,
+  className = "",
+}: {
+  rating: NonNullable<Offer["rating"]>;
+  /** Drops the extra ("Top Pro · Hired 48 times") on phones so the line stays on one row. */
+  short?: boolean;
+  className?: string;
+}) {
   return (
-    <p className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-bold ${className}`}>
+    <p className={`flex flex-wrap items-center gap-x-2 gap-y-1 font-bold ${short ? "text-[13px] sm:text-sm" : "text-sm"} ${className}`}>
       <span className="flex gap-0.5" aria-hidden>
         {[0, 1, 2, 3, 4].map((s) => (
           <Star key={s} />
@@ -182,7 +191,7 @@ function RatingCount({ rating, className = "" }: { rating: NonNullable<Offer["ra
       </span>
       <span>
         {rating.score} from {rating.count} reviews on {rating.source}
-        {rating.extra && <span className="font-semibold opacity-80"> · {rating.extra}</span>}
+        {rating.extra && <span className={`font-semibold opacity-80 ${short ? "hidden sm:inline" : ""}`}> · {rating.extra}</span>}
       </span>
     </p>
   );

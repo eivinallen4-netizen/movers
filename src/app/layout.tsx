@@ -50,6 +50,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '1700787861671112');
 fbq('init', '1160527763156914');
+fbq('init', '1605571614173809');
 fbq('track', 'PageView');}`}
         </Script>
         {/* Google Tag Manager. Same Global Privacy Control opt-out as the Meta Pixel. */}
@@ -83,6 +84,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             width="1"
             style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=1160527763156914&ev=PageView&noscript=1"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=1605571614173809&ev=PageView&noscript=1"
             alt=""
           />
         </noscript>

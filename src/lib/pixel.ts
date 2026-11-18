@@ -1,7 +1,7 @@
 /*
  * Meta Pixel standard events from the browser. The pixel itself is loaded in app/layout.tsx and is skipped for
  * visitors whose browser sends Global Privacy Control, so nothing here ever loads it or sends without it.
- * `fbq('track', ...)` goes to every pixel initialised in the layout (both ad accounts).
+ * `fbq('track', ...)` goes to every pixel initialised in the layout (all three).
  *
  * What we send, and when:
  *   PageView          first load (layout), then every client-side route change (<MetaPixelEvents>)

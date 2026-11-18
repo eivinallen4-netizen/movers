@@ -233,7 +233,12 @@ export function OfferForm({
     <div>
       <StepProgress step={stage === "size" ? 1 : 2} total={totalSteps} note="Takes about 30 seconds" />
       <h2 className="mt-4 text-[22px] font-bold leading-tight sm:mt-5 sm:text-[28px]">{title}</h2>
-      <p className="mt-3 flex items-center gap-2 bg-sky px-3 py-2.5 text-[13px] font-bold text-ink sm:mt-4 sm:px-4 sm:py-3 sm:text-sm">
+      {/* Phones skip this on step 1 so the size buttons fit on the first screen; it's back on step 2, next to the phone field. */}
+      <p
+        className={`mt-3 items-center gap-2 bg-sky px-3 py-2.5 text-[13px] font-bold text-ink sm:mt-4 sm:px-4 sm:py-3 sm:text-sm ${
+          stage === "size" ? "hidden sm:flex" : "flex"
+        }`}
+      >
         <Phone width={18} height={18} className="shrink-0" /> We&apos;ll call or text you within 15 minutes.
       </p>
     </div>
@@ -260,7 +265,7 @@ export function OfferForm({
           </div>
         </fieldset>
         <p className="mt-4 flex items-center justify-center gap-1.5 text-xs font-semibold text-white/70">
-          <Lock /> Free, no obligation. We never sell your info.
+          <Lock className="shrink-0" /> Free, no obligation. A real person calls or texts you within 15 minutes.
         </p>
       </div>
     );

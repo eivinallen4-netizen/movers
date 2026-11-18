@@ -176,7 +176,7 @@ export const OFFERS: Offer[] = [
     eyebrow: "The 60-Day Homeowner Move Special",
     headline: "Las Vegas homeowners: your whole move for $1,499 flat.",
     subheadline:
-      "A crew of 3 packs, wraps and sets up your furniture. Send photos of everything you're moving and we'll call or text within 15 minutes to lock in your price in writing.",
+      "A crew of 3 wraps, moves and sets up your furniture. No home visit: send photos and we lock in your price in writing.",
     heroPhoto: {
       src: "/media/pricing-photo.jpg",
       alt: "Movers and Junk Removal crew loading plastic-wrapped furniture into a moving truck stacked with boxes",
@@ -184,7 +184,7 @@ export const OFFERS: Offer[] = [
       height: 1024,
     },
     clock: { lead: "We take 10 flat rate moves a week.", label: "$1,499" },
-    formTitle: "Get your $1,499 flat rate in 30 seconds",
+    formTitle: "Get your $1,499 flat rate",
     sizePrompt: "Tap your home size to start",
     button: "Get my $1,499 flat rate",
     urgency: "We take 10 flat rate moves a week. Lock yours in now.",
@@ -193,7 +193,7 @@ export const OFFERS: Offer[] = [
       {
         icon: "price-locked",
         q: "Is $1,499 really the whole price?",
-        a: "Yes, for everything in your photos. We confirm it in writing before moving day, and nothing gets added at the new house. Leave something out of your photos and the flat rate won't apply.",
+        a: "Yes, for everything in your photos. We confirm it in writing before moving day, and nothing gets added at the new house.",
       },
       {
         icon: "wrapped-furniture",
@@ -219,7 +219,7 @@ export const OFFERS: Offer[] = [
       },
       {
         icon: "photo-quote", title: "Priced from your photos.",
-        body: "No home visit needed. Photograph everything you're moving, or your quote won't be accurate and the flat rate won't apply.",
+        body: "No home visit needed. Send photos of everything you're moving and we price it from those.",
       },
     ],
     bonus: {
@@ -256,8 +256,8 @@ export const OFFERS: Offer[] = [
     steps: [
       { icon: "send-form", title: "Send the form.", body: "About 30 seconds: your home size and how to reach you." },
       {
-        icon: "photo-quote", title: "Photograph everything you're moving.",
-        body: "Every room, closet, the garage and patio. Anything missing means no accurate quote and no flat rate.",
+        icon: "photo-quote", title: "Send photos of everything you're moving.",
+        body: "Every room, closet, the garage and patio, so your price covers all of it.",
       },
       {
         icon: "calendar-lock", title: "We lock in $1,499 in writing.",
